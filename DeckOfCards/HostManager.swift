@@ -45,6 +45,10 @@ class HostManager: NSObject, GCDAsyncSocketDelegate {
 
             print("Echo server started on port \(self.listenSocket.localHost) : \(self.listenSocket.localPort)")
 
+            //TODO: Get actual ip address
+            //http://stackoverflow.com/questions/14037129/null-result-on-converting-nsdata-to-nsstring
+            //self.listenSocket.localAddress
+
             self.isRunning = true;
         } else {
             print("Server already started")
