@@ -2,7 +2,7 @@
 //  DeckOfCardsTests.swift
 //  DeckOfCardsTests
 //
-//  Created by John DeLong on 4/2/16.
+//  Created by John DeLong on 4/3/16.
 //  Copyright © 2016 delong. All rights reserved.
 //
 

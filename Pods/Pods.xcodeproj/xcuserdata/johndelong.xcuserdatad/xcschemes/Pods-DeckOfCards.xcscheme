@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '4A76F7DAA4A64DBD463BFB68'
+               BlueprintIdentifier = '8BEAB986996E57D6061E79EF'
                BlueprintName = 'Pods-DeckOfCards'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Pods_DeckOfCards.framework'>

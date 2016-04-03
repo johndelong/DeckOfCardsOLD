@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+               BlueprintIdentifier = "1583FEAE1CB1C690008EBAB8"
                BuildableName = "DeckOfCards.app"
                BlueprintName = "DeckOfCards"
                ReferencedContainer = "container:DeckOfCards.xcodeproj">
@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "15A339F11CB07BC400A489B7"
+               BlueprintIdentifier = "1583FEC61CB1C690008EBAB8"
                BuildableName = "DeckOfCardsTests.xctest"
                BlueprintName = "DeckOfCardsTests"
                ReferencedContainer = "container:DeckOfCards.xcodeproj">
@@ -42,7 +42,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "15A339FC1CB07BC400A489B7"
+               BlueprintIdentifier = "1583FED11CB1C690008EBAB8"
                BuildableName = "DeckOfCardsUITests.xctest"
                BlueprintName = "DeckOfCardsUITests"
                ReferencedContainer = "container:DeckOfCards.xcodeproj">
@@ -52,7 +52,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+            BlueprintIdentifier = "1583FEAE1CB1C690008EBAB8"
             BuildableName = "DeckOfCards.app"
             BlueprintName = "DeckOfCards"
             ReferencedContainer = "container:DeckOfCards.xcodeproj">
@@ -75,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+            BlueprintIdentifier = "1583FEAE1CB1C690008EBAB8"
             BuildableName = "DeckOfCards.app"
             BlueprintName = "DeckOfCards"
             ReferencedContainer = "container:DeckOfCards.xcodeproj">
@@ -94,7 +94,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+            BlueprintIdentifier = "1583FEAE1CB1C690008EBAB8"
             BuildableName = "DeckOfCards.app"
             BlueprintName = "DeckOfCards"
             ReferencedContainer = "container:DeckOfCards.xcodeproj">
