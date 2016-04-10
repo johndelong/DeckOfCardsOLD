@@ -17,8 +17,8 @@ enum ServerState {
 
 
 protocol MatchmakingServerDelegate {
-    func matchmakingServer(server: MCServer, clientDidConnect peerID: NSString)
-    func matchmakingServer(server: MCServer, clientDidDisconnect peerID: NSString)
+    func matchmakingServer(server: MCServer, clientDidConnect peerID: MCPeerID)
+    func matchmakingServer(server: MCServer, clientDidDisconnect peerID: MCPeerID)
     func matchmakingServerSessionDidEnd(server: MCServer)
     func matchmakingServerNoNetwork(server: MCServer)
 }
@@ -79,13 +79,24 @@ extension MCServer : MCSessionDelegate {
             if self.serverState == .AcceptingConnections {
                 if !self.connectedClients.containsObject(peerID) {
                     self.connectedClients.addObject(peerID)
-                    self.delegate?.matchmakingServer(self, clientDidConnect: peerID.displayName)
+
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.delegate?.matchmakingServer(self, clientDidConnect: peerID)
+                    });
                 }
             }
         case .Connecting:
             print("Connecting...")
         case .NotConnected:
             print("Not connected")
+
+            if self.connectedClients.containsObject(peerID) {
+                self.connectedClients.removeObject(peerID)
+
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.delegate?.matchmakingServer(self, clientDidDisconnect: peerID)
+                });
+            }
         }
     }
 

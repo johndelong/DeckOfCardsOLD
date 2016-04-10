@@ -63,12 +63,12 @@ extension HostViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension HostViewController: MatchmakingServerDelegate {
-    func matchmakingServer(server: MCServer, clientDidConnect peerID: NSString) {
+    func matchmakingServer(server: MCServer, clientDidConnect peerID: MCPeerID) {
         self.tableView.reloadData()
     }
 
-    func matchmakingServer(server: MCServer, clientDidDisconnect peerID: NSString) {
-
+    func matchmakingServer(server: MCServer, clientDidDisconnect peerID: MCPeerID) {
+        self.tableView.reloadData()
     }
 
     func matchmakingServerSessionDidEnd(server: MCServer) {

@@ -68,7 +68,8 @@ class MCClient: NSObject {
 
         self.clientState = .Idle
         self.session.disconnect()
-        self.connectedClients.removeAllObjects();
+        self.availableServers.removeAllObjects()
+        self.connectedClients.removeAllObjects()
         self.delegate?.matchmakingClient(self, didDisconnectFromServer: self.serverPeerID)
         self.serverPeerID = nil
     }
@@ -121,7 +122,10 @@ extension MCClient : MCSessionDelegate {
 
             if !self.connectedClients.containsObject(peerID) {
                 self.connectedClients.addObject(peerID)
-                self.delegate?.matchmakingClient(self, didConnectToServer: peerID)
+
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.delegate?.matchmakingClient(self, didConnectToServer: peerID)
+                })
             }
 
         case .Connecting:
@@ -131,10 +135,21 @@ extension MCClient : MCSessionDelegate {
             print("Connecting...")
         case .NotConnected:
             print("Not connected")
+
+            if self.connectedClients.containsObject(peerID) {
+                self.connectedClients.removeObject(peerID)
+
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.delegate?.matchmakingClient(self, didDisconnectFromServer: peerID)
+                })
+            }
+
             // Is this the server we're currently trying to connect with?
             if self.clientState == .Connecting && peerID.isEqual(self.serverPeerID) {
                 self.disconnectFromServer()
             }
+
+
         }
 
     }

@@ -27,8 +27,9 @@ class JoinViewController: UIViewController {
 
     }
 
-
-
+    @IBAction func cancelButtonPressed(sender: AnyObject) {
+        self.mcClient.disconnectFromServer()
+    }
 }
 
 extension JoinViewController: UITableViewDelegate, UITableViewDataSource {
@@ -62,28 +63,19 @@ extension JoinViewController: UITableViewDelegate, UITableViewDataSource {
 extension JoinViewController: MatchmakingClientDelegate {
 
     func matchmakingClient(client: MCClient, serverBecameAvailable peerID: MCPeerID) {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.tableView.reloadData()
-            })
-
+        self.tableView.reloadData()
     }
 
     func matchmakingClient(client: MCClient, serverBecameUnavailable peerID: MCPeerID) {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.tableView.reloadData()
-        })
+        self.tableView.reloadData()
     }
 
     func matchmakingClient(client: MCClient, didDisconnectFromServer peerID: MCPeerID?) {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.tableView.reloadData()
-        })
+        self.tableView.reloadData()
     }
 
     func matchmakingClient(client: MCClient, didConnectToServer peerID: MCPeerID?) {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.tableView.reloadData()
-        })
+        self.tableView.reloadData()
     }
 
     func matchmakingClientNoNetwork(client: MCClient) {
