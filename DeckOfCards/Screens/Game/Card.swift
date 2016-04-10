@@ -9,10 +9,13 @@
 import Foundation
 import SpriteKit
 
+//https://www.raywenderlich.com/12735/how-to-make-a-simple-playing-card-game-with-multiplayer-and-bluetooth-part-1
+
 struct Card {
     enum Suit:String {
         case Hearts, Diamonds, Clubs, Spades
     }
+
     enum Rank:Int {
         case Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten
         case Jack, Queen, King
@@ -21,8 +24,10 @@ struct Card {
     let rank:Rank
     let suit:Suit
 
-    func toAssetName() -> String {
-        return (Suit.RawValue() as String)
+    func assetName() -> String {
+        let suit = self.suit.rawValue
+        let rank = self.rank.rawValue
+        return (String(suit[suit.startIndex]).lowercaseString + String(rank))
     }
 }
 
@@ -30,18 +35,14 @@ class UICard : SKSpriteNode {
 
     let frontTexture :SKTexture
     let backTexture :SKTexture
-    var largeTexture :SKTexture?
-    let largeTextureFilename :String
     var faceUp = true
-    var enlarged = false
-    var savedPosition = CGPointZero
+    var selected = false
 
     init(card: Card) {
 
         // initialize properties
         backTexture = SKTexture(imageNamed: "back")
-        frontTexture = SKTexture(imageNamed: "c01")
-        largeTextureFilename = "c01"
+        frontTexture = SKTexture(imageNamed: card.assetName())
 
         // call designated initializer on super
         let size = CGSize(width: frontTexture.size().width / 8, height: frontTexture.size().height / 8)
@@ -57,49 +58,36 @@ class UICard : SKSpriteNode {
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch in touches {
-            if touch.tapCount > 1 {
-                self.flip()
-            }
 
-            if enlarged { return }
-
-            // note: removed references to touchedNode
-            // 'self' in most cases is not required in Swift
-            zPosition = 15
-            let liftUp = SKAction.scaleTo(1.2, duration: 0.2)
+            let movePos:CGFloat = self.selected ? -50.0 : 50.0
+            let liftUp = SKAction.moveToY(self.position.y + movePos, duration: 0.2)
             runAction(liftUp)
 
-            let wiggleIn = SKAction.scaleXTo(1.0, duration: 0.2)
-            let wiggleOut = SKAction.scaleXTo(1.2, duration: 0.2)
-            let wiggle = SKAction.sequence([wiggleIn, wiggleOut])
-            let wiggleRepeat = SKAction.repeatActionForever(wiggle)
-
-            // again, since this is the touched sprite
-            // run the action on self (implied)
-            runAction(wiggleRepeat, withKey: "wiggle")
+            self.selected = !self.selected
         }
     }
 
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if enlarged { return }
+//        if enlarged { return }
 
-        for touch in touches {
-            let location = touch.locationInNode(scene!)  // make sure this is scene, not self
-            position = location
-        }
+//        guard let scene = scene else {
+//            return
+//        }
+//
+//        for touch in touches {
+//            let location = touch.locationInNode(scene)  // make sure this is scene, not self
+//            position = location
+//        }
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if enlarged { return }
+//        if enlarged { return }
 
-        for _ in touches {
-            zPosition = 0
-
-            let dropDown = SKAction.scaleTo(1.0, duration: 0.2)
-            runAction(dropDown)
-
-            removeActionForKey("wiggle")
-        }
+//        for _ in touches {
+////            zPosition = 0
+//
+//
+//        }
     }
 
     func flip() {
@@ -123,33 +111,44 @@ class UICard : SKSpriteNode {
         }
     }
 
-    func enlarge() {
-        if enlarged {
-            let slide = SKAction.moveTo(savedPosition, duration:0.3)
-            let scaleDown = SKAction.scaleTo(1.0, duration:0.3)
-            runAction(SKAction.group([slide, scaleDown])) {
-                self.enlarged = false
-                self.zPosition = 0
-            }
-        } else {
-            enlarged = true
-            savedPosition = position
+//
+//    let wiggleIn = SKAction.scaleXTo(1.0, duration: 0.2)
+//    let wiggleOut = SKAction.scaleXTo(1.2, duration: 0.2)
+//    let wiggle = SKAction.sequence([wiggleIn, wiggleOut])
+//    let wiggleRepeat = SKAction.repeatActionForever(wiggle)
+//
+//    // again, since this is the touched sprite
+//    // run the action on self (implied)
+//    runAction(wiggleRepeat, withKey: "wiggle")
 
-            if (largeTexture != nil) {
-                texture = largeTexture
-            } else {
-                largeTexture = SKTexture(imageNamed: largeTextureFilename)
-                texture = largeTexture
-            }
 
-            zPosition = 20
 
-            let newPosition = CGPointMake(CGRectGetMidX(parent!.frame), CGRectGetMidY(parent!.frame))
-            removeAllActions()
+//    let dropDown = SKAction.scaleTo(1.0, duration: 0.2)
+//    runAction(dropDown)
+//
+//    removeActionForKey("wiggle")
 
-            let slide = SKAction.moveTo(newPosition, duration:0.3)
-            let scaleUp = SKAction.scaleTo(5.0, duration:0.3)
-            runAction(SKAction.group([slide, scaleUp]))
-        }
-    }
+
+//    func enlarge() {
+//        if enlarged {
+//            let slide = SKAction.moveTo(savedPosition, duration:0.3)
+//            let scaleDown = SKAction.scaleTo(1.0, duration:0.3)
+//            runAction(SKAction.group([slide, scaleDown])) {
+//                self.enlarged = false
+//                self.zPosition = 0
+//            }
+//        } else {
+//            enlarged = true
+//            savedPosition = position
+//
+//            zPosition = 20
+//
+//            let newPosition = CGPointMake(CGRectGetMidX(parent!.frame), CGRectGetMidY(parent!.frame))
+//            removeAllActions()
+//
+//            let slide = SKAction.moveTo(newPosition, duration:0.3)
+//            let scaleUp = SKAction.scaleTo(5.0, duration:0.3)
+//            runAction(SKAction.group([slide, scaleUp]))
+//        }
+//    }
 }

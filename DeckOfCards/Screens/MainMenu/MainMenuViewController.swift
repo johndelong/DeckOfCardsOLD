@@ -25,29 +25,6 @@ class MainMenuViewController: UIViewController, UITextFieldDelegate {
 
         // Do any additional setup after loading the view.
 
-        NSNotificationCenter.defaultCenter().addObserver(
-            self,
-            selector: #selector(self.didReceiveData(_:)),
-            name:HostManager.DataReceivedNotification,
-            object: nil
-        )
-        self.hostNameTextField.delegate = self
-        self.startGame.enabled = false
-
-        NSNotificationCenter.defaultCenter().addObserver(
-            self,
-            selector: #selector(self.connectionEstablished(_:)),
-            name:HostManager.ConnectionEstablishedNotification,
-            object: nil
-        )
-
-        NSNotificationCenter.defaultCenter().addObserver(
-            self,
-            selector: #selector(self.connectionLost(_:)),
-            name:HostManager.ConnectionLostNotification,
-            object: nil
-        )
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,57 +32,70 @@ class MainMenuViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    func didReceiveData(notification: NSNotification) {
-        print(notification.userInfo)
-        if let msg = notification.userInfo?["data"] as? String {
-            if msg == "start" {
-                self.performSegueWithIdentifier("PresentGameSegue", sender: self)
-            }
-        }
-    }
-
-    func connectionEstablished(notification: NSNotification) {
-        print(notification.userInfo)
-        if let msg = notification.userInfo?["data"] as? String {
-            self.connectedPlayersTextView.text = self.connectedPlayersTextView.text + "\n" + msg + " joined"
-        }
-    }
-
-    func connectionLost(notification: NSNotification) {
-        print("connection lost")
-    }
 
     @IBAction func hostGameButtonPressed(sender: AnyObject) {
-        if HostManager.sharedInstance.start() {
-            self.hostGame.enabled = false
-            self.joinGame.enabled = false
-            self.hostNameTextField.enabled = false
-            self.hostGame.enabled = false
-            self.startGame.enabled = true
-            self.connectedPlayersTextView.hidden = false
 
-            self.statusLabel.text = "You are hosting a new game.\nPress Start Game when ready."
-        }
     }
 
     @IBAction func joinGameButtonPressed(sender: AnyObject) {
-        self.hostGame.enabled = false
-        self.joinGame.enabled = false
-        self.hostNameTextField.enabled = false
-        self.hostGame.enabled = false
-        self.startGame.enabled = false
-        self.statusLabel.text = "You joined a new game.\nWaiting for host to start the game."
 
-        ClientManager.sharedInstance.connectToHost(self.hostNameTextField.text!)
     }
 
     @IBAction func startGameButtonPressed(sender: AnyObject) {
-        HostManager.sharedInstance.writeData("start")
+
     }
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+
+    @IBAction func unwindToMainMenu(sender: UIStoryboardSegue)
+    {
+//        let sourceViewController = sender.sourceViewController
+        // Pull any data from the view controller which initiated the unwind segue.
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let hostViewController = segue.destinationViewController as? HostViewController {
+            hostViewController.delegate = self;
+        }
+    }
+
+}
+
+extension MainMenuViewController : HostViewControllerDelegate {
+    func hostViewControllerDidCancel(controller: HostViewController) {
+        // do nothing???
+    }
+
+    func hostViewController(controller: HostViewController, didEndSessionWithReason reason: QuitReason) {
+        // maybe show a popup
+    }
+}
+
+
+
+extension MainMenuViewController : ColorServiceManagerDelegate {
+
+    func connectedDevicesChanged(manager: ColorServiceManager, connectedDevices: [String]) {
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            print("Connections: \(connectedDevices)")
+        }
+    }
+
+    func colorChanged(manager: ColorServiceManager, colorString: String) {
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            
+//            switch colorString {
+//            case "red":
+////                self.changeColor(UIColor.redColor())
+//            case "yellow":
+//                self.changeColor(UIColor.yellowColor())
+//            default:
+//                NSLog("%@", "Unknown color value received: \(colorString)")
+//            }
+        }
     }
 
 }

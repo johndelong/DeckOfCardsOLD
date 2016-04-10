@@ -4,7 +4,6 @@
 use_frameworks!
 
 target 'DeckOfCards' do
-  pod 'CocoaAsyncSocket'
 
 end
 
