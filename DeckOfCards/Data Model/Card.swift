@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-//https://www.raywenderlich.com/12735/how-to-make-a-simple-playing-card-game-with-multiplayer-and-bluetooth-part-1
+
 
 struct Card {
     enum Suit:String {

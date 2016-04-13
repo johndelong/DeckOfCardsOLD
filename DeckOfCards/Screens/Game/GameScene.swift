@@ -7,24 +7,19 @@
 //
 
 import SpriteKit
+import MultipeerConnectivity
+
+//https://www.raywenderlich.com/119815/sprite-kit-swift-2-tutorial-for-beginners
+
+//https://www.raywenderlich.com/12735/how-to-make-a-simple-playing-card-game-with-multiplayer-and-bluetooth-part-1
 
 class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-//        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-//        myLabel.text = "Hello, World!"
-//        myLabel.fontSize = 45
-//        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
 
-//        self.addChild(myLabel)
-
-//        let card = UICard(card: Card(rank: .Ace, suit: .Spades))
-//        card.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
-//        addChild(card)
-//
-//        let card = UICard(card: Card(rank: .Two, suit: .Spades))
-//        card.position = CGPoint(x:CGRectGetMidX(self.frame + 20.0), y:CGRectGetMidY(self.frame))
-//        addChild(card)
+//        let closeButton = UIButton()
+//        closeButton.titleLabel = "Close"
+//        closeButton
 
         setupHand()
 

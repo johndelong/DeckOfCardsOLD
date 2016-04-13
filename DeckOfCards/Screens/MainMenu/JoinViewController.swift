@@ -13,72 +13,59 @@ class JoinViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
-
-    lazy var mcClient: MCClient = {
-        let client = MCClient()
-        client.delegate = self
-        return client
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mcClient.startSearchingForServers()
+        MCClient.sharedInstance.delegate = self
+        MCClient.sharedInstance.startSearchingForServers()
 
     }
 
     @IBAction func cancelButtonPressed(sender: AnyObject) {
-        self.mcClient.disconnectFromServer()
+        MCClient.sharedInstance.disconnectFromServer()
     }
 }
 
 extension JoinViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.mcClient.clientState == .Connected {
-            return self.mcClient.connectedClients.count
-        } else {
-            return self.mcClient.availableServers.count
-        }
+        return MCClient.sharedInstance.availableServers.count
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-
         let cell = UITableViewCell()
-        if self.mcClient.clientState == .Connected {
-            cell.textLabel?.text = mcClient.connectedClients[indexPath.row].displayName
-        } else {
-            cell.textLabel?.text = mcClient.availableServers[indexPath.row].displayName
-        }
+        cell.textLabel?.text = MCClient.sharedInstance.availableServers[indexPath.row].displayName
 
         return cell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let peer = mcClient.availableServers[indexPath.row] as? MCPeerID {
-            self.mcClient.connectToServer(peer)
+        if let peer = MCClient.sharedInstance.availableServers[indexPath.row] as? MCPeerID {
+            MCClient.sharedInstance.connectToServer(peer)
         }
     }
 }
 
-extension JoinViewController: MatchmakingClientDelegate {
+extension JoinViewController: MCClientDelegate {
 
-    func matchmakingClient(client: MCClient, serverBecameAvailable peerID: MCPeerID) {
+    func serverBecameAvailable(peerID: MCPeerID) {
         self.tableView.reloadData()
     }
 
-    func matchmakingClient(client: MCClient, serverBecameUnavailable peerID: MCPeerID) {
+    func serverBecameUnavailable(peerID: MCPeerID) {
         self.tableView.reloadData()
     }
 
-    func matchmakingClient(client: MCClient, didDisconnectFromServer peerID: MCPeerID?) {
+    func didDisconnectFromServer(peerID: MCPeerID) {
         self.tableView.reloadData()
     }
 
-    func matchmakingClient(client: MCClient, didConnectToServer peerID: MCPeerID?) {
-        self.tableView.reloadData()
+    func didConnectToServer(peerID: MCPeerID) {
+        let storyboard = UIStoryboard(name: "Game", bundle: nil)
+        let gameViewController = storyboard.instantiateViewControllerWithIdentifier("GameViewController")
+        self.presentViewController(gameViewController, animated: false, completion: nil)
     }
 
-    func matchmakingClientNoNetwork(client: MCClient) {
+    func noNetwork() {
 
     }
 }

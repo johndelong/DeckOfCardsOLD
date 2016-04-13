@@ -8,12 +8,18 @@
 
 import UIKit
 import SpriteKit
+//import MultipeerConnectivity
+
+//protocol GameViewControllerDelegate {
+//    func joinViewController(controller: JoinViewController, startGameWithSession session: MCSession, playerName name:NSString, server peerID:NSString)
+//}
 
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+//        let scene = GameScene(size: view.bounds.size)
         if let scene = GameScene(fileNamed:"GameScene") {
             // Configure the view.
             let skView = self.view as! SKView
@@ -50,4 +56,9 @@ class GameViewController: UIViewController {
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+
+//    func joinViewController(controller: JoinViewController, startGameWithSession session: MCSession, playerName name:NSString, server peerID:MCPeerID) {
+//        print("hello world");
+//    }
+
 }

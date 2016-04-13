@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		156A4F601CB95DF400B94748 /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A4F5F1CB95DF400B94748 /* HostViewController.swift */; };
 		156A4F621CB9629F00B94748 /* JoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A4F611CB9629F00B94748 /* JoinViewController.swift */; };
-		156A4F6C1CB97DE900B94748 /* MCBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A4F6B1CB97DE900B94748 /* MCBase.swift */; };
+		156A4F6C1CB97DE900B94748 /* MCNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A4F6B1CB97DE900B94748 /* MCNetworking.swift */; };
 		1583FEB31CB1C690008EBAB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583FEB21CB1C690008EBAB8 /* AppDelegate.swift */; };
 		1583FEBE1CB1C690008EBAB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1583FEBD1CB1C690008EBAB8 /* Assets.xcassets */; };
 		1583FEC11CB1C690008EBAB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1583FEBF1CB1C690008EBAB8 /* LaunchScreen.storyboard */; };
@@ -24,6 +24,7 @@
 		1583FEF71CB1C773008EBAB8 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583FEF21CB1C773008EBAB8 /* GameViewController.swift */; };
 		1583FEF81CB1C773008EBAB8 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583FEF31CB1C773008EBAB8 /* Card.swift */; };
 		1583FEF91CB1C773008EBAB8 /* Game.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1583FEF41CB1C773008EBAB8 /* Game.storyboard */; };
+		15D07DDB1CBDB88100CF6006 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D07DDA1CBDB88100CF6006 /* Game.swift */; };
 		410A03161AF8E45421B1C88D /* Pods_DeckOfCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B703958F30588F0B4FD0864 /* Pods_DeckOfCards.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,7 +48,7 @@
 /* Begin PBXFileReference section */
 		156A4F5F1CB95DF400B94748 /* HostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostViewController.swift; sourceTree = "<group>"; };
 		156A4F611CB9629F00B94748 /* JoinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinViewController.swift; sourceTree = "<group>"; };
-		156A4F6B1CB97DE900B94748 /* MCBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCBase.swift; sourceTree = "<group>"; };
+		156A4F6B1CB97DE900B94748 /* MCNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCNetworking.swift; sourceTree = "<group>"; };
 		1583FEAF1CB1C690008EBAB8 /* DeckOfCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeckOfCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1583FEB21CB1C690008EBAB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1583FEBD1CB1C690008EBAB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -68,6 +69,7 @@
 		1583FEF21CB1C773008EBAB8 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		1583FEF31CB1C773008EBAB8 /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		1583FEF41CB1C773008EBAB8 /* Game.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Game.storyboard; sourceTree = "<group>"; };
+		15D07DDA1CBDB88100CF6006 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		4B703958F30588F0B4FD0864 /* Pods_DeckOfCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckOfCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FF60E56502438746D704711 /* Pods-DeckOfCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.release.xcconfig"; sourceTree = "<group>"; };
 		D3437A3CACEFFD91323A8068 /* Pods-DeckOfCards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.debug.xcconfig"; sourceTree = "<group>"; };
@@ -124,7 +126,8 @@
 		1583FEB11CB1C690008EBAB8 /* DeckOfCards */ = {
 			isa = PBXGroup;
 			children = (
-				1583FEE41CB1C6A3008EBAB8 /* Communication */,
+				15D07DDC1CBDB8BB00CF6006 /* Data Model */,
+				1583FEE41CB1C6A3008EBAB8 /* Networking */,
 				1583FEE91CB1C6D4008EBAB8 /* Screens */,
 				1583FEB21CB1C690008EBAB8 /* AppDelegate.swift */,
 				1583FEBD1CB1C690008EBAB8 /* Assets.xcassets */,
@@ -152,14 +155,14 @@
 			path = DeckOfCardsUITests;
 			sourceTree = "<group>";
 		};
-		1583FEE41CB1C6A3008EBAB8 /* Communication */ = {
+		1583FEE41CB1C6A3008EBAB8 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
 				1583FEE51CB1C6C9008EBAB8 /* MCServer.swift */,
 				1583FEE61CB1C6C9008EBAB8 /* MCClient.swift */,
-				156A4F6B1CB97DE900B94748 /* MCBase.swift */,
+				156A4F6B1CB97DE900B94748 /* MCNetworking.swift */,
 			);
-			path = Communication;
+			path = Networking;
 			sourceTree = "<group>";
 		};
 		1583FEE91CB1C6D4008EBAB8 /* Screens */ = {
@@ -188,10 +191,18 @@
 				1583FEF01CB1C773008EBAB8 /* GameScene.sks */,
 				1583FEF11CB1C773008EBAB8 /* GameScene.swift */,
 				1583FEF21CB1C773008EBAB8 /* GameViewController.swift */,
-				1583FEF31CB1C773008EBAB8 /* Card.swift */,
 				1583FEF41CB1C773008EBAB8 /* Game.storyboard */,
 			);
 			path = Game;
+			sourceTree = "<group>";
+		};
+		15D07DDC1CBDB8BB00CF6006 /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				15D07DDA1CBDB88100CF6006 /* Game.swift */,
+				1583FEF31CB1C773008EBAB8 /* Card.swift */,
+			);
+			path = "Data Model";
 			sourceTree = "<group>";
 		};
 		8BE2B9AE88770747239FEEE4 /* Pods */ = {
@@ -397,10 +408,11 @@
 			files = (
 				156A4F601CB95DF400B94748 /* HostViewController.swift in Sources */,
 				1583FEEF1CB1C763008EBAB8 /* MainMenuViewController.swift in Sources */,
-				156A4F6C1CB97DE900B94748 /* MCBase.swift in Sources */,
+				156A4F6C1CB97DE900B94748 /* MCNetworking.swift in Sources */,
 				1583FEF81CB1C773008EBAB8 /* Card.swift in Sources */,
 				1583FEE71CB1C6C9008EBAB8 /* MCServer.swift in Sources */,
 				156A4F621CB9629F00B94748 /* JoinViewController.swift in Sources */,
+				15D07DDB1CBDB88100CF6006 /* Game.swift in Sources */,
 				1583FEF71CB1C773008EBAB8 /* GameViewController.swift in Sources */,
 				1583FEB31CB1C690008EBAB8 /* AppDelegate.swift in Sources */,
 				1583FEF61CB1C773008EBAB8 /* GameScene.swift in Sources */,

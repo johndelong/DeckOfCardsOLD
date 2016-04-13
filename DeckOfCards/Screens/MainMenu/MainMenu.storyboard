@@ -17,13 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jXw-IC-7oF">
-                                <rect key="frame" x="261" y="550" width="78" height="30"/>
-                                <state key="normal" title="Start Game"/>
-                                <connections>
-                                    <action selector="startGameButtonPressed:" destination="yNU-68-XOP" eventType="touchUpInside" id="nLE-El-RPI"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dZV-fk-kF5">
                                 <rect key="frame" x="256" y="40" width="89" height="30"/>
                                 <state key="normal" title="Host a Game"/>
@@ -40,54 +33,18 @@
                                     <segue destination="kLM-h8-PK7" kind="show" id="CGE-uQ-msf"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="192.168.1.183" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Qg-Af-7R2">
-                                <rect key="frame" x="200" y="116" width="200" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="pT2-gG-Hfq"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Host or Join a Game" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4yx-SJ-746">
-                                <rect key="frame" x="222.5" y="289.5" width="155.5" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" text="Waiting for players to join..." textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PiL-8l-HWY">
-                                <rect key="frame" x="180" y="318.5" width="240" height="128"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="CEm-NX-RSj"/>
-                                    <constraint firstAttribute="width" constant="240" id="FFF-nW-RX0"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="4yx-SJ-746" firstAttribute="centerX" secondItem="KjU-Hu-gaJ" secondAttribute="centerX" id="LCo-Ml-DVK"/>
-                            <constraint firstItem="9Qg-Af-7R2" firstAttribute="centerX" secondItem="KjU-Hu-gaJ" secondAttribute="centerX" id="Pa6-Bu-iKg"/>
                             <constraint firstItem="kDI-Tn-Qvg" firstAttribute="centerX" secondItem="KjU-Hu-gaJ" secondAttribute="centerX" id="Vwp-1E-dGU"/>
                             <constraint firstItem="dZV-fk-kF5" firstAttribute="centerX" secondItem="KjU-Hu-gaJ" secondAttribute="centerX" id="YqV-jQ-UjD"/>
                             <constraint firstItem="dZV-fk-kF5" firstAttribute="top" secondItem="j37-75-shW" secondAttribute="bottom" constant="20" id="a3c-ay-brf"/>
-                            <constraint firstItem="hwC-du-sfG" firstAttribute="top" secondItem="jXw-IC-7oF" secondAttribute="bottom" constant="20" id="bV9-Vg-F4j"/>
                             <constraint firstItem="kDI-Tn-Qvg" firstAttribute="top" secondItem="dZV-fk-kF5" secondAttribute="bottom" constant="8" id="fFR-6J-rhg"/>
-                            <constraint firstItem="jXw-IC-7oF" firstAttribute="centerX" secondItem="KjU-Hu-gaJ" secondAttribute="centerX" id="hed-vD-5T7"/>
-                            <constraint firstItem="4yx-SJ-746" firstAttribute="centerY" secondItem="KjU-Hu-gaJ" secondAttribute="centerY" id="kgl-iJ-SMa"/>
-                            <constraint firstItem="PiL-8l-HWY" firstAttribute="top" secondItem="4yx-SJ-746" secondAttribute="bottom" constant="8" id="raz-G9-O6F"/>
-                            <constraint firstItem="PiL-8l-HWY" firstAttribute="centerX" secondItem="KjU-Hu-gaJ" secondAttribute="centerX" id="wst-Ay-xsC"/>
-                            <constraint firstItem="9Qg-Af-7R2" firstAttribute="top" secondItem="kDI-Tn-Qvg" secondAttribute="bottom" constant="8" id="yDS-ic-KN8"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="connectedPlayersTextView" destination="PiL-8l-HWY" id="Pi9-10-A1p"/>
                         <outlet property="hostGame" destination="dZV-fk-kF5" id="Fjd-UX-C0v"/>
-                        <outlet property="hostNameTextField" destination="9Qg-Af-7R2" id="WhF-MF-fvE"/>
                         <outlet property="joinGame" destination="kDI-Tn-Qvg" id="ffr-pD-Ljg"/>
-                        <outlet property="startGame" destination="jXw-IC-7oF" id="zN1-Ea-iQH"/>
-                        <outlet property="statusLabel" destination="4yx-SJ-746" id="8lr-3T-8Rf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sew-r7-SMk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -100,7 +57,7 @@
                 <viewControllerPlaceholder storyboardName="Game" id="IM4-Mt-KNu" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5BI-Ud-q1X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1603.5" y="316"/>
+            <point key="canvasLocation" x="1585.5" y="-94"/>
         </scene>
         <!--Host View Controller-->
         <scene sceneID="9I0-e3-83D">
@@ -277,6 +234,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="Nwv-ft-DpA" id="h0h-Qr-Oia"/>
+                        <segue destination="IM4-Mt-KNu" kind="show" identifier="presentGameViewController" id="rbw-ed-C7g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a01-Yc-Y6c" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -285,4 +243,7 @@
             <point key="canvasLocation" x="1049" y="585"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="rbw-ed-C7g"/>
+    </inferredMetricsTieBreakers>
 </document>

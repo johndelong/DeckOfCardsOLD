@@ -27,11 +27,6 @@ class MainMenuViewController: UIViewController, UITextFieldDelegate {
 
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
     @IBAction func hostGameButtonPressed(sender: AnyObject) {
 
@@ -41,19 +36,13 @@ class MainMenuViewController: UIViewController, UITextFieldDelegate {
 
     }
 
-    @IBAction func startGameButtonPressed(sender: AnyObject) {
-
-    }
-
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
 
-    @IBAction func unwindToMainMenu(sender: UIStoryboardSegue)
-    {
-//        let sourceViewController = sender.sourceViewController
-        // Pull any data from the view controller which initiated the unwind segue.
+    @IBAction func unwindToMainMenu(sender: UIStoryboardSegue) {
+
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -72,30 +61,4 @@ extension MainMenuViewController : HostViewControllerDelegate {
     func hostViewController(controller: HostViewController, didEndSessionWithReason reason: QuitReason) {
         // maybe show a popup
     }
-}
-
-
-
-extension MainMenuViewController : ColorServiceManagerDelegate {
-
-    func connectedDevicesChanged(manager: ColorServiceManager, connectedDevices: [String]) {
-        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-            print("Connections: \(connectedDevices)")
-        }
-    }
-
-    func colorChanged(manager: ColorServiceManager, colorString: String) {
-        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-            
-//            switch colorString {
-//            case "red":
-////                self.changeColor(UIColor.redColor())
-//            case "yellow":
-//                self.changeColor(UIColor.yellowColor())
-//            default:
-//                NSLog("%@", "Unknown color value received: \(colorString)")
-//            }
-        }
-    }
-
 }

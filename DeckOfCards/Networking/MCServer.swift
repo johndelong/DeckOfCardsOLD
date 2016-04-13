@@ -16,32 +16,29 @@ enum ServerState {
 }
 
 
-protocol MatchmakingServerDelegate {
-    func matchmakingServer(server: MCServer, clientDidConnect peerID: MCPeerID)
-    func matchmakingServer(server: MCServer, clientDidDisconnect peerID: MCPeerID)
-    func matchmakingServerSessionDidEnd(server: MCServer)
-    func matchmakingServerNoNetwork(server: MCServer)
+protocol MCServerDelegate {
+    func clientDidConnect(peerID: MCPeerID)
+    func clientDidDisconnect(peerID: MCPeerID)
+    func sessionDidEnd()
+    func serverNoNetwork()
 }
 
-class MCServer: NSObject {
+class MCServer: MCNetworking {
+
+    static let sharedInstance = MCServer()
 
     var connectedClients:NSMutableArray = []
-    var delegate: MatchmakingServerDelegate?
+    var delegate: MCServerDelegate?
     var serverState:ServerState = .Idle
 
     private lazy var serviceAdvertiser: MCNearbyServiceAdvertiser = {
-        return MCNearbyServiceAdvertiser(peer: ColorServiceManager.peerId, discoveryInfo: nil, serviceType: ColorServiceManager.serviceType)
-    }()
-
-    lazy var session: MCSession = {
-        let session = MCSession(peer: ColorServiceManager.peerId, securityIdentity: nil, encryptionPreference: MCEncryptionPreference.Required)
-        session.delegate = self
-        return session
+        return MCNearbyServiceAdvertiser(peer: self.peerId, discoveryInfo: nil, serviceType: self.serviceType)
     }()
 
     override init() {
         super.init()
         self.serviceAdvertiser.delegate = self
+        self.session.delegate = self
     }
 
     deinit {
@@ -69,10 +66,6 @@ extension MCServer : MCSessionDelegate {
 
     func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
         NSLog("%@", "peer \(peerID) didChangeState: \(state.stringValue())")
-        //        self.delegate?.connectedDevicesChanged(self, connectedDevices: session.connectedPeers.map({$0.displayName}))
-
-        // the nearby peer declined the invitation, the connection could not be established,
-        // or a previously connected peer is no longer connected
 
         switch state {
         case .Connected:
@@ -80,29 +73,32 @@ extension MCServer : MCSessionDelegate {
                 if !self.connectedClients.containsObject(peerID) {
                     self.connectedClients.addObject(peerID)
 
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.delegate?.matchmakingServer(self, clientDidConnect: peerID)
-                    });
+                    NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                        self.delegate?.clientDidConnect(peerID)
+                    }
                 }
             }
         case .Connecting:
             print("Connecting...")
         case .NotConnected:
+            // the nearby peer declined the invitation,
+            // the connection could not be established,
+            // or a previously connected peer is no longer connected
             print("Not connected")
 
             if self.connectedClients.containsObject(peerID) {
                 self.connectedClients.removeObject(peerID)
 
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.delegate?.matchmakingServer(self, clientDidDisconnect: peerID)
-                });
+                NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                    self.delegate?.clientDidDisconnect(peerID)
+                }
             }
         }
     }
 
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
         NSLog("%@", "didReceiveData: \(data.length) bytes")
-        let str = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
+//        let str = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
         //        self.delegate?.colorChanged(self, colorString: str)
     }
 
