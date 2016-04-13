@@ -25,6 +25,7 @@
 		1583FEF81CB1C773008EBAB8 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583FEF31CB1C773008EBAB8 /* Card.swift */; };
 		1583FEF91CB1C773008EBAB8 /* Game.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1583FEF41CB1C773008EBAB8 /* Game.storyboard */; };
 		15D07DDB1CBDB88100CF6006 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D07DDA1CBDB88100CF6006 /* Game.swift */; };
+		15D07DDE1CBDDD4A00CF6006 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D07DDD1CBDDD4A00CF6006 /* Packet.swift */; };
 		410A03161AF8E45421B1C88D /* Pods_DeckOfCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B703958F30588F0B4FD0864 /* Pods_DeckOfCards.framework */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,7 @@
 		1583FEF31CB1C773008EBAB8 /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		1583FEF41CB1C773008EBAB8 /* Game.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Game.storyboard; sourceTree = "<group>"; };
 		15D07DDA1CBDB88100CF6006 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		15D07DDD1CBDDD4A00CF6006 /* Packet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
 		4B703958F30588F0B4FD0864 /* Pods_DeckOfCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckOfCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FF60E56502438746D704711 /* Pods-DeckOfCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.release.xcconfig"; sourceTree = "<group>"; };
 		D3437A3CACEFFD91323A8068 /* Pods-DeckOfCards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.debug.xcconfig"; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				1583FEE51CB1C6C9008EBAB8 /* MCServer.swift */,
 				1583FEE61CB1C6C9008EBAB8 /* MCClient.swift */,
 				156A4F6B1CB97DE900B94748 /* MCNetworking.swift */,
+				15D07DDD1CBDDD4A00CF6006 /* Packet.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -409,6 +412,7 @@
 				156A4F601CB95DF400B94748 /* HostViewController.swift in Sources */,
 				1583FEEF1CB1C763008EBAB8 /* MainMenuViewController.swift in Sources */,
 				156A4F6C1CB97DE900B94748 /* MCNetworking.swift in Sources */,
+				15D07DDE1CBDDD4A00CF6006 /* Packet.swift in Sources */,
 				1583FEF81CB1C773008EBAB8 /* Card.swift in Sources */,
 				1583FEE71CB1C6C9008EBAB8 /* MCServer.swift in Sources */,
 				156A4F621CB9629F00B94748 /* JoinViewController.swift in Sources */,

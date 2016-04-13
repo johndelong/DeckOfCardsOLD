@@ -9,13 +9,6 @@
 import Foundation
 import MultipeerConnectivity
 
-enum ServerState {
-    case Idle,
-    AcceptingConnections,
-    IgnoringNewConnections
-}
-
-
 protocol MCServerDelegate {
     func clientDidConnect(peerID: MCPeerID)
     func clientDidDisconnect(peerID: MCPeerID)
@@ -27,9 +20,9 @@ class MCServer: MCNetworking {
 
     static let sharedInstance = MCServer()
 
+    var isAdvertising = false
     var connectedClients:NSMutableArray = []
     var delegate: MCServerDelegate?
-    var serverState:ServerState = .Idle
 
     private lazy var serviceAdvertiser: MCNearbyServiceAdvertiser = {
         return MCNearbyServiceAdvertiser(peer: self.peerId, discoveryInfo: nil, serviceType: self.serviceType)
@@ -41,20 +34,20 @@ class MCServer: MCNetworking {
         self.session.delegate = self
     }
 
-    deinit {
-        self.stopAcceptingConnections()
-    }
-
     func startAcceptingConnections() {
-        self.serverState = .AcceptingConnections
-        self.serviceAdvertiser.startAdvertisingPeer()
-        print("Started listening for connections")
+        if !self.isAdvertising {
+            self.isAdvertising = true
+            self.serviceAdvertiser.startAdvertisingPeer()
+            print("Started listening for connections")
+        }
     }
 
     func stopAcceptingConnections() {
-        self.serverState = .IgnoringNewConnections
-        self.serviceAdvertiser.stopAdvertisingPeer()
-        print("Stopped listening for connections")
+        if self.isAdvertising {
+            self.isAdvertising = false
+            self.serviceAdvertiser.stopAdvertisingPeer()
+            print("Stopped listening for connections")
+        }
     }
 
     func endSession() {
@@ -69,13 +62,11 @@ extension MCServer : MCSessionDelegate {
 
         switch state {
         case .Connected:
-            if self.serverState == .AcceptingConnections {
-                if !self.connectedClients.containsObject(peerID) {
-                    self.connectedClients.addObject(peerID)
+            if !self.connectedClients.containsObject(peerID) {
+                self.connectedClients.addObject(peerID)
 
-                    NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                        self.delegate?.clientDidConnect(peerID)
-                    }
+                NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                    self.delegate?.clientDidConnect(peerID)
                 }
             }
         case .Connecting:

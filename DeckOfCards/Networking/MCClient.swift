@@ -9,13 +9,6 @@
 import Foundation
 import MultipeerConnectivity
 
-enum ClientState {
-    case Idle,
-    SearchingForServers,
-    Connecting,
-    Connected
-}
-
 protocol MCClientDelegate {
     func serverBecameAvailable(peerID: MCPeerID)
     func serverBecameUnavailable(peerID: MCPeerID)
@@ -28,8 +21,8 @@ class MCClient: MCNetworking {
 
     static let sharedInstance = MCClient()
 
+    var isBrowsing = false
     var availableServers:NSMutableArray = []
-    var state:ClientState = .Idle
 
     var serverPeerID:MCPeerID?
     var delegate:MCClientDelegate?
@@ -45,15 +38,16 @@ class MCClient: MCNetworking {
     }
 
     func startSearchingForServers() {
-        if self.state == .Idle {
-            self.state = .SearchingForServers
+        if !self.isBrowsing {
+            self.isBrowsing = true
             self.serviceBrowser.startBrowsingForPeers()
             print("Started searching for available servers")
         }
     }
 
     func stopSearchingForServers() {
-        if self.state == .SearchingForServers {
+        if self.isBrowsing {
+            self.isBrowsing = false
             self.serviceBrowser.stopBrowsingForPeers()
             print("Stopped searching for available servers")
         }
@@ -63,7 +57,6 @@ class MCClient: MCNetworking {
         self.stopSearchingForServers()
         self.session.disconnect()
         self.availableServers.removeAllObjects()
-        self.state = .Idle
 
         if let serverPeerID = self.serverPeerID {
             NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
@@ -96,13 +89,11 @@ extension MCClient : MCNearbyServiceBrowserDelegate {
     func browser(browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         NSLog("%@", "foundPeer: \(peerID)")
 
-        if state == .SearchingForServers {
-            if !self.availableServers.containsObject(peerID) {
-                self.availableServers.addObject(peerID)
+        if !self.availableServers.containsObject(peerID) {
+            self.availableServers.addObject(peerID)
 
-                NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                    self.delegate?.serverBecameAvailable(peerID)
-                }
+            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                self.delegate?.serverBecameAvailable(peerID)
             }
         }
     }
@@ -110,18 +101,16 @@ extension MCClient : MCNearbyServiceBrowserDelegate {
     func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         NSLog("%@", "lostPeer: \(peerID)")
 
-        if state == .SearchingForServers {
-            if self.availableServers.containsObject(peerID) {
-                self.availableServers.removeObject(peerID)
+        if self.availableServers.containsObject(peerID) {
+            self.availableServers.removeObject(peerID)
 
-                NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                    self.delegate?.serverBecameUnavailable(peerID)
-                }
+            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                self.delegate?.serverBecameUnavailable(peerID)
             }
         }
 
         // Is this the server we're currently trying to connect with?
-        if self.state == .Connecting && peerID.isEqual(self.serverPeerID) {
+        if peerID.isEqual(self.serverPeerID) {
             print("The server we have been trying to connect to has been lost")
             self.disconnectFromServer()
         }
@@ -136,17 +125,8 @@ extension MCClient : MCSessionDelegate {
         switch state {
         case .Connecting:
             print("Connecting...")
-
-            if self.state == .SearchingForServers {
-                self.state = .Connecting
-            }
         case .Connected:
             print("Connected")
-            if self.state == .Connecting {
-                self.stopSearchingForServers()
-                self.state = .Connected
-            }
-
             NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
                 self.delegate?.didConnectToServer(peerID)
             }
