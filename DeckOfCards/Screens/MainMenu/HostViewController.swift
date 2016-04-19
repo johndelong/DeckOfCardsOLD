@@ -32,8 +32,8 @@ class HostViewController: UIViewController {
         if MCServer.sharedInstance.connectedClients.count > 0 {
             let name = MCServer.sharedInstance.session.myPeerID.displayName
 
-
-//            self.delegate?.hostViewController(self, startGameWithSession: mcServer.session, playerName: name, andClients: mcServer.connectedClients)
+            Game.sharedInstance.setupCommunication(MCServer.sharedInstance)
+            Game.sharedInstance.startGame()
         }
     }
     

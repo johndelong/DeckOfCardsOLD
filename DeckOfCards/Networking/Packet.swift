@@ -6,49 +6,62 @@
 //  Copyright © 2016 delong. All rights reserved.
 //
 
+// https://developer.apple.com/library/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html
+
 import Foundation
 
 enum PacketType: Int {
-    case Unknown, DealCards
+    case Unknown, NewGame, DealCards
 }
 
-class Packet {
+class Packet: NSObject, NSSecureCoding {
 
-    var number:Int = -1
-    var type:PacketType = .Unknown
-    var payload:NSData?
+    var type: PacketType
+    var msg: String?
 
-    required convenience init?(coder decoder: NSCoder) {
-        self.init()
-
-        if decoder.decodeObjectForKey("packet_header") as? String != "DeckOfCards" {
-            return
-        }
-
-        if let number = decoder.decodeObjectForKey("packet_number") as? Int {
-            self.number = number
-        }
-
-        if let typeValue = decoder.decodeObjectForKey("packet_type") as? Int,
-            let type = PacketType.init(rawValue: typeValue) {
-            self.type = type
-        }
-
-        self.payload = decoder.decodeObjectForKey("packet_payload") as? NSData
+    struct PropertyKey {
+        static let typeKey = "type"
+        static let msgKey = "msg"
     }
 
-    func encodeWithCoder(coder: NSCoder) {
-        coder.encodeObject("DeckOfCards", forKey: "packet_header")
-        coder.encodeObject(self.number, forKey: "packet_number")
-        coder.encodeObject(self.type.rawValue, forKey: "packet_type")
-        coder.encodeObject(self.payload, forKey: "packet_payload")
+    init(type: PacketType, msg: String?) {
+        // Initialize stored properties.
+        self.type = type
+        self.msg = msg
+
+        super.init()
     }
 
-    func toData() -> NSData {
-        return NSKeyedArchiver.archivedDataWithRootObject(self)
+    // ===================================================================================
+    // archive
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeInteger(self.type.rawValue, forKey: PropertyKey.typeKey)
+        aCoder.encodeObject(self.msg, forKey: PropertyKey.msgKey)
     }
 
-    static func fromData(data: NSData) -> Packet? {
-        return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? Packet
+    // ===================================================================================
+    // unarchive
+
+    // The required keyword means this initializer must be implemented on every subclass of the class that defines 
+    // this initializer.
+
+    // Convenience initializers are secondary, supporting initializers that need to call one of their class’s
+    // designated initializers. Designated initializers are the primary initializers for a class. They fully initialize 
+    // all properties introduced by that class and call a superclass initializer to continue the initialization process 
+    // up the superclass chain. Here, you’re declaring this initializer as a convenience initializer because it only 
+    // applies when there’s saved data to be loaded.
+
+    // The question mark (?) means that this is a failable initializer that might return nil.
+    required convenience init?(coder aDecoder: NSCoder) {
+
+        let type = PacketType.init(rawValue: aDecoder.decodeIntegerForKey(PropertyKey.typeKey))!
+        let msg = aDecoder.decodeObjectForKey(PropertyKey.msgKey) as? String
+
+        // Must call designated initializer.
+        self.init(type: type, msg: msg)
+    }
+
+    class func supportsSecureCoding() -> Bool {
+        return true
     }
 }
