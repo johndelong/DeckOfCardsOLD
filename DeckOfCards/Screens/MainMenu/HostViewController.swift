@@ -20,6 +20,8 @@ class HostViewController: UIViewController {
     var delegate:HostViewControllerDelegate?
     var quitReason:QuitReason?
 
+    var game:Game?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,12 +31,11 @@ class HostViewController: UIViewController {
 
     @IBAction func startButtonPressed(sender: AnyObject) {
 
-        if MCServer.sharedInstance.connectedClients.count > 0 {
-            let name = MCServer.sharedInstance.session.myPeerID.displayName
-
-            Game.sharedInstance.setupCommunication(MCServer.sharedInstance)
-            Game.sharedInstance.startGame()
-        }
+//        if MCServer.sharedInstance.connectedClients.count > 0 {
+//            let name = MCServer.sharedInstance.session.myPeerID.displayName
+            self.game = Game(networking: MCServer.sharedInstance)
+            self.game?.startGame()
+//        }
     }
     
     @IBAction func cancelButtonPressed(sender: AnyObject) {

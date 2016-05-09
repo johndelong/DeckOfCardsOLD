@@ -8,6 +8,8 @@ enum QuitReason {
     ServerQuit         // the server quit the game (on purpose)
 }
 
+// https://www.hackingwithswift.com/example-code/system/how-to-create-a-peer-to-peer-network-using-the-multipeer-connectivity-framework
+
 class MCNetworking: NSObject {
 
     let serviceType = "deck-of-cards"

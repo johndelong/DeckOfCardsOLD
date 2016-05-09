@@ -60,7 +60,7 @@ extension JoinViewController: MCClientDelegate {
     }
 
     func didConnectToServer(peerID: MCPeerID) {
-        Game.sharedInstance.setupCommunication(MCClient.sharedInstance)
+//        Game.sharedInstance.setupCommunication(MCClient.sharedInstance)
 
         let storyboard = UIStoryboard(name: "Game", bundle: nil)
         let gameViewController = storyboard.instantiateViewControllerWithIdentifier("GameViewController")

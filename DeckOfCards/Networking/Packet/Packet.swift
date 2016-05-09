@@ -10,24 +10,26 @@
 
 import Foundation
 
-enum PacketType: Int {
-    case Unknown, NewGame, DealCards
-}
+
 
 class Packet: NSObject, NSSecureCoding {
 
+    enum PacketType: Int {
+        case Unknown, NewGame, DealCards
+    }
+
     var type: PacketType
-    var msg: String?
+    var payload: NSData?
 
     struct PropertyKey {
         static let typeKey = "type"
-        static let msgKey = "msg"
+        static let payloadKey = "payload"
     }
 
-    init(type: PacketType, msg: String?) {
+    init(type: PacketType, payload: NSData?) {
         // Initialize stored properties.
         self.type = type
-        self.msg = msg
+        self.payload = payload
 
         super.init()
     }
@@ -36,7 +38,7 @@ class Packet: NSObject, NSSecureCoding {
     // archive
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeInteger(self.type.rawValue, forKey: PropertyKey.typeKey)
-        aCoder.encodeObject(self.msg, forKey: PropertyKey.msgKey)
+        aCoder.encodeObject(self.payload, forKey: PropertyKey.payloadKey)
     }
 
     // ===================================================================================
@@ -55,10 +57,10 @@ class Packet: NSObject, NSSecureCoding {
     required convenience init?(coder aDecoder: NSCoder) {
 
         let type = PacketType.init(rawValue: aDecoder.decodeIntegerForKey(PropertyKey.typeKey))!
-        let msg = aDecoder.decodeObjectForKey(PropertyKey.msgKey) as? String
+        let payload = aDecoder.decodeObjectForKey(PropertyKey.payloadKey) as? NSData
 
         // Must call designated initializer.
-        self.init(type: type, msg: msg)
+        self.init(type: type, payload: payload)
     }
 
     class func supportsSecureCoding() -> Bool {

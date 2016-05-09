@@ -24,40 +24,54 @@ enum NetworkRole {
 
 class Game: NSObject {
 
-    static let sharedInstance = Game()
+    var comm: MCNetworking
+    var session: MCSession
 
-    var communication:MCNetworking?
-    
+    var euchre = Dictionary<Scenario.ScenarioType, Scenario>();
 
-//    var networkRole: NetworkRole
+    init(networking: MCNetworking) {
+        self.comm = networking
+        self.session = self.comm.session
 
-//    override init() {
-//
-//    }
+        super.init()
 
-//    override init() {
-//
-//    }
-
-    func setupCommunication(communication: MCNetworking) {
-        self.communication = communication
-        communication.session.delegate = self
+        self.session.delegate = self
     }
 
     func startGame() {
         // Send start game signal
-        let packet = Packet(type: .NewGame, msg: "Testing")
+        let packet = Packet(type: .NewGame, payload: nil)
         let data = NSKeyedArchiver.archivedDataWithRootObject(packet)
 
-        if let com = self.communication {
-            do {
-                try com.session.sendData(data, toPeers: com.session.connectedPeers, withMode: .Reliable)
-            } catch let error as NSError {
-                print(error.localizedDescription)
-            }
+        do {
+            try self.session.sendData(data, toPeers: self.session.connectedPeers, withMode: .Reliable)
+        } catch let error as NSError {
+            print(error.localizedDescription)
         }
     }
 
+    func setupGame() {
+        // the deal
+        if let theDeal = euchre[.TheDeal] {
+            // give each player x number of cards
+//            let cardsPerPlayer: Int = theDeal.rules[.NumberOfCardsInHand]
+
+        }
+    }
+
+    func theDeal() -> Scenario {
+        let scenario = Scenario(type: .TheDeal)
+//        scenario.rules[.NumberOfCardsInHand] = Rule.NumberOfCards.Even.rawValue
+        return scenario
+    }
+
+//    func constantRules() -> Scenario {
+//        let scenario = Scenario(type: .ConstantRules)
+//        let rule1 = HandOrientationRule(value: .FaceUp)
+//        scenario.rules[rule1.type] = rule1
+//        scenario.rules[
+//        return scenario
+//    }
 }
 
 extension Game : MCSessionDelegate {

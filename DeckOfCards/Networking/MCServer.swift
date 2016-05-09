@@ -12,8 +12,6 @@ import MultipeerConnectivity
 protocol MCServerDelegate {
     func clientDidConnect(peerID: MCPeerID)
     func clientDidDisconnect(peerID: MCPeerID)
-    func sessionDidEnd()
-    func serverNoNetwork()
 }
 
 class MCServer: MCNetworking {

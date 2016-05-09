@@ -13,6 +13,10 @@ import MultipeerConnectivity
 
 //https://www.raywenderlich.com/12735/how-to-make-a-simple-playing-card-game-with-multiplayer-and-bluetooth-part-1
 
+// All visual logic goes in here
+// This class should know nothing about the game (rules or how a game should be played)
+// This class receives instructions on what should happen on the table
+
 class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
