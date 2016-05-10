@@ -1,0 +1,45 @@
+Teams? - Yes
+  * number of teams: 2
+  * players per team: 2
+  * offense/defense: yes
+
+The Deck
+  * Number of decks: 1
+  * Customized deck? - yep
+    - Range: 9-A
+    - Jokers: No
+
+Card Values:
+  * Ace high: yes
+  * Trump: yes
+    - Bowers: yes
+
+General Game Play
+  * Rounds: Yes
+    - Until: Score is 10
+    - Number of rounds: nil
+  * Define Round (is one deal)
+    - Who starts Round? Left of dealer
+    - Tricks: Yes
+      - Who starts trick: Winner of last trick
+    - Stops when: Everyone Out of cards
+  * Play direction: Clockwise
+  * Follow suit: Yes
+  * Cards in hand: 5
+
+Scoring:
+  * When evaluate: End of Round
+  * How evaluate
+    - Points when (Rule): (Conditions) Offense, alone, tricks all = 4
+    - Points when: Offense, all = 2
+    - Points when: Offense, majority = 1
+    - Points when: defense, majority = 2
+
+Game Play:
+Rounds --- looping through
+  * Scenario 1: Deal
+    - Flip top card after deal: yes
+  * Scenario 2: Euchre choose trump
+  * Scenario 3: Actual Game Play
+    - Cards playable per turn: 1
+    - Ends when: Everyone Out of cards
