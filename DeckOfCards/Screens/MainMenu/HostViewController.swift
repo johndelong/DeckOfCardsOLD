@@ -20,7 +20,7 @@ class HostViewController: UIViewController {
     var delegate:HostViewControllerDelegate?
     var quitReason:QuitReason?
 
-    var game:Game?
+    var game:GameManager?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +33,7 @@ class HostViewController: UIViewController {
 
 //        if MCServer.sharedInstance.connectedClients.count > 0 {
 //            let name = MCServer.sharedInstance.session.myPeerID.displayName
-            self.game = Game(networking: MCServer.sharedInstance)
+            self.game = GameManager(networking: MCServer.sharedInstance)
             self.game?.startGame()
 //        }
     }

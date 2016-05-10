@@ -2,112 +2,85 @@
 //  Game.swift
 //  DeckOfCards
 //
-//  Created by John DeLong on 4/12/16.
+//  Created by John DeLong on 5/9/16.
 //  Copyright © 2016 delong. All rights reserved.
 //
 
-
-/*
- 
- This class manages the entire game
- 
-*/
-
-
-
 import Foundation
-import MultipeerConnectivity
 
-enum NetworkRole {
-    case Host, Client
-}
+class Game {
 
-class Game: NSObject {
-
-    var comm: MCNetworking
-    var session: MCSession
-
-    var euchre = Dictionary<Scenario.ScenarioType, Scenario>();
-
-    init(networking: MCNetworking) {
-        self.comm = networking
-        self.session = self.comm.session
-
-        super.init()
-
-        self.session.delegate = self
+    enum PlayerRelativeToDealer {
+        case Dealer
+        case Left
+        case Right
+        case Across
     }
 
-    func startGame() {
-        // Send start game signal
-        let packet = Packet(type: .NewGame, payload: nil)
-        let data = NSKeyedArchiver.archivedDataWithRootObject(packet)
-
-        do {
-            try self.session.sendData(data, toPeers: self.session.connectedPeers, withMode: .Reliable)
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
+    enum GamePlayState {
+        case StartOfGame
+        case EndOfGame
+        case StartOfRound
+        case EndOfRound
     }
 
-    func setupGame() {
-        // the deal
-        if let theDeal = euchre[.TheDeal] {
-            // give each player x number of cards
-//            let cardsPerPlayer: Int = theDeal.rules[.NumberOfCardsInHand]
-
-        }
+    enum Direction {
+        case Left
+        case Right
     }
 
-    func theDeal() -> Scenario {
-        let scenario = Scenario(type: .TheDeal)
-//        scenario.rules[.NumberOfCardsInHand] = Rule.NumberOfCards.Even.rawValue
-        return scenario
-    }
+    // ==========================================
+    // Teams
+    // ==========================================
+    var numOfTeams: Int?
+    var playersPerTeam: Int?
+    var offenseVersusDefense: Bool?
 
-//    func constantRules() -> Scenario {
-//        let scenario = Scenario(type: .ConstantRules)
-//        let rule1 = HandOrientationRule(value: .FaceUp)
-//        scenario.rules[rule1.type] = rule1
-//        scenario.rules[
-//        return scenario
-//    }
-}
+    // ==========================================
+    // The Deck
+    // ==========================================
+    var numOfDecks = 1
+//    var hasCustomizedDeck: Bool = false
+    var cardsInDeck = [Int]() // specify what cards should be included in the deck (1-13)
+    var hasJokers: Bool = false
 
-extension Game : MCSessionDelegate {
-    func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
-        NSLog("%@", "peer \(peerID) didChangeState: \(state.stringValue())")
+    // ==========================================
+    // Card Values
+    // ==========================================
+    var aceHigh: Bool = true
+    var hasTrump: Bool = false
+    var hasBowers: Bool?
 
-        switch state {
-        case .Connecting:
-            print("Connecting...")
-        case .Connected:
-            print("Connected")
-        case .NotConnected:
-            print("Not connected")
-        }
-    }
+    // ==========================================
+    // General Game Settings
+    // ==========================================
 
-    func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
-        NSLog("%@", "didReceiveData: \(data.length) bytes")
+    // Rounds: A new "round" begins everytime the cards are delt
+    // Assumptions:
+    // - Round ends when all cards have been played
+    var numOfRounds: Int? = 1
+    var roundsEndWhenScore: Int?
 
-        guard let packet = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? Packet else {
-            print("Data received was not a reconizable packet")
-            return
-        }
 
-        print(packet.type.rawValue)
-    }
+    var playerToStartRound: PlayerRelativeToDealer = .Left
 
-    func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-        NSLog("%@", "didReceiveStream")
-    }
+    // Description:
+    // - The player who lays the highest card wins
+    //
+    // Assumptions:
+    // - Winner of trick is next to lead
+    var hasTricks: Bool = false
 
-    func session(session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, atURL localURL: NSURL, withError error: NSError?) {
-        NSLog("%@", "didFinishReceivingResourceWithName")
-    }
+    var playDirection: Direction = .Left
 
-    func session(session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, withProgress progress: NSProgress) {
-        NSLog("%@", "didStartReceivingResourceWithName")
-    }
+    var mustFollowSuit: Bool = true
+    var numOfCardsInHand: Int = 13
+
+    // ==========================================
+    // Scoring
+    // ==========================================
+    var evaluateScoreWhen: GamePlayState = .EndOfRound
+    var scoreEvaluationRules: Array = [Condition];
+
+    
 }

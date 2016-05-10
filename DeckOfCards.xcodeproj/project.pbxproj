@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1566BB1E1CE174430075A567 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1566BB1D1CE174430075A567 /* Game.swift */; };
+		1566BB201CE1749A0075A567 /* UICard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1566BB1F1CE1749A0075A567 /* UICard.swift */; };
+		1566BB221CE17F410075A567 /* Condition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1566BB211CE17F410075A567 /* Condition.swift */; };
 		156A4F601CB95DF400B94748 /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A4F5F1CB95DF400B94748 /* HostViewController.swift */; };
 		156A4F621CB9629F00B94748 /* JoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A4F611CB9629F00B94748 /* JoinViewController.swift */; };
 		156A4F6C1CB97DE900B94748 /* MCNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A4F6B1CB97DE900B94748 /* MCNetworking.swift */; };
@@ -25,12 +28,8 @@
 		1583FEF81CB1C773008EBAB8 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583FEF31CB1C773008EBAB8 /* Card.swift */; };
 		1583FEF91CB1C773008EBAB8 /* Game.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1583FEF41CB1C773008EBAB8 /* Game.storyboard */; };
 		15B2EA5D1CCC3AF3003739BF /* NewGamePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B2EA5C1CCC3AF3003739BF /* NewGamePacket.swift */; };
-		15B2EA5F1CCC3E15003739BF /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B2EA5E1CCC3E15003739BF /* Rule.swift */; };
-		15B2EA611CCC40DF003739BF /* Scenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B2EA601CCC40DF003739BF /* Scenario.swift */; };
-		15B2EA631CCC50B0003739BF /* HandOrientationRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B2EA621CCC50B0003739BF /* HandOrientationRule.swift */; };
-		15B2EA691CCC58F7003739BF /* TrickRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B2EA681CCC58F7003739BF /* TrickRule.swift */; };
 		15B2EA6B1CCC5BEE003739BF /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B2EA6A1CCC5BEE003739BF /* Deck.swift */; };
-		15D07DDB1CBDB88100CF6006 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D07DDA1CBDB88100CF6006 /* Game.swift */; };
+		15D07DDB1CBDB88100CF6006 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D07DDA1CBDB88100CF6006 /* GameManager.swift */; };
 		15D07DDE1CBDDD4A00CF6006 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D07DDD1CBDDD4A00CF6006 /* Packet.swift */; };
 		410A03161AF8E45421B1C88D /* Pods_DeckOfCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B703958F30588F0B4FD0864 /* Pods_DeckOfCards.framework */; };
 /* End PBXBuildFile section */
@@ -53,6 +52,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1566BB1D1CE174430075A567 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		1566BB1F1CE1749A0075A567 /* UICard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICard.swift; sourceTree = "<group>"; };
+		1566BB211CE17F410075A567 /* Condition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
 		156A4F5F1CB95DF400B94748 /* HostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostViewController.swift; sourceTree = "<group>"; };
 		156A4F611CB9629F00B94748 /* JoinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinViewController.swift; sourceTree = "<group>"; };
 		156A4F6B1CB97DE900B94748 /* MCNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCNetworking.swift; sourceTree = "<group>"; };
@@ -77,12 +79,8 @@
 		1583FEF31CB1C773008EBAB8 /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		1583FEF41CB1C773008EBAB8 /* Game.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Game.storyboard; sourceTree = "<group>"; };
 		15B2EA5C1CCC3AF3003739BF /* NewGamePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGamePacket.swift; sourceTree = "<group>"; };
-		15B2EA5E1CCC3E15003739BF /* Rule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
-		15B2EA601CCC40DF003739BF /* Scenario.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scenario.swift; sourceTree = "<group>"; };
-		15B2EA621CCC50B0003739BF /* HandOrientationRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandOrientationRule.swift; sourceTree = "<group>"; };
-		15B2EA681CCC58F7003739BF /* TrickRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrickRule.swift; sourceTree = "<group>"; };
 		15B2EA6A1CCC5BEE003739BF /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
-		15D07DDA1CBDB88100CF6006 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		15D07DDA1CBDB88100CF6006 /* GameManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameManager.swift; path = "Data Model/GameManager.swift"; sourceTree = "<group>"; };
 		15D07DDD1CBDDD4A00CF6006 /* Packet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Packet.swift; path = DeckOfCards/Networking/Packet/Packet.swift; sourceTree = SOURCE_ROOT; };
 		4B703958F30588F0B4FD0864 /* Pods_DeckOfCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckOfCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FF60E56502438746D704711 /* Pods-DeckOfCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.release.xcconfig"; sourceTree = "<group>"; };
@@ -140,6 +138,7 @@
 		1583FEB11CB1C690008EBAB8 /* DeckOfCards */ = {
 			isa = PBXGroup;
 			children = (
+				15D07DDA1CBDB88100CF6006 /* GameManager.swift */,
 				15D07DDC1CBDB8BB00CF6006 /* Data Model */,
 				1583FEE41CB1C6A3008EBAB8 /* Networking */,
 				1583FEE91CB1C6D4008EBAB8 /* Screens */,
@@ -207,6 +206,7 @@
 				1583FEF11CB1C773008EBAB8 /* GameScene.swift */,
 				1583FEF21CB1C773008EBAB8 /* GameViewController.swift */,
 				1583FEF41CB1C773008EBAB8 /* Game.storyboard */,
+				1566BB1F1CE1749A0075A567 /* UICard.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -220,24 +220,13 @@
 			path = Packet;
 			sourceTree = "<group>";
 		};
-		15B2EA641CCC53A8003739BF /* Rule */ = {
-			isa = PBXGroup;
-			children = (
-				15B2EA5E1CCC3E15003739BF /* Rule.swift */,
-				15B2EA621CCC50B0003739BF /* HandOrientationRule.swift */,
-				15B2EA681CCC58F7003739BF /* TrickRule.swift */,
-			);
-			name = Rule;
-			sourceTree = "<group>";
-		};
 		15D07DDC1CBDB8BB00CF6006 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				15B2EA641CCC53A8003739BF /* Rule */,
-				15D07DDA1CBDB88100CF6006 /* Game.swift */,
 				1583FEF31CB1C773008EBAB8 /* Card.swift */,
-				15B2EA601CCC40DF003739BF /* Scenario.swift */,
 				15B2EA6A1CCC5BEE003739BF /* Deck.swift */,
+				1566BB1D1CE174430075A567 /* Game.swift */,
+				1566BB211CE17F410075A567 /* Condition.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -444,23 +433,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				15B2EA6B1CCC5BEE003739BF /* Deck.swift in Sources */,
+				1566BB1E1CE174430075A567 /* Game.swift in Sources */,
+				1566BB221CE17F410075A567 /* Condition.swift in Sources */,
 				156A4F601CB95DF400B94748 /* HostViewController.swift in Sources */,
 				1583FEEF1CB1C763008EBAB8 /* MainMenuViewController.swift in Sources */,
 				156A4F6C1CB97DE900B94748 /* MCNetworking.swift in Sources */,
-				15B2EA631CCC50B0003739BF /* HandOrientationRule.swift in Sources */,
-				15B2EA611CCC40DF003739BF /* Scenario.swift in Sources */,
 				15D07DDE1CBDDD4A00CF6006 /* Packet.swift in Sources */,
 				1583FEF81CB1C773008EBAB8 /* Card.swift in Sources */,
 				1583FEE71CB1C6C9008EBAB8 /* MCServer.swift in Sources */,
 				15B2EA5D1CCC3AF3003739BF /* NewGamePacket.swift in Sources */,
 				156A4F621CB9629F00B94748 /* JoinViewController.swift in Sources */,
-				15B2EA691CCC58F7003739BF /* TrickRule.swift in Sources */,
-				15D07DDB1CBDB88100CF6006 /* Game.swift in Sources */,
+				15D07DDB1CBDB88100CF6006 /* GameManager.swift in Sources */,
 				1583FEF71CB1C773008EBAB8 /* GameViewController.swift in Sources */,
 				1583FEB31CB1C690008EBAB8 /* AppDelegate.swift in Sources */,
 				1583FEF61CB1C773008EBAB8 /* GameScene.swift in Sources */,
 				1583FEE81CB1C6C9008EBAB8 /* MCClient.swift in Sources */,
-				15B2EA5F1CCC3E15003739BF /* Rule.swift in Sources */,
+				1566BB201CE1749A0075A567 /* UICard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
