@@ -1,16 +1,16 @@
 PODS:
-  - CocoaAsyncSocket (7.4.3):
-    - CocoaAsyncSocket/All (= 7.4.3)
-  - CocoaAsyncSocket/All (7.4.3):
-    - CocoaAsyncSocket/GCD
-    - CocoaAsyncSocket/RunLoop
-  - CocoaAsyncSocket/GCD (7.4.3)
-  - CocoaAsyncSocket/RunLoop (7.4.3)
+  - RxCocoa (3.2.0):
+    - RxSwift (~> 3.1)
+  - RxSwift (3.2.0)
 
 DEPENDENCIES:
-  - CocoaAsyncSocket
+  - RxCocoa
+  - RxSwift
 
 SPEC CHECKSUMS:
-  CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
+  RxCocoa: ccdf43101a70407097a29082f648ba1676075b30
+  RxSwift: 46574f70d416b7923c237195939cc488a7fbf3a0
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 542c99b61975323d971804610fcdd28f44353bde
+
+COCOAPODS: 1.2.0

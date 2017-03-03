@@ -2,8 +2,8 @@
 //  DeckOfCardsTests.swift
 //  DeckOfCardsTests
 //
-//  Created by John DeLong on 4/2/16.
-//  Copyright © 2016 delong. All rights reserved.
+//  Created by John DeLong on 2/25/17.
+//  Copyright © 2017 MichiganLabs. All rights reserved.
 //
 
 import XCTest
@@ -28,7 +28,7 @@ class DeckOfCardsTests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }

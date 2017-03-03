@@ -4,12 +4,22 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CocoaAsyncSocket.xcscheme</key>
+		<key>Pods-DeckOfCards.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-DeckOfCards.xcscheme</key>
+		<key>Pods-DeckOfCardsTests.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>RxCocoa.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>RxSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -17,12 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>B1D17BA74BEACBD28F897F231B5907A4</key>
+		<key>51EEDA043FABCB66B907F77185A35F43</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F8CB75FD1E68C9C4E52B7F1C1C00BB96</key>
+		<key>5657CCEDEF8C67E6E956BA94B7480630</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>97E0EDCB9D9DD263B628DAC528885883</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FCE4D70EFAFFADE22D8AA28ED417F7AD</key>
 		<dict>
 			<key>primary</key>
 			<true/>

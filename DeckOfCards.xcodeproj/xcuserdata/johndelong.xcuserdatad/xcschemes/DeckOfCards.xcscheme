@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0730"
+   LastUpgradeVersion = "0820"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+               BlueprintIdentifier = "15B4ECE41E620446001C72CF"
                BuildableName = "DeckOfCards.app"
                BlueprintName = "DeckOfCards"
                ReferencedContainer = "container:DeckOfCards.xcodeproj">
@@ -32,19 +32,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "15A339F11CB07BC400A489B7"
+               BlueprintIdentifier = "15B4ECFB1E620446001C72CF"
                BuildableName = "DeckOfCardsTests.xctest"
                BlueprintName = "DeckOfCardsTests"
-               ReferencedContainer = "container:DeckOfCards.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "15A339FC1CB07BC400A489B7"
-               BuildableName = "DeckOfCardsUITests.xctest"
-               BlueprintName = "DeckOfCardsUITests"
                ReferencedContainer = "container:DeckOfCards.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -52,7 +42,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+            BlueprintIdentifier = "15B4ECE41E620446001C72CF"
             BuildableName = "DeckOfCards.app"
             BlueprintName = "DeckOfCards"
             ReferencedContainer = "container:DeckOfCards.xcodeproj">
@@ -75,12 +65,19 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+            BlueprintIdentifier = "15B4ECE41E620446001C72CF"
             BuildableName = "DeckOfCards.app"
             BlueprintName = "DeckOfCards"
             ReferencedContainer = "container:DeckOfCards.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -94,7 +91,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "15A339DA1CB07BC400A489B7"
+            BlueprintIdentifier = "15B4ECE41E620446001C72CF"
             BuildableName = "DeckOfCards.app"
             BlueprintName = "DeckOfCards"
             ReferencedContainer = "container:DeckOfCards.xcodeproj">

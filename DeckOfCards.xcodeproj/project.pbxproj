@@ -7,172 +7,202 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1509F8101CB09DB100F7CD9A /* HostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1509F80F1CB09DB100F7CD9A /* HostManager.swift */; };
-		1509F8111CB09DB100F7CD9A /* HostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1509F80F1CB09DB100F7CD9A /* HostManager.swift */; };
-		1509F8131CB0A89E00F7CD9A /* ClientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1509F8121CB0A89E00F7CD9A /* ClientManager.swift */; };
-		1509F8141CB0A89E00F7CD9A /* ClientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1509F8121CB0A89E00F7CD9A /* ClientManager.swift */; };
-		15A339DF1CB07BC400A489B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A339DE1CB07BC400A489B7 /* AppDelegate.swift */; };
-		15A339E11CB07BC400A489B7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A339E01CB07BC400A489B7 /* ViewController.swift */; };
-		15A339E41CB07BC400A489B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15A339E21CB07BC400A489B7 /* Main.storyboard */; };
-		15A339E71CB07BC400A489B7 /* DeckOfCards.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 15A339E51CB07BC400A489B7 /* DeckOfCards.xcdatamodeld */; };
-		15A339E91CB07BC400A489B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 15A339E81CB07BC400A489B7 /* Assets.xcassets */; };
-		15A339EC1CB07BC400A489B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15A339EA1CB07BC400A489B7 /* LaunchScreen.storyboard */; };
-		15A339F71CB07BC400A489B7 /* DeckOfCardsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A339F61CB07BC400A489B7 /* DeckOfCardsTests.swift */; };
-		15A33A021CB07BC400A489B7 /* DeckOfCardsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A33A011CB07BC400A489B7 /* DeckOfCardsUITests.swift */; };
-		6D645D2804FE7FB9C1132E6E /* Pods_DeckOfCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F675EFF5AD98194962E60CD /* Pods_DeckOfCards.framework */; };
+		1533520C1E69148300C997FB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520A1E69148300C997FB /* Card.swift */; };
+		1533520D1E69148300C997FB /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520B1E69148300C997FB /* Deck.swift */; };
+		15B4ECE91E620446001C72CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECE81E620446001C72CF /* AppDelegate.swift */; };
+		15B4ECEB1E620446001C72CF /* PlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECEA1E620446001C72CF /* PlayersViewController.swift */; };
+		15B4ECEE1E620446001C72CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ECEC1E620446001C72CF /* Main.storyboard */; };
+		15B4ECF11E620446001C72CF /* DeckOfCards.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECEF1E620446001C72CF /* DeckOfCards.xcdatamodeld */; };
+		15B4ECF31E620446001C72CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ECF21E620446001C72CF /* Assets.xcassets */; };
+		15B4ECF61E620446001C72CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ECF41E620446001C72CF /* LaunchScreen.storyboard */; };
+		15B4ED011E620446001C72CF /* DeckOfCardsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED001E620446001C72CF /* DeckOfCardsTests.swift */; };
+		15B4ED0C1E6204B3001C72CF /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED0B1E6204B3001C72CF /* NetworkManager.swift */; };
+		15B4ED0E1E6206A0001C72CF /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ED0D1E6206A0001C72CF /* .swiftlint.yml */; };
+		15B4ED131E622CF8001C72CF /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED121E622CF8001C72CF /* GameManager.swift */; };
+		15B4ED151E64638E001C72CF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED141E64638E001C72CF /* MainViewController.swift */; };
+		15B4ED1B1E6463F6001C72CF /* StoryboardBased.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED181E6463F6001C72CF /* StoryboardBased.swift */; };
+		15B4ED1C1E6463F6001C72CF /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED191E6463F6001C72CF /* NibLoadable.swift */; };
+		15B4ED1D1E6463F6001C72CF /* NibOwnerLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED1A1E6463F6001C72CF /* NibOwnerLoadable.swift */; };
+		15B4ED201E6464E8001C72CF /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED1F1E6464E8001C72CF /* GameViewController.swift */; };
+		15B4ED221E65ADB3001C72CF /* JoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED211E65ADB3001C72CF /* JoinViewController.swift */; };
+		15B4ED241E65B48E001C72CF /* PlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ED231E65B48E001C72CF /* PlayersViewController.storyboard */; };
+		15B4ED261E65B4E0001C72CF /* GameViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ED251E65B4E0001C72CF /* GameViewController.storyboard */; };
+		15B948CA1E67853A00E99113 /* Packets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B948C91E67853A00E99113 /* Packets.swift */; };
+		5075347E41AB199AD02E36D5 /* Pods_DeckOfCardsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D66C5719C5B3F6155B96DE8C /* Pods_DeckOfCardsTests.framework */; };
+		F10F127338EB0369B3070260 /* Pods_DeckOfCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDD3970435A30C2D33401523 /* Pods_DeckOfCards.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		15A339F31CB07BC400A489B7 /* PBXContainerItemProxy */ = {
+		15B4ECFD1E620446001C72CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 15A339D31CB07BC400A489B7 /* Project object */;
+			containerPortal = 15B4ECDD1E620446001C72CF /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 15A339DA1CB07BC400A489B7;
-			remoteInfo = DeckOfCards;
-		};
-		15A339FE1CB07BC400A489B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 15A339D31CB07BC400A489B7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 15A339DA1CB07BC400A489B7;
+			remoteGlobalIDString = 15B4ECE41E620446001C72CF;
 			remoteInfo = DeckOfCards;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1509F80F1CB09DB100F7CD9A /* HostManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostManager.swift; sourceTree = "<group>"; };
-		1509F8121CB0A89E00F7CD9A /* ClientManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientManager.swift; sourceTree = "<group>"; };
-		15A339DB1CB07BC400A489B7 /* DeckOfCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeckOfCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		15A339DE1CB07BC400A489B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		15A339E01CB07BC400A489B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		15A339E31CB07BC400A489B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		15A339E61CB07BC400A489B7 /* DeckOfCards.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DeckOfCards.xcdatamodel; sourceTree = "<group>"; };
-		15A339E81CB07BC400A489B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		15A339EB1CB07BC400A489B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		15A339ED1CB07BC400A489B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		15A339F21CB07BC400A489B7 /* DeckOfCardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeckOfCardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		15A339F61CB07BC400A489B7 /* DeckOfCardsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckOfCardsTests.swift; sourceTree = "<group>"; };
-		15A339F81CB07BC400A489B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		15A339FD1CB07BC400A489B7 /* DeckOfCardsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeckOfCardsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		15A33A011CB07BC400A489B7 /* DeckOfCardsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckOfCardsUITests.swift; sourceTree = "<group>"; };
-		15A33A031CB07BC400A489B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		23CB35FBAA6B7E8970490F03 /* Pods-DeckOfCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.release.xcconfig"; sourceTree = "<group>"; };
-		6F675EFF5AD98194962E60CD /* Pods_DeckOfCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckOfCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EE1C1CA3D96BA58D89AE2B76 /* Pods-DeckOfCards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.debug.xcconfig"; sourceTree = "<group>"; };
+		1533520A1E69148300C997FB /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		1533520B1E69148300C997FB /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
+		15B4ECE51E620446001C72CF /* DeckOfCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeckOfCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		15B4ECE81E620446001C72CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		15B4ECEA1E620446001C72CF /* PlayersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersViewController.swift; sourceTree = "<group>"; };
+		15B4ECED1E620446001C72CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		15B4ECF01E620446001C72CF /* DeckOfCards.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DeckOfCards.xcdatamodel; sourceTree = "<group>"; };
+		15B4ECF21E620446001C72CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		15B4ECF51E620446001C72CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		15B4ECF71E620446001C72CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		15B4ECFC1E620446001C72CF /* DeckOfCardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeckOfCardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		15B4ED001E620446001C72CF /* DeckOfCardsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckOfCardsTests.swift; sourceTree = "<group>"; };
+		15B4ED021E620446001C72CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		15B4ED0B1E6204B3001C72CF /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		15B4ED0D1E6206A0001C72CF /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
+		15B4ED121E622CF8001C72CF /* GameManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
+		15B4ED141E64638E001C72CF /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		15B4ED181E6463F6001C72CF /* StoryboardBased.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardBased.swift; sourceTree = "<group>"; };
+		15B4ED191E6463F6001C72CF /* NibLoadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
+		15B4ED1A1E6463F6001C72CF /* NibOwnerLoadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibOwnerLoadable.swift; sourceTree = "<group>"; };
+		15B4ED1F1E6464E8001C72CF /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		15B4ED211E65ADB3001C72CF /* JoinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinViewController.swift; sourceTree = "<group>"; };
+		15B4ED231E65B48E001C72CF /* PlayersViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PlayersViewController.storyboard; sourceTree = "<group>"; };
+		15B4ED251E65B4E0001C72CF /* GameViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GameViewController.storyboard; sourceTree = "<group>"; };
+		15B948C91E67853A00E99113 /* Packets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packets.swift; sourceTree = "<group>"; };
+		319890A8556413D0640754AB /* Pods-DeckOfCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.release.xcconfig"; sourceTree = "<group>"; };
+		8E3CEB088614C6DA17CA467A /* Pods-DeckOfCardsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCardsTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCardsTests/Pods-DeckOfCardsTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C44595009732264F8893D44E /* Pods-DeckOfCards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.debug.xcconfig"; sourceTree = "<group>"; };
+		CDD3970435A30C2D33401523 /* Pods_DeckOfCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckOfCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D66C5719C5B3F6155B96DE8C /* Pods_DeckOfCardsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeckOfCardsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E19AF57FE14433364BE83342 /* Pods-DeckOfCardsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCardsTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCardsTests/Pods-DeckOfCardsTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		15A339D81CB07BC400A489B7 /* Frameworks */ = {
+		15B4ECE21E620446001C72CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D645D2804FE7FB9C1132E6E /* Pods_DeckOfCards.framework in Frameworks */,
+				F10F127338EB0369B3070260 /* Pods_DeckOfCards.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		15A339EF1CB07BC400A489B7 /* Frameworks */ = {
+		15B4ECF91E620446001C72CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		15A339FA1CB07BC400A489B7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				5075347E41AB199AD02E36D5 /* Pods_DeckOfCardsTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		15A339D21CB07BC400A489B7 = {
+		15B4ECDC1E620446001C72CF = {
 			isa = PBXGroup;
 			children = (
-				15A339DD1CB07BC400A489B7 /* DeckOfCards */,
-				15A339F51CB07BC400A489B7 /* DeckOfCardsTests */,
-				15A33A001CB07BC400A489B7 /* DeckOfCardsUITests */,
-				15A339DC1CB07BC400A489B7 /* Products */,
-				20B0B4174472CBC7331FB080 /* Pods */,
-				74B2EEB4AD2C8377EE797DC5 /* Frameworks */,
+				15B4ED0D1E6206A0001C72CF /* .swiftlint.yml */,
+				15B4ECE71E620446001C72CF /* DeckOfCards */,
+				15B4ECFF1E620446001C72CF /* DeckOfCardsTests */,
+				15B4ECE61E620446001C72CF /* Products */,
+				E7CA626F5FAAA97E9E0E71F6 /* Pods */,
+				CC82551084775ADF2B81BE4D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		15A339DC1CB07BC400A489B7 /* Products */ = {
+		15B4ECE61E620446001C72CF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				15A339DB1CB07BC400A489B7 /* DeckOfCards.app */,
-				15A339F21CB07BC400A489B7 /* DeckOfCardsTests.xctest */,
-				15A339FD1CB07BC400A489B7 /* DeckOfCardsUITests.xctest */,
+				15B4ECE51E620446001C72CF /* DeckOfCards.app */,
+				15B4ECFC1E620446001C72CF /* DeckOfCardsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		15A339DD1CB07BC400A489B7 /* DeckOfCards */ = {
+		15B4ECE71E620446001C72CF /* DeckOfCards */ = {
 			isa = PBXGroup;
 			children = (
-				15A339DE1CB07BC400A489B7 /* AppDelegate.swift */,
-				15A339E01CB07BC400A489B7 /* ViewController.swift */,
-				15A339E21CB07BC400A489B7 /* Main.storyboard */,
-				15A339E81CB07BC400A489B7 /* Assets.xcassets */,
-				15A339EA1CB07BC400A489B7 /* LaunchScreen.storyboard */,
-				15A339ED1CB07BC400A489B7 /* Info.plist */,
-				15A339E51CB07BC400A489B7 /* DeckOfCards.xcdatamodeld */,
-				1509F80F1CB09DB100F7CD9A /* HostManager.swift */,
-				1509F8121CB0A89E00F7CD9A /* ClientManager.swift */,
+				15B4ED161E6463C0001C72CF /* Extensions */,
+				15B4ECE81E620446001C72CF /* AppDelegate.swift */,
+				15B4ED141E64638E001C72CF /* MainViewController.swift */,
+				15B4ECEA1E620446001C72CF /* PlayersViewController.swift */,
+				15B4ED1F1E6464E8001C72CF /* GameViewController.swift */,
+				1533520A1E69148300C997FB /* Card.swift */,
+				1533520B1E69148300C997FB /* Deck.swift */,
+				15B4ECEC1E620446001C72CF /* Main.storyboard */,
+				15B4ECF21E620446001C72CF /* Assets.xcassets */,
+				15B4ECF41E620446001C72CF /* LaunchScreen.storyboard */,
+				15B4ECF71E620446001C72CF /* Info.plist */,
+				15B4ECEF1E620446001C72CF /* DeckOfCards.xcdatamodeld */,
+				15B4ED0B1E6204B3001C72CF /* NetworkManager.swift */,
+				15B4ED121E622CF8001C72CF /* GameManager.swift */,
+				15B4ED211E65ADB3001C72CF /* JoinViewController.swift */,
+				15B4ED231E65B48E001C72CF /* PlayersViewController.storyboard */,
+				15B4ED251E65B4E0001C72CF /* GameViewController.storyboard */,
+				15B948C91E67853A00E99113 /* Packets.swift */,
 			);
 			path = DeckOfCards;
 			sourceTree = "<group>";
 		};
-		15A339F51CB07BC400A489B7 /* DeckOfCardsTests */ = {
+		15B4ECFF1E620446001C72CF /* DeckOfCardsTests */ = {
 			isa = PBXGroup;
 			children = (
-				15A339F61CB07BC400A489B7 /* DeckOfCardsTests.swift */,
-				15A339F81CB07BC400A489B7 /* Info.plist */,
+				15B4ED001E620446001C72CF /* DeckOfCardsTests.swift */,
+				15B4ED021E620446001C72CF /* Info.plist */,
 			);
 			path = DeckOfCardsTests;
 			sourceTree = "<group>";
 		};
-		15A33A001CB07BC400A489B7 /* DeckOfCardsUITests */ = {
+		15B4ED161E6463C0001C72CF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				15A33A011CB07BC400A489B7 /* DeckOfCardsUITests.swift */,
-				15A33A031CB07BC400A489B7 /* Info.plist */,
+				15B4ED1E1E646429001C72CF /* Loadable */,
 			);
-			path = DeckOfCardsUITests;
+			name = Extensions;
 			sourceTree = "<group>";
 		};
-		20B0B4174472CBC7331FB080 /* Pods */ = {
+		15B4ED1E1E646429001C72CF /* Loadable */ = {
 			isa = PBXGroup;
 			children = (
-				EE1C1CA3D96BA58D89AE2B76 /* Pods-DeckOfCards.debug.xcconfig */,
-				23CB35FBAA6B7E8970490F03 /* Pods-DeckOfCards.release.xcconfig */,
+				15B4ED181E6463F6001C72CF /* StoryboardBased.swift */,
+				15B4ED191E6463F6001C72CF /* NibLoadable.swift */,
+				15B4ED1A1E6463F6001C72CF /* NibOwnerLoadable.swift */,
 			);
-			name = Pods;
+			name = Loadable;
 			sourceTree = "<group>";
 		};
-		74B2EEB4AD2C8377EE797DC5 /* Frameworks */ = {
+		CC82551084775ADF2B81BE4D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6F675EFF5AD98194962E60CD /* Pods_DeckOfCards.framework */,
+				CDD3970435A30C2D33401523 /* Pods_DeckOfCards.framework */,
+				D66C5719C5B3F6155B96DE8C /* Pods_DeckOfCardsTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E7CA626F5FAAA97E9E0E71F6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C44595009732264F8893D44E /* Pods-DeckOfCards.debug.xcconfig */,
+				319890A8556413D0640754AB /* Pods-DeckOfCards.release.xcconfig */,
+				8E3CEB088614C6DA17CA467A /* Pods-DeckOfCardsTests.debug.xcconfig */,
+				E19AF57FE14433364BE83342 /* Pods-DeckOfCardsTests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		15A339DA1CB07BC400A489B7 /* DeckOfCards */ = {
+		15B4ECE41E620446001C72CF /* DeckOfCards */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 15A33A061CB07BC400A489B7 /* Build configuration list for PBXNativeTarget "DeckOfCards" */;
+			buildConfigurationList = 15B4ED051E620446001C72CF /* Build configuration list for PBXNativeTarget "DeckOfCards" */;
 			buildPhases = (
-				D9109A5D2DC2CBC9BA1962C0 /* Check Pods Manifest.lock */,
-				15A339D71CB07BC400A489B7 /* Sources */,
-				15A339D81CB07BC400A489B7 /* Frameworks */,
-				15A339D91CB07BC400A489B7 /* Resources */,
-				3B358937BFA8A49F3A5E0F95 /* Embed Pods Frameworks */,
-				80BAA427C760C6046C084816 /* Copy Pods Resources */,
+				0B2A1B7FB79555A3CAD8F952 /* [CP] Check Pods Manifest.lock */,
+				15B4ECE11E620446001C72CF /* Sources */,
+				15B4ECE21E620446001C72CF /* Frameworks */,
+				15B4ECE31E620446001C72CF /* Resources */,
+				15B4ED0F1E620B16001C72CF /* Swiftlint */,
+				F8057641BC13B43C601EB608 /* [CP] Embed Pods Frameworks */,
+				9741C9E0FE45730601FD4A30 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -180,70 +210,54 @@
 			);
 			name = DeckOfCards;
 			productName = DeckOfCards;
-			productReference = 15A339DB1CB07BC400A489B7 /* DeckOfCards.app */;
+			productReference = 15B4ECE51E620446001C72CF /* DeckOfCards.app */;
 			productType = "com.apple.product-type.application";
 		};
-		15A339F11CB07BC400A489B7 /* DeckOfCardsTests */ = {
+		15B4ECFB1E620446001C72CF /* DeckOfCardsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 15A33A091CB07BC400A489B7 /* Build configuration list for PBXNativeTarget "DeckOfCardsTests" */;
+			buildConfigurationList = 15B4ED081E620446001C72CF /* Build configuration list for PBXNativeTarget "DeckOfCardsTests" */;
 			buildPhases = (
-				15A339EE1CB07BC400A489B7 /* Sources */,
-				15A339EF1CB07BC400A489B7 /* Frameworks */,
-				15A339F01CB07BC400A489B7 /* Resources */,
+				55B7B603D0A195A925C83AAE /* [CP] Check Pods Manifest.lock */,
+				15B4ECF81E620446001C72CF /* Sources */,
+				15B4ECF91E620446001C72CF /* Frameworks */,
+				15B4ECFA1E620446001C72CF /* Resources */,
+				5E4CCA0A67D0D2F4466F73D8 /* [CP] Embed Pods Frameworks */,
+				A23BE1DED35F5B520B8910D2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				15A339F41CB07BC400A489B7 /* PBXTargetDependency */,
+				15B4ECFE1E620446001C72CF /* PBXTargetDependency */,
 			);
 			name = DeckOfCardsTests;
 			productName = DeckOfCardsTests;
-			productReference = 15A339F21CB07BC400A489B7 /* DeckOfCardsTests.xctest */;
+			productReference = 15B4ECFC1E620446001C72CF /* DeckOfCardsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		15A339FC1CB07BC400A489B7 /* DeckOfCardsUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 15A33A0C1CB07BC400A489B7 /* Build configuration list for PBXNativeTarget "DeckOfCardsUITests" */;
-			buildPhases = (
-				15A339F91CB07BC400A489B7 /* Sources */,
-				15A339FA1CB07BC400A489B7 /* Frameworks */,
-				15A339FB1CB07BC400A489B7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				15A339FF1CB07BC400A489B7 /* PBXTargetDependency */,
-			);
-			name = DeckOfCardsUITests;
-			productName = DeckOfCardsUITests;
-			productReference = 15A339FD1CB07BC400A489B7 /* DeckOfCardsUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		15A339D31CB07BC400A489B7 /* Project object */ = {
+		15B4ECDD1E620446001C72CF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
-				ORGANIZATIONNAME = delong;
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = MichiganLabs;
 				TargetAttributes = {
-					15A339DA1CB07BC400A489B7 = {
-						CreatedOnToolsVersion = 7.3;
+					15B4ECE41E620446001C72CF = {
+						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 4R8XXUKU6X;
+						ProvisioningStyle = Automatic;
 					};
-					15A339F11CB07BC400A489B7 = {
-						CreatedOnToolsVersion = 7.3;
-						TestTargetID = 15A339DA1CB07BC400A489B7;
-					};
-					15A339FC1CB07BC400A489B7 = {
-						CreatedOnToolsVersion = 7.3;
-						TestTargetID = 15A339DA1CB07BC400A489B7;
+					15B4ECFB1E620446001C72CF = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 4R8XXUKU6X;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 15B4ECE41E620446001C72CF;
 					};
 				};
 			};
-			buildConfigurationList = 15A339D61CB07BC400A489B7 /* Build configuration list for PBXProject "DeckOfCards" */;
+			buildConfigurationList = 15B4ECE01E620446001C72CF /* Build configuration list for PBXProject "DeckOfCards" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -251,37 +265,32 @@
 				en,
 				Base,
 			);
-			mainGroup = 15A339D21CB07BC400A489B7;
-			productRefGroup = 15A339DC1CB07BC400A489B7 /* Products */;
+			mainGroup = 15B4ECDC1E620446001C72CF;
+			productRefGroup = 15B4ECE61E620446001C72CF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				15A339DA1CB07BC400A489B7 /* DeckOfCards */,
-				15A339F11CB07BC400A489B7 /* DeckOfCardsTests */,
-				15A339FC1CB07BC400A489B7 /* DeckOfCardsUITests */,
+				15B4ECE41E620446001C72CF /* DeckOfCards */,
+				15B4ECFB1E620446001C72CF /* DeckOfCardsTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		15A339D91CB07BC400A489B7 /* Resources */ = {
+		15B4ECE31E620446001C72CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15A339EC1CB07BC400A489B7 /* LaunchScreen.storyboard in Resources */,
-				15A339E91CB07BC400A489B7 /* Assets.xcassets in Resources */,
-				15A339E41CB07BC400A489B7 /* Main.storyboard in Resources */,
+				15B4ED261E65B4E0001C72CF /* GameViewController.storyboard in Resources */,
+				15B4ED241E65B48E001C72CF /* PlayersViewController.storyboard in Resources */,
+				15B4ED0E1E6206A0001C72CF /* .swiftlint.yml in Resources */,
+				15B4ECF61E620446001C72CF /* LaunchScreen.storyboard in Resources */,
+				15B4ECF31E620446001C72CF /* Assets.xcassets in Resources */,
+				15B4ECEE1E620446001C72CF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		15A339F01CB07BC400A489B7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		15A339FB1CB07BC400A489B7 /* Resources */ = {
+		15B4ECFA1E620446001C72CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -291,29 +300,73 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3B358937BFA8A49F3A5E0F95 /* Embed Pods Frameworks */ = {
+		0B2A1B7FB79555A3CAD8F952 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		80BAA427C760C6046C084816 /* Copy Pods Resources */ = {
+		15B4ED0F1E620B16001C72CF /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = Swiftlint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    echo \"swiftlint version:\"\n    swiftlint version\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
+		55B7B603D0A195A925C83AAE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5E4CCA0A67D0D2F4466F73D8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DeckOfCardsTests/Pods-DeckOfCardsTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9741C9E0FE45730601FD4A30 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -321,82 +374,91 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D9109A5D2DC2CBC9BA1962C0 /* Check Pods Manifest.lock */ = {
+		A23BE1DED35F5B520B8910D2 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DeckOfCardsTests/Pods-DeckOfCardsTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F8057641BC13B43C601EB608 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		15A339D71CB07BC400A489B7 /* Sources */ = {
+		15B4ECE11E620446001C72CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15A339E71CB07BC400A489B7 /* DeckOfCards.xcdatamodeld in Sources */,
-				1509F8101CB09DB100F7CD9A /* HostManager.swift in Sources */,
-				15A339E11CB07BC400A489B7 /* ViewController.swift in Sources */,
-				15A339DF1CB07BC400A489B7 /* AppDelegate.swift in Sources */,
-				1509F8131CB0A89E00F7CD9A /* ClientManager.swift in Sources */,
+				1533520D1E69148300C997FB /* Deck.swift in Sources */,
+				15B4ED201E6464E8001C72CF /* GameViewController.swift in Sources */,
+				15B4ECF11E620446001C72CF /* DeckOfCards.xcdatamodeld in Sources */,
+				15B4ED221E65ADB3001C72CF /* JoinViewController.swift in Sources */,
+				15B4ED1D1E6463F6001C72CF /* NibOwnerLoadable.swift in Sources */,
+				1533520C1E69148300C997FB /* Card.swift in Sources */,
+				15B4ED1C1E6463F6001C72CF /* NibLoadable.swift in Sources */,
+				15B4ED0C1E6204B3001C72CF /* NetworkManager.swift in Sources */,
+				15B4ECEB1E620446001C72CF /* PlayersViewController.swift in Sources */,
+				15B4ED151E64638E001C72CF /* MainViewController.swift in Sources */,
+				15B4ECE91E620446001C72CF /* AppDelegate.swift in Sources */,
+				15B4ED131E622CF8001C72CF /* GameManager.swift in Sources */,
+				15B4ED1B1E6463F6001C72CF /* StoryboardBased.swift in Sources */,
+				15B948CA1E67853A00E99113 /* Packets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		15A339EE1CB07BC400A489B7 /* Sources */ = {
+		15B4ECF81E620446001C72CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15A339F71CB07BC400A489B7 /* DeckOfCardsTests.swift in Sources */,
-				1509F8111CB09DB100F7CD9A /* HostManager.swift in Sources */,
-				1509F8141CB0A89E00F7CD9A /* ClientManager.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		15A339F91CB07BC400A489B7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				15A33A021CB07BC400A489B7 /* DeckOfCardsUITests.swift in Sources */,
+				15B4ED011E620446001C72CF /* DeckOfCardsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		15A339F41CB07BC400A489B7 /* PBXTargetDependency */ = {
+		15B4ECFE1E620446001C72CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 15A339DA1CB07BC400A489B7 /* DeckOfCards */;
-			targetProxy = 15A339F31CB07BC400A489B7 /* PBXContainerItemProxy */;
-		};
-		15A339FF1CB07BC400A489B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 15A339DA1CB07BC400A489B7 /* DeckOfCards */;
-			targetProxy = 15A339FE1CB07BC400A489B7 /* PBXContainerItemProxy */;
+			target = 15B4ECE41E620446001C72CF /* DeckOfCards */;
+			targetProxy = 15B4ECFD1E620446001C72CF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		15A339E21CB07BC400A489B7 /* Main.storyboard */ = {
+		15B4ECEC1E620446001C72CF /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				15A339E31CB07BC400A489B7 /* Base */,
+				15B4ECED1E620446001C72CF /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		15A339EA1CB07BC400A489B7 /* LaunchScreen.storyboard */ = {
+		15B4ECF41E620446001C72CF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				15A339EB1CB07BC400A489B7 /* Base */,
+				15B4ECF51E620446001C72CF /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -404,7 +466,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		15A33A041CB07BC400A489B7 /* Debug */ = {
+		15B4ED031E620446001C72CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -416,10 +478,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -441,16 +506,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		15A33A051CB07BC400A489B7 /* Release */ = {
+		15B4ED041E620446001C72CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -462,10 +528,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -481,125 +550,101 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		15A33A071CB07BC400A489B7 /* Debug */ = {
+		15B4ED061E620446001C72CF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE1C1CA3D96BA58D89AE2B76 /* Pods-DeckOfCards.debug.xcconfig */;
+			baseConfigurationReference = C44595009732264F8893D44E /* Pods-DeckOfCards.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4R8XXUKU6X;
 				INFOPLIST_FILE = DeckOfCards/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DeckOfCards;
+				PRODUCT_BUNDLE_IDENTIFIER = com.michiganlabs.DeckOfCards;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
-		15A33A081CB07BC400A489B7 /* Release */ = {
+		15B4ED071E620446001C72CF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 23CB35FBAA6B7E8970490F03 /* Pods-DeckOfCards.release.xcconfig */;
+			baseConfigurationReference = 319890A8556413D0640754AB /* Pods-DeckOfCards.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4R8XXUKU6X;
 				INFOPLIST_FILE = DeckOfCards/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DeckOfCards;
+				PRODUCT_BUNDLE_IDENTIFIER = com.michiganlabs.DeckOfCards;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
-		15A33A0A1CB07BC400A489B7 /* Debug */ = {
+		15B4ED091E620446001C72CF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8E3CEB088614C6DA17CA467A /* Pods-DeckOfCardsTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 4R8XXUKU6X;
 				INFOPLIST_FILE = DeckOfCardsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DeckOfCardsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.michiganlabs.DeckOfCardsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DeckOfCards.app/DeckOfCards";
 			};
 			name = Debug;
 		};
-		15A33A0B1CB07BC400A489B7 /* Release */ = {
+		15B4ED0A1E620446001C72CF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E19AF57FE14433364BE83342 /* Pods-DeckOfCardsTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 4R8XXUKU6X;
 				INFOPLIST_FILE = DeckOfCardsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DeckOfCardsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.michiganlabs.DeckOfCardsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DeckOfCards.app/DeckOfCards";
-			};
-			name = Release;
-		};
-		15A33A0D1CB07BC400A489B7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = DeckOfCardsUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DeckOfCardsUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = DeckOfCards;
-			};
-			name = Debug;
-		};
-		15A33A0E1CB07BC400A489B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = DeckOfCardsUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DeckOfCardsUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = DeckOfCards;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		15A339D61CB07BC400A489B7 /* Build configuration list for PBXProject "DeckOfCards" */ = {
+		15B4ECE01E620446001C72CF /* Build configuration list for PBXProject "DeckOfCards" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				15A33A041CB07BC400A489B7 /* Debug */,
-				15A33A051CB07BC400A489B7 /* Release */,
+				15B4ED031E620446001C72CF /* Debug */,
+				15B4ED041E620446001C72CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		15A33A061CB07BC400A489B7 /* Build configuration list for PBXNativeTarget "DeckOfCards" */ = {
+		15B4ED051E620446001C72CF /* Build configuration list for PBXNativeTarget "DeckOfCards" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				15A33A071CB07BC400A489B7 /* Debug */,
-				15A33A081CB07BC400A489B7 /* Release */,
+				15B4ED061E620446001C72CF /* Debug */,
+				15B4ED071E620446001C72CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		15A33A091CB07BC400A489B7 /* Build configuration list for PBXNativeTarget "DeckOfCardsTests" */ = {
+		15B4ED081E620446001C72CF /* Build configuration list for PBXNativeTarget "DeckOfCardsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				15A33A0A1CB07BC400A489B7 /* Debug */,
-				15A33A0B1CB07BC400A489B7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		15A33A0C1CB07BC400A489B7 /* Build configuration list for PBXNativeTarget "DeckOfCardsUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				15A33A0D1CB07BC400A489B7 /* Debug */,
-				15A33A0E1CB07BC400A489B7 /* Release */,
+				15B4ED091E620446001C72CF /* Debug */,
+				15B4ED0A1E620446001C72CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -607,17 +652,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		15A339E51CB07BC400A489B7 /* DeckOfCards.xcdatamodeld */ = {
+		15B4ECEF1E620446001C72CF /* DeckOfCards.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				15A339E61CB07BC400A489B7 /* DeckOfCards.xcdatamodel */,
+				15B4ECF01E620446001C72CF /* DeckOfCards.xcdatamodel */,
 			);
-			currentVersion = 15A339E61CB07BC400A489B7 /* DeckOfCards.xcdatamodel */;
+			currentVersion = 15B4ECF01E620446001C72CF /* DeckOfCards.xcdatamodel */;
 			path = DeckOfCards.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
 	};
-	rootObject = 15A339D31CB07BC400A489B7 /* Project object */;
+	rootObject = 15B4ECDD1E620446001C72CF /* Project object */;
 }
