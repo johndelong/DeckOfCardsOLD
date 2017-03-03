@@ -24,9 +24,9 @@ class Deck {
             while let rank = Card.Rank(rawValue: rankIndex) {
                 let card = Card(rank: rank, suit: suit)
                 self.cards.append(card)
-                rankIndex = rankIndex + 1
+//                rankIndex = rankIndex + 1
             }
-            suitIndex = suitIndex + 1
+//            suitIndex = suitIndex + 1
         }
     }
 
@@ -34,10 +34,11 @@ class Deck {
         let count = self.cards.count - 1
         var shuffledCards = Array<Card>()
         for _ in 0...count {
-            let pos = random() % self.cards.count
+//            let pos = arc4random() % self.cards.count
+            let pos = 0
             let card = self.cards[pos]
             shuffledCards.append(card)
-            self.cards.removeAtIndex(pos)
+            self.cards.remove(at: pos)
         }
 
         self.cards = shuffledCards

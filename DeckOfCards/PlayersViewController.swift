@@ -17,7 +17,7 @@ class PlayersViewController: UIViewController, StoryboardBased {
     @IBOutlet private weak var startGameButton: UIButton!
     @IBOutlet private weak var tableView: UITableView!
 
-    let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,18 +37,6 @@ class PlayersViewController: UIViewController, StoryboardBased {
                 self.tableView.reloadData()
             }).disposed(by: self.disposeBag)
 
-        NetworkManager.shared.communication.asObservable()
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] packet in
-                guard let packet = packet else { return }
-
-                if let setup = packet as? GameState {
-                    let storyboard = GameViewController.instantiate()
-                    self.present(storyboard, animated: true, completion: nil)
-                }
-
-            }).disposed(by: self.disposeBag)
-
         self.startGameButton.rx.tap.subscribe(onNext: {
             GameManager.shared.startGame()
 
@@ -60,6 +48,28 @@ class PlayersViewController: UIViewController, StoryboardBased {
             GameManager.shared.leaveGame()
             self.dismiss(animated: true, completion: nil)
         }).disposed(by: self.disposeBag)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        GameManager.shared.state.asObservable()
+            .takeUntil(self.rx.deallocated)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] state in
+                guard let _ = state else { return }
+
+                let storyboard = GameViewController.instantiate()
+                self.present(storyboard, animated: true, completion: nil)
+
+            }).disposed(by: self.disposeBag)
+
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        self.disposeBag = DisposeBag()
     }
 }
 

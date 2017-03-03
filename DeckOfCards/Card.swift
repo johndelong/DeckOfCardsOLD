@@ -63,7 +63,7 @@ class Card {
     func assetName() -> String {
         let suit = self.suit.toString()
         let rank = self.rank.rawValue
-        return (String(suit[suit.startIndex]).lowercaseString + String(rank))
+        return (String(suit[suit.startIndex]).lowercased() + String(rank))
     }
 
     func displayName() -> String {

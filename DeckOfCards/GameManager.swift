@@ -12,7 +12,8 @@ import RxSwift
 
 class GameManager {
     private lazy var disposeBag = DisposeBag()
-    var state: GameState?
+
+    lazy var state = Variable<GameState?>(nil)
 
     enum State {
         case unknown
@@ -24,10 +25,15 @@ class GameManager {
 
     static let shared = GameManager()
     private init() {
-//        self.state.asObservable().subscribe(onNext: { state in
-//
-//
-//        }).disposed(by: self.disposeBag)
+         NetworkManager.shared.communication.asObservable()
+            .subscribe(onNext: { packet in
+                guard let packet = packet else { return }
+
+                if let state = packet as? GameState {
+                    GameManager.shared.state.value = state
+                }
+
+            }).disposed(by: self.disposeBag)
     }
 
     func hostGame() {
@@ -42,10 +48,14 @@ class GameManager {
 
     func startGame() {
 //        self.state.value = .playing
-        NetworkManager.shared.send(packet: GameState(
-            players: NetworkManager.shared.connectedPeers.value,
+        var players = NetworkManager.shared.connectedPeers.value
+        players.append(NetworkManager.shared.myPeerId)
+        let state = GameState(
+            players: players,
             dealer: NetworkManager.shared.myPeerId
-        ))
+        )
+        NetworkManager.shared.send(packet: state)
+        GameManager.shared.state.value = state
     }
 
     func leaveGame() {

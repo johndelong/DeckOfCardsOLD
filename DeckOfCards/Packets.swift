@@ -47,8 +47,8 @@ extension PacketProtocol {
  * Maybe rename to GameState
  */
 class GameState: NSObject, NSSecureCoding, PacketProtocol {
-    let players: [MCPeerID]
-    let dealer: MCPeerID
+    var players: [MCPeerID]
+    var dealer: MCPeerID
 
     init(players: [MCPeerID], dealer: MCPeerID) {
         self.players = players
