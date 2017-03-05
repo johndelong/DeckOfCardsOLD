@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Game View Controller-->
+        <!--Game Table View Controller-->
         <scene sceneID="dBE-VT-axe">
             <objects>
-                <viewController id="UWi-0T-xxd" customClass="GameViewController" customModule="DeckOfCards" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="UWi-0T-xxd" customClass="GameTableViewController" customModule="DeckOfCards" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="24Y-fL-sJU"/>
                         <viewControllerLayoutGuide type="bottom" id="GGb-mc-b8B"/>

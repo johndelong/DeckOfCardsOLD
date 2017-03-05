@@ -15,13 +15,7 @@ class GameManager {
 
     lazy var state = Variable<GameState?>(nil)
 
-    enum State {
-        case unknown
-        case joining
-        case hosting
-        case playing
-    }
-//    lazy var state = Variable<State>(.unknown)
+    private let maxPlayers = 4
 
     static let shared = GameManager()
     private init() {
@@ -34,20 +28,21 @@ class GameManager {
                 }
 
             }).disposed(by: self.disposeBag)
+
+        NetworkManager.shared.connectedPeers.asObservable()
+            .subscribe(onNext: { [unowned self] peers in
+                if peers.count == self.maxPlayers {
+                    NetworkManager.shared.stopSearching()
+                }
+            }
+        ).disposed(by: self.disposeBag)
     }
 
-    func hostGame() {
-//        self.state.value = .hosting
-        NetworkManager.shared.startSearching()
-    }
-
-    func joinGame() {
-//        self.state.value = .joining
+    func findGame() {
         NetworkManager.shared.startSearching()
     }
 
     func startGame() {
-//        self.state.value = .playing
         var players = NetworkManager.shared.connectedPeers.value
         players.append(NetworkManager.shared.myPeerId)
         let state = GameState(
@@ -59,7 +54,6 @@ class GameManager {
     }
 
     func leaveGame() {
-//        self.state.value = .unknown
         NetworkManager.shared.disconnect()
     }
 }

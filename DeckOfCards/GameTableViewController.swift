@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class GameViewController: UIViewController, StoryboardBased {
+class GameTableViewController: UIViewController, StoryboardBased {
 
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var playButton: UIButton!

@@ -10,7 +10,6 @@
 		1533520C1E69148300C997FB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520A1E69148300C997FB /* Card.swift */; };
 		1533520D1E69148300C997FB /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520B1E69148300C997FB /* Deck.swift */; };
 		15B4ECE91E620446001C72CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECE81E620446001C72CF /* AppDelegate.swift */; };
-		15B4ECEB1E620446001C72CF /* PlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECEA1E620446001C72CF /* PlayersViewController.swift */; };
 		15B4ECEE1E620446001C72CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ECEC1E620446001C72CF /* Main.storyboard */; };
 		15B4ECF11E620446001C72CF /* DeckOfCards.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECEF1E620446001C72CF /* DeckOfCards.xcdatamodeld */; };
 		15B4ECF31E620446001C72CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ECF21E620446001C72CF /* Assets.xcassets */; };
@@ -23,10 +22,9 @@
 		15B4ED1B1E6463F6001C72CF /* StoryboardBased.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED181E6463F6001C72CF /* StoryboardBased.swift */; };
 		15B4ED1C1E6463F6001C72CF /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED191E6463F6001C72CF /* NibLoadable.swift */; };
 		15B4ED1D1E6463F6001C72CF /* NibOwnerLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED1A1E6463F6001C72CF /* NibOwnerLoadable.swift */; };
-		15B4ED201E6464E8001C72CF /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED1F1E6464E8001C72CF /* GameViewController.swift */; };
+		15B4ED201E6464E8001C72CF /* GameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED1F1E6464E8001C72CF /* GameTableViewController.swift */; };
 		15B4ED221E65ADB3001C72CF /* JoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ED211E65ADB3001C72CF /* JoinViewController.swift */; };
-		15B4ED241E65B48E001C72CF /* PlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ED231E65B48E001C72CF /* PlayersViewController.storyboard */; };
-		15B4ED261E65B4E0001C72CF /* GameViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ED251E65B4E0001C72CF /* GameViewController.storyboard */; };
+		15B4ED261E65B4E0001C72CF /* GameTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ED251E65B4E0001C72CF /* GameTableViewController.storyboard */; };
 		15B948CA1E67853A00E99113 /* Packets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B948C91E67853A00E99113 /* Packets.swift */; };
 		5075347E41AB199AD02E36D5 /* Pods_DeckOfCardsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D66C5719C5B3F6155B96DE8C /* Pods_DeckOfCardsTests.framework */; };
 		F10F127338EB0369B3070260 /* Pods_DeckOfCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDD3970435A30C2D33401523 /* Pods_DeckOfCards.framework */; };
@@ -47,7 +45,6 @@
 		1533520B1E69148300C997FB /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
 		15B4ECE51E620446001C72CF /* DeckOfCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeckOfCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B4ECE81E620446001C72CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		15B4ECEA1E620446001C72CF /* PlayersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersViewController.swift; sourceTree = "<group>"; };
 		15B4ECED1E620446001C72CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		15B4ECF01E620446001C72CF /* DeckOfCards.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DeckOfCards.xcdatamodel; sourceTree = "<group>"; };
 		15B4ECF21E620446001C72CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -63,10 +60,9 @@
 		15B4ED181E6463F6001C72CF /* StoryboardBased.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardBased.swift; sourceTree = "<group>"; };
 		15B4ED191E6463F6001C72CF /* NibLoadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		15B4ED1A1E6463F6001C72CF /* NibOwnerLoadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibOwnerLoadable.swift; sourceTree = "<group>"; };
-		15B4ED1F1E6464E8001C72CF /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		15B4ED1F1E6464E8001C72CF /* GameTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTableViewController.swift; sourceTree = "<group>"; };
 		15B4ED211E65ADB3001C72CF /* JoinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinViewController.swift; sourceTree = "<group>"; };
-		15B4ED231E65B48E001C72CF /* PlayersViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PlayersViewController.storyboard; sourceTree = "<group>"; };
-		15B4ED251E65B4E0001C72CF /* GameViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GameViewController.storyboard; sourceTree = "<group>"; };
+		15B4ED251E65B4E0001C72CF /* GameTableViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GameTableViewController.storyboard; sourceTree = "<group>"; };
 		15B948C91E67853A00E99113 /* Packets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packets.swift; sourceTree = "<group>"; };
 		319890A8556413D0640754AB /* Pods-DeckOfCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.release.xcconfig"; sourceTree = "<group>"; };
 		8E3CEB088614C6DA17CA467A /* Pods-DeckOfCardsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCardsTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCardsTests/Pods-DeckOfCardsTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -123,8 +119,6 @@
 				15B4ED161E6463C0001C72CF /* Extensions */,
 				15B4ECE81E620446001C72CF /* AppDelegate.swift */,
 				15B4ED141E64638E001C72CF /* MainViewController.swift */,
-				15B4ECEA1E620446001C72CF /* PlayersViewController.swift */,
-				15B4ED1F1E6464E8001C72CF /* GameViewController.swift */,
 				1533520A1E69148300C997FB /* Card.swift */,
 				1533520B1E69148300C997FB /* Deck.swift */,
 				15B4ECEC1E620446001C72CF /* Main.storyboard */,
@@ -135,8 +129,8 @@
 				15B4ED0B1E6204B3001C72CF /* NetworkManager.swift */,
 				15B4ED121E622CF8001C72CF /* GameManager.swift */,
 				15B4ED211E65ADB3001C72CF /* JoinViewController.swift */,
-				15B4ED231E65B48E001C72CF /* PlayersViewController.storyboard */,
-				15B4ED251E65B4E0001C72CF /* GameViewController.storyboard */,
+				15B4ED1F1E6464E8001C72CF /* GameTableViewController.swift */,
+				15B4ED251E65B4E0001C72CF /* GameTableViewController.storyboard */,
 				15B948C91E67853A00E99113 /* Packets.swift */,
 			);
 			path = DeckOfCards;
@@ -281,8 +275,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15B4ED261E65B4E0001C72CF /* GameViewController.storyboard in Resources */,
-				15B4ED241E65B48E001C72CF /* PlayersViewController.storyboard in Resources */,
+				15B4ED261E65B4E0001C72CF /* GameTableViewController.storyboard in Resources */,
 				15B4ED0E1E6206A0001C72CF /* .swiftlint.yml in Resources */,
 				15B4ECF61E620446001C72CF /* LaunchScreen.storyboard in Resources */,
 				15B4ECF31E620446001C72CF /* Assets.xcassets in Resources */,
@@ -412,14 +405,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1533520D1E69148300C997FB /* Deck.swift in Sources */,
-				15B4ED201E6464E8001C72CF /* GameViewController.swift in Sources */,
+				15B4ED201E6464E8001C72CF /* GameTableViewController.swift in Sources */,
 				15B4ECF11E620446001C72CF /* DeckOfCards.xcdatamodeld in Sources */,
 				15B4ED221E65ADB3001C72CF /* JoinViewController.swift in Sources */,
 				15B4ED1D1E6463F6001C72CF /* NibOwnerLoadable.swift in Sources */,
 				1533520C1E69148300C997FB /* Card.swift in Sources */,
 				15B4ED1C1E6463F6001C72CF /* NibLoadable.swift in Sources */,
 				15B4ED0C1E6204B3001C72CF /* NetworkManager.swift in Sources */,
-				15B4ECEB1E620446001C72CF /* PlayersViewController.swift in Sources */,
 				15B4ED151E64638E001C72CF /* MainViewController.swift in Sources */,
 				15B4ECE91E620446001C72CF /* AppDelegate.swift in Sources */,
 				15B4ED131E622CF8001C72CF /* GameManager.swift in Sources */,
