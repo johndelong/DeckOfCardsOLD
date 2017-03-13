@@ -29,20 +29,29 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHA-ya-5N0">
-                                <rect key="frame" x="306.5" y="329" width="53" height="30"/>
+                                <rect key="frame" x="16" y="329" width="53" height="30"/>
                                 <state key="normal" title="My turn"/>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Me" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="70s-Om-KOl">
+                                <rect key="frame" x="321.5" y="346" width="24" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wHA-ya-5N0" firstAttribute="centerX" secondItem="P8u-b5-96b" secondAttribute="centerX" id="XWO-fE-Mtg"/>
+                            <constraint firstItem="wHA-ya-5N0" firstAttribute="leading" secondItem="P8u-b5-96b" secondAttribute="leading" constant="16" id="a4S-i8-B2z"/>
+                            <constraint firstItem="GGb-mc-b8B" firstAttribute="top" secondItem="70s-Om-KOl" secondAttribute="bottom" constant="8" id="bsj-t8-ANe"/>
                             <constraint firstItem="2Km-LU-LZw" firstAttribute="top" secondItem="24Y-fL-sJU" secondAttribute="bottom" constant="16" id="gpX-BB-8Gp"/>
+                            <constraint firstItem="70s-Om-KOl" firstAttribute="centerX" secondItem="P8u-b5-96b" secondAttribute="centerX" id="rpS-Xk-QMV"/>
                             <constraint firstItem="2Km-LU-LZw" firstAttribute="leading" secondItem="P8u-b5-96b" secondAttribute="leading" constant="16" id="w7P-l9-oDd"/>
                             <constraint firstItem="GGb-mc-b8B" firstAttribute="top" secondItem="wHA-ya-5N0" secondAttribute="bottom" constant="16" id="z3f-LR-jNc"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="exitButton" destination="2Km-LU-LZw" id="C2c-bn-wDs"/>
+                        <outlet property="myNameLabel" destination="70s-Om-KOl" id="v40-Gy-hUf"/>
                         <outlet property="playButton" destination="wHA-ya-5N0" id="cR4-hW-OQl"/>
                     </connections>
                 </viewController>

@@ -14,6 +14,7 @@ import RxCocoa
 class MainViewController: UIViewController {
 
     @IBOutlet private weak var playEuchre: UIButton!
+    @IBOutlet weak var join: UIButton!
 
     private var disposeBag = DisposeBag()
 
@@ -21,6 +22,11 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
 
         self.playEuchre.rx.tap.subscribe(onNext: {
+            GameManager.shared.hostGame()
+            self.goToTable()
+        }).disposed(by: self.disposeBag)
+
+        self.join.rx.tap.subscribe(onNext: {
             GameManager.shared.findGame()
             self.goToTable()
         }).disposed(by: self.disposeBag)

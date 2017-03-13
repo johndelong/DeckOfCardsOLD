@@ -10,7 +10,7 @@ import Foundation
 
 class Deck {
 
-    var cards = Array<Card>()
+    var cards = [Card]()
 
     init() {
         createDeck()
@@ -24,18 +24,17 @@ class Deck {
             while let rank = Card.Rank(rawValue: rankIndex) {
                 let card = Card(rank: rank, suit: suit)
                 self.cards.append(card)
-//                rankIndex = rankIndex + 1
+                rankIndex += 1
             }
-//            suitIndex = suitIndex + 1
+            suitIndex += 1
         }
     }
 
     func shuffle() {
         let count = self.cards.count - 1
-        var shuffledCards = Array<Card>()
+        var shuffledCards = [Card]()
         for _ in 0...count {
-//            let pos = arc4random() % self.cards.count
-            let pos = 0
+            let pos = Int(arc4random()) % self.cards.count
             let card = self.cards[pos]
             shuffledCards.append(card)
             self.cards.remove(at: pos)

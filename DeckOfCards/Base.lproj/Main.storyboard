@@ -21,8 +21,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="d8Z-sd-65L">
-                                <rect key="frame" x="304" y="173" width="85" height="30"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="d8Z-sd-65L">
+                                <rect key="frame" x="291" y="173" width="85" height="30"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hDj-nY-OWv">
                                         <rect key="frame" x="0.0" y="0.0" width="85" height="30"/>
@@ -30,14 +30,21 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XJM-bJ-VFP">
+                                <rect key="frame" x="318" y="220" width="30" height="30"/>
+                                <state key="normal" title="Join"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="d8Z-sd-65L" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0qq-gA-IFB"/>
+                            <constraint firstItem="XJM-bJ-VFP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="G04-Dn-oTq"/>
+                            <constraint firstItem="XJM-bJ-VFP" firstAttribute="top" secondItem="hDj-nY-OWv" secondAttribute="bottom" constant="17" id="IF2-ah-pLc"/>
                             <constraint firstItem="d8Z-sd-65L" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="NyP-KO-g9S"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="join" destination="XJM-bJ-VFP" id="eH4-xL-Ap2"/>
                         <outlet property="playEuchre" destination="hDj-nY-OWv" id="PYh-Al-Gry"/>
                     </connections>
                 </viewController>

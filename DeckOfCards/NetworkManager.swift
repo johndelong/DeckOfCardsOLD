@@ -15,8 +15,9 @@ class NetworkManager: NSObject {
     private let serviceAdvertiser: MCNearbyServiceAdvertiser
     private let serviceBrowser: MCNearbyServiceBrowser
 
+    // Sessions are created by advertisers, and passed to peers when accepting an invitation to connect
     lazy var session: MCSession = {
-        let session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .required)
+        let session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .none)
         session.delegate = self
         return session
     }()
@@ -63,10 +64,12 @@ class NetworkManager: NSObject {
         self.session.disconnect()
     }
 
+    static var me: MCPeerID = {
+        return NetworkManager.shared.myPeerId
+    }()
+
     // MARK - Communication Functions
     func send(packet: PacketProtocol) {
-//        NSLog("%@", "sendColor: \(packet.type.displayName) to \(session.connectedPeers.count) peers")
-
         if !session.connectedPeers.isEmpty {
             do {
                 try self.session.send(packet.encode(), toPeers: session.connectedPeers, with: .reliable)
@@ -91,8 +94,9 @@ extension NetworkManager: MCNearbyServiceAdvertiserDelegate {
         withContext context: Data?,
         invitationHandler: @escaping (Bool, MCSession?) -> Void
     ) {
-        NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
-        invitationHandler(true, self.session)
+        NSLog("%@", "didReceiveInvitationFromPeer \(peerID)") // Somebody would like to join my game
+        let canJoin = self.session.connectedPeers.count < GameManager.shared.maxPlayers - 1
+        invitationHandler(canJoin, self.session) // Let them play!
     }
 }
 
@@ -107,8 +111,8 @@ extension NetworkManager : MCNearbyServiceBrowserDelegate {
         foundPeer peerID: MCPeerID,
         withDiscoveryInfo info: [String : String]?
     ) {
-        NSLog("%@", "foundPeer: \(peerID)")
-        NSLog("%@", "invitePeer: \(peerID)")
+        NSLog("%@", "foundPeer: \(peerID)") // Hey, I found a game to join
+        NSLog("%@", "invitePeer: \(peerID)") // Lets see if I can play with them
         browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
     }
 
@@ -122,7 +126,6 @@ extension NetworkManager : MCSessionDelegate {
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         NSLog("%@", "peer \(peerID) didChangeState: \(state)")
-
         self.connectedPeers.value = session.connectedPeers
     }
 
