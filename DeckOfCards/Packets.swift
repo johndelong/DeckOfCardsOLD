@@ -22,13 +22,13 @@ extension Data {
         unarchiver.requiresSecureCoding = true
 
         let classes = [
-            GameState.classForCoder(),
+            GameStatePacket.classForCoder(),
             PlayerDetails.classForCoder(),
             ActionPacket.classForCoder(),
             TurnDetails.classForCoder(),
             Card.self,
             NSArray.classForCoder(),
-            MCPeerID.classForCoder()
+            MCPeerID.classForCoder(),
         ]
         let packet = unarchiver.decodeObject(of: classes, forKey: packetModelKay) as? PacketProtocol
         unarchiver.finishDecoding()
@@ -54,33 +54,51 @@ extension PacketProtocol {
 
 
 /**
- * Maybe rename to GameState
+ * Information that is useful at any point in the game
+ *   - Is the game finished? (State)
+ *   - Who is the dealer
+ *   - Whose turn is it
+ *   - What is the score
+ *   - What round is it
  */
-class GameState: NSObject, NSSecureCoding, PacketProtocol {
+class GameStatePacket: NSObject, NSSecureCoding, PacketProtocol {
     enum State: String {
-        case start
+//        case start
+        case dealing
+        case playing
+        case unknown
     }
 
-    var state: State
+    let state: State
+    let dealer: MCPeerID
+    let turn: MCPeerID
 
-    init(state: State) {
+    init(state: State, dealer: MCPeerID, turn: MCPeerID) {
         self.state = state
+        self.dealer = dealer
+        self.turn = turn
     }
 
     required init?(coder aDecoder: NSCoder) {
 
         guard
             let stateValue = aDecoder.decodeObject(forKey: "state") as? String,
-            let state = State(rawValue: stateValue)
+            let state = State(rawValue: stateValue),
+            let dealer = aDecoder.decodeObject(forKey: "dealer") as? MCPeerID,
+            let turn = aDecoder.decodeObject(forKey: "turn") as? MCPeerID
         else {
             return nil
         }
 
         self.state = state
+        self.dealer = dealer
+        self.turn = turn
     }
 
     func encode(with aCoder: NSCoder) {
         aCoder.encode(self.state.rawValue, forKey: "state")
+        aCoder.encode(self.dealer, forKey: "dealer")
+        aCoder.encode(self.turn, forKey: "turn")
     }
 
     static var supportsSecureCoding: Bool {
@@ -127,8 +145,8 @@ class PlayerDetails: NSObject, NSSecureCoding, PacketProtocol {
 // player, action, value
 class ActionPacket: NSObject, NSSecureCoding, PacketProtocol {
     enum Action: String {
-        case deal
-        case playCard
+        case dealt
+        case playedCard
     }
 
     let player: MCPeerID // The player that took a specific action
@@ -166,8 +184,23 @@ class ActionPacket: NSObject, NSSecureCoding, PacketProtocol {
     static var supportsSecureCoding: Bool {
         return true
     }
-}
 
+    static func dealCards(to players: [MCPeerID]) -> ActionPacket {
+        let deck = Deck()
+        var cards = [[Card]]()
+        var index = 0
+        for card in deck.cards {
+            if cards.count != players.count {
+                cards.append([card])
+            } else {
+                cards[index % players.count].append(card)
+            }
+            index += 1
+        }
+        let data = NSKeyedArchiver.archivedData(withRootObject: cards)
+        return ActionPacket(player: NetworkManager.me, action: .dealt, value: data)
+    }
+}
 
 class TurnDetails: NSObject, NSSecureCoding, PacketProtocol {
     let player: MCPeerID // The player whose turn this class describes

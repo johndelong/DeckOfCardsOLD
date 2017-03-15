@@ -14,49 +14,35 @@ class GameManager {
 
     // Game Properties
     let maxPlayers = 4
-    var turn: MCPeerID? = nil
-    var dealer: MCPeerID? = nil
+
+    var state: GameStatePacket.State
+    var turn: MCPeerID
+    var dealer: MCPeerID
 
     // Streams
     private lazy var disposeBag = DisposeBag()
-    lazy var state = Variable<GameState?>(nil)
-    
-    // TODO: Make this not optional. Players have to exist if game is to be played. Maybe wrap in GamePacket object.
+    lazy var stateStream = Variable<GameStatePacket?>(nil)
     lazy var playersStream = Variable<PlayerDetails?>(nil)
-
-    static private(set) var players: PlayerDetails? {
-        get {
-            return GameManager.shared.playersStream.value
-        }
-        set {
-            GameManager.shared.playersStream.value = newValue
-        }
-    }
-
     lazy var eventStream = Variable<ActionPacket?>(nil)
-
 
     static let shared = GameManager()
     private init() {
+
+        // Set an initial value
+        self.state = .unknown
+        self.turn = NetworkManager.me
+        self.dealer = NetworkManager.me
+
          NetworkManager.shared.communication.asObservable()
             .subscribe(onNext: { [unowned self] packet in
                 guard let packet = packet else { return }
 
-                if let state = packet as? GameState {
-                    self.state.value = state
+                if let state = packet as? GameStatePacket {
+                    self.update(from: state)
                 }
 
                 if let event = packet as? ActionPacket {
-                    if event.action == .deal {
-                        self.dealer = event.player
-                        self.turn = self.determineNextTurn(currentPlayer: self.dealer!)
-                    }
-
-                    if event.action == .playCard {
-                        self.turn = self.determineNextTurn(currentPlayer: self.turn!)
-                    }
-
-                    self.eventStream.value = event
+                    self.update(from: event)
                 }
 
                 if let players = packet as? PlayerDetails {
@@ -95,49 +81,83 @@ class GameManager {
     }
 
     func startGame() {
-        guard let players = GameManager.players?.positions else { return }
+        guard let players = self.playersStream.value?.positions else { return }
 
         // Let the other players know we are starting the game
-        let state = GameState(state: .start)
-        NetworkManager.shared.send(packet: state)
-        self.state.value = state
-
-        // Tell the other players who the dealer is
         let dealer = players[Int(arc4random_uniform(UInt32(players.count)))]
-        self.dealer = dealer
-        self.turn = self.determineNextTurn(currentPlayer: self.dealer!)
-        let event = ActionPacket(player: dealer, action: .deal)
-        NetworkManager.shared.send(packet: event)
-        self.eventStream.value = event
+        let state = GameStatePacket(state: .dealing, dealer: dealer, turn: dealer)
+
+        self.update(from: state)
+        NetworkManager.shared.send(packet: state)
+    }
+
+    func update(from state: GameStatePacket) {
+        self.state = state.state
+        self.turn = state.turn
+        self.dealer = state.dealer
+        self.stateStream.value = state
     }
 
     func leaveGame() {
         NetworkManager.shared.disconnect()
     }
-}
 
-extension GameManager {
-    func determineNextTurn(currentPlayer: MCPeerID) -> MCPeerID? {
-        guard let playersList = GameManager.players?.positions else { return nil }
-
-        var player: MCPeerID? = nil
-        let players = Array(playersList)
-        for i in 0...players.count - 1 {
-            if currentPlayer == players[i] {
-                if i == players.count - 1 {
-                    player = players[0]
-                } else {
-                    player = players[i + 1]
-                }
-            }
-        }
-
-        return player
+    func dealCards() {
+        guard let players = self.playersStream.value?.positions else { return }
+        let event = ActionPacket.dealCards(to: players)
+        self.update(from: event)
+        NetworkManager.shared.send(packet: event)
     }
 
     func playCard() {
-        let event = ActionPacket(player: NetworkManager.me, action: .playCard)
+        let event = ActionPacket(player: NetworkManager.me, action: .playedCard)
+
+        self.update(from: event)
         NetworkManager.shared.send(packet: event)
+    }
+
+    func update(from event: ActionPacket) {
+        if event.action == .dealt {
+            self.state = .playing
+            if let data = event.value {
+                let cards = NSKeyedUnarchiver.unarchiveObject(with: data)
+                print(cards ?? nil)
+            }
+        }
+
+        if event.action == .playedCard {
+            print("\(event.player.displayName) played a card")
+        }
+
+        if let player = self.getNextPlayer(currentPlayer: event.player) {
+            self.turn = player
+        }
+
         self.eventStream.value = event
+    }
+
+    func getNextPlayer(currentPlayer: MCPeerID) -> MCPeerID? {
+        guard
+            let players = self.playersStream.value?.positions,
+            let index = players.index(of: currentPlayer)
+        else { return nil }
+
+        if index == players.count - 1 {
+            return players.first
+        } else {
+            return players[index.advanced(by: 1)]
+        }
+    }
+
+    static var isMyTurn: Bool {
+        return GameManager.shared.turn == NetworkManager.me
+    }
+
+    static var isDealer: Bool {
+        return GameManager.shared.dealer == NetworkManager.me
+    }
+
+    static var isHost: Bool {
+        return GameManager.shared.playersStream.value?.host == NetworkManager.me
     }
 }

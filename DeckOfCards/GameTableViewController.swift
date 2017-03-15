@@ -28,13 +28,18 @@ class GameTableViewController: UIViewController, StoryboardBased {
         super.viewDidLoad()
 
         self.myNameLabel.text = NetworkManager.me.displayName
-        self.playButton.isEnabled = (GameManager.players?.host == NetworkManager.me) 
+        self.playButton.isEnabled = GameManager.isHost
 
-        GameManager.shared.state.asObservable()
+        GameManager.shared.stateStream.asObservable()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] state in
                 guard let state = state else { return }
 
+                if state.state == .dealing {
+                    if state.dealer.isMe {
+                        self.playButton.isEnabled = true
+                    }
+                }
             }
         ).disposed(by: self.disposeBag)
 
@@ -51,7 +56,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
             .subscribe(onNext: { [unowned self] event in
                 guard let event = event else { return }
 
-                if GameManager.shared.turn == NetworkManager.me {
+                if GameManager.isMyTurn {
                     self.playButton.isEnabled = true
                 }
             }
@@ -62,8 +67,10 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
             let game = GameManager.shared
 
-            if GameManager.shared.state.value == nil {
+            if GameManager.shared.stateStream.value == nil {
                 GameManager.shared.startGame()
+            } else if GameManager.isDealer && game.state == .dealing {
+                game.dealCards()
             } else {
                 game.playCard()
             }
@@ -90,19 +97,20 @@ class GameTableViewController: UIViewController, StoryboardBased {
             }
 
             let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
             label.text = player.displayName
             self.view.addSubview(label)
 
             switch index {
             case 0: // Left side
-                label.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0).isActive = true
-                label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0).isActive = true
+                label.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 8.0).isActive = true
+                label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 8.0).isActive = true
             case 1: // Top
-                label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0).isActive = true
-                label.topAnchor.constraint(equalTo: margins.topAnchor, constant: 0).isActive = true
+                label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 8.0).isActive = true
+                label.topAnchor.constraint(equalTo: margins.topAnchor, constant: 8.0).isActive = true
             case 2: // Right side
-                label.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0).isActive = true
-                label.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0).isActive = true
+                label.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 8.0).isActive = true
+                label.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 8.0).isActive = true
             default:
                 continue
             }
@@ -111,5 +119,11 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
             index += 1
         }
+    }
+}
+
+extension MCPeerID {
+    var isMe: Bool {
+        return self == NetworkManager.me
     }
 }

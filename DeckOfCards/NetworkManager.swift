@@ -64,9 +64,9 @@ class NetworkManager: NSObject {
         self.session.disconnect()
     }
 
-    static var me: MCPeerID = {
+    static var me: MCPeerID {
         return NetworkManager.shared.myPeerId
-    }()
+    }
 
     // MARK - Communication Functions
     func send(packet: PacketProtocol) {
