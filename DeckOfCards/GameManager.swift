@@ -119,10 +119,6 @@ class GameManager {
     func update(from event: ActionPacket) {
         if event.action == .dealt {
             self.state = .playing
-            if let data = event.value {
-                let cards = NSKeyedUnarchiver.unarchiveObject(with: data)
-                print(cards ?? nil)
-            }
         }
 
         if event.action == .playedCard {

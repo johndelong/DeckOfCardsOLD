@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 // Resources
 // http://opengameart.org/content/dice-trumps
@@ -83,14 +84,16 @@ class Card: NSObject, NSSecureCoding {
     }
 
     func assetName() -> String {
-        let suit = self.suit.toString()
-        let rank = self.rank.rawValue
-        return (String(suit[suit.startIndex]).lowercased() + String(rank))
+        let suit = self.suit.toString().lowercased()
+        let rank = self.rank.toString().lowercased()
+        return "\(rank)_of_\(suit)"
     }
 
     func displayName() -> String {
         return "\(rank.toString()) of \(suit.toString())"
     }
 
-    
+    func getImageView() -> UIImageView {
+        return UIImageView(image: UIImage(named: self.assetName()))
+    }
 }

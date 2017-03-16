@@ -187,13 +187,13 @@ class ActionPacket: NSObject, NSSecureCoding, PacketProtocol {
 
     static func dealCards(to players: [MCPeerID]) -> ActionPacket {
         let deck = Deck()
-        var cards = [[Card]]()
+        var cards = [String: [Card]]()
         var index = 0
         for card in deck.cards {
             if cards.count != players.count {
-                cards.append([card])
+                cards[players[index].displayName] = [card]
             } else {
-                cards[index % players.count].append(card)
+                cards[players[index % players.count].displayName]?.append(card)
             }
             index += 1
         }

@@ -17,8 +17,10 @@ class GameTableViewController: UIViewController, StoryboardBased {
     @IBOutlet private weak var myNameLabel: UILabel!
     @IBOutlet private weak var exitButton: UIButton!
     @IBOutlet private weak var playButton: UIButton!
+    @IBOutlet weak var cardView: UIView!
 
     fileprivate var playerLabels = [UIView]()
+    fileprivate var cardImages = [UIImageView]()
 
     let disposeBag = DisposeBag()
 
@@ -59,8 +61,17 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 if GameManager.isMyTurn {
                     self.playButton.isEnabled = true
                 }
+
+                if
+                    event.action == .dealt,
+                    let data = event.value,
+                    let cards = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String: [Card]],
+                    let myCards = cards[NetworkManager.me.displayName]
+                {
+                    self.placeHand(cards: myCards)
+                }
             }
-        )
+        ).disposed(by: self.disposeBag)
 
         self.playButton.rx.tap.subscribe(onNext: {
             self.playButton.isEnabled = false
@@ -81,12 +92,41 @@ class GameTableViewController: UIViewController, StoryboardBased {
         self.dismiss(animated: true, completion: nil)
     }
 
+    func placeHand(cards: [Card]) {
+        for card in self.cardImages {
+            card.removeFromSuperview()
+        }
+        self.cardImages.removeAll()
+
+        let maxHandWidth = 300
+        let cardWidth: CGFloat = 80
+        let cardHeight: CGFloat = 116
+        let padding: CGFloat = 32
+        let yPos = self.view.frame.maxY - padding - cardHeight
+        let positions = cards.count
+        let offset = maxHandWidth / positions
+
+        var currentPos = 0
+        let startXPos = (self.view.frame.width / 2) - CGFloat(maxHandWidth / 2)
+        for card in cards {
+            let imageView = card.getImageView()
+            let xPos = startXPos + CGFloat(currentPos * offset)
+            let frame = CGRect(x: xPos, y: yPos, width: cardWidth, height: cardHeight)
+            imageView.frame = frame
+
+            self.cardImages.append(imageView)
+            self.view.addSubview(imageView)
+            currentPos += 1
+        }
+    }
+
     func updatePlayerLabels(_ positions: [MCPeerID]) {
 
         // Clear previous player labels
         for view in self.playerLabels {
             view.removeFromSuperview()
         }
+        self.playerLabels.removeAll()
 
         // Draw new player labels
         let margins = self.view.layoutMarginsGuide
