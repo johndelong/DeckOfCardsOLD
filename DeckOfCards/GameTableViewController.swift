@@ -68,7 +68,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     let cards = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String: [Card]],
                     let myCards = cards[NetworkManager.me.displayName]
                 {
-                    self.placeHand(cards: myCards)
+                    self.dealHand(cards: myCards)
                 }
             }
         ).disposed(by: self.disposeBag)
@@ -92,25 +92,36 @@ class GameTableViewController: UIViewController, StoryboardBased {
         self.dismiss(animated: true, completion: nil)
     }
 
-    func placeHand(cards: [Card]) {
+    func orderCards(_ cards: [Card]) -> [Card] {
+        return cards.sorted { (lhs, rhs) -> Bool in
+            return lhs.suit.rawValue > rhs.suit.rawValue ||
+                (lhs.suit.rawValue == rhs.suit.rawValue && lhs.rank.rawValue > rhs.rank.rawValue)
+        }
+    }
+
+    func dealHand(cards: [Card]) {
         for card in self.cardImages {
             card.removeFromSuperview()
         }
         self.cardImages.removeAll()
 
-        let maxHandWidth = 300
+        let maxHandWidth: CGFloat = 350
         let cardWidth: CGFloat = 80
         let cardHeight: CGFloat = 116
-        let padding: CGFloat = 32
-        let yPos = self.view.frame.maxY - padding - cardHeight
+//        let padding: CGFloat = 32
+        let yPos = self.view.frame.maxY - (cardHeight / 2)
         let positions = cards.count
-        let offset = maxHandWidth / positions
+        let offset = (maxHandWidth - cardWidth) / CGFloat(positions)
 
         var currentPos = 0
         let startXPos = (self.view.frame.width / 2) - CGFloat(maxHandWidth / 2)
-        for card in cards {
-            let imageView = card.getImageView()
-            let xPos = startXPos + CGFloat(currentPos * offset)
+        for card in orderCards(cards) {
+            let imageView = card.view
+            let gesture = UITapGestureRecognizer(target: self, action: #selector(playCard(sender:)))
+            imageView.addGestureRecognizer(gesture)
+
+            imageView.contentMode = .scaleAspectFit
+            let xPos = startXPos + CGFloat(currentPos) * offset
             let frame = CGRect(x: xPos, y: yPos, width: cardWidth, height: cardHeight)
             imageView.frame = frame
 
@@ -118,6 +129,14 @@ class GameTableViewController: UIViewController, StoryboardBased {
             self.view.addSubview(imageView)
             currentPos += 1
         }
+    }
+
+    func playCard(sender: UIImageView) {
+        // move to table
+        let original = sender.frame
+
+
+        // update the others
     }
 
     func updatePlayerLabels(_ positions: [MCPeerID]) {
@@ -158,6 +177,17 @@ class GameTableViewController: UIViewController, StoryboardBased {
             self.playerLabels.append(label)
 
             index += 1
+        }
+    }
+}
+
+extension GameTableViewController {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        if (size.width > size.height)
+        {
+            // Position elements for Landscape
+        } else {
+            // Position elements for Portrait
         }
     }
 }

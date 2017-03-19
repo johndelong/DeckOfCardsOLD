@@ -16,8 +16,8 @@ import UIKit
 
 class Card: NSObject, NSSecureCoding {
     enum Suit: Int {
-        case Hearts = 1
-        case Diamonds, Clubs, Spades
+        case Diamonds = 1
+        case Clubs, Hearts, Spades
 
         func toString() -> String {
             switch self {
@@ -93,7 +93,11 @@ class Card: NSObject, NSSecureCoding {
         return "\(rank.toString()) of \(suit.toString())"
     }
 
-    func getImageView() -> UIImageView {
-        return UIImageView(image: UIImage(named: self.assetName()))
+    var image: UIImage? {
+        return UIImage(named: self.assetName())
+    }
+
+    var view: CardView {
+        return CardView(card: self)
     }
 }

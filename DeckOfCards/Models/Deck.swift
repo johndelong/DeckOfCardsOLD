@@ -48,4 +48,17 @@ class Deck {
             print(card.displayName())
         }
     }
+
+    static func euchre() -> Deck {
+        let deck = Deck()
+        var index = 0
+        for card in deck.cards {
+            if card.rank.rawValue < 9 {
+                deck.cards.remove(at: index)
+                continue
+            }
+            index += 1
+        }
+        return deck
+    }
 }
