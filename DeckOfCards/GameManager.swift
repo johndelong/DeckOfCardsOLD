@@ -109,9 +109,8 @@ class GameManager {
         NetworkManager.shared.send(packet: event)
     }
 
-    func playCard() {
-        let event = ActionPacket(player: NetworkManager.me, action: .playedCard)
-
+    func playCard(_ card: Card) {
+        let event = ActionPacket.player(NetworkManager.me, played: card)
         self.update(from: event)
         NetworkManager.shared.send(packet: event)
     }

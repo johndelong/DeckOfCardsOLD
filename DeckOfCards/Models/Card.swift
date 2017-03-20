@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import MultipeerConnectivity
 
 // Resources
 // http://opengameart.org/content/dice-trumps

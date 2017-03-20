@@ -67,4 +67,9 @@ class ActionPacket: NSObject, PacketProtocol {
         let data = NSKeyedArchiver.archivedData(withRootObject: cards)
         return ActionPacket(player: NetworkManager.me, action: .dealt, value: data)
     }
+
+    static func player(_ player: MCPeerID, played card: Card) -> ActionPacket {
+        let data = NSKeyedArchiver.archivedData(withRootObject: card)
+        return ActionPacket(player: player, action: .playedCard, value: data)
+    }
 }

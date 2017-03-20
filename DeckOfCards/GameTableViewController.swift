@@ -14,11 +14,10 @@ import RxCocoa
 
 class GameTableViewController: UIViewController, StoryboardBased {
 
-    @IBOutlet private weak var myNameLabel: UILabel!
     @IBOutlet private weak var exitButton: UIButton!
     @IBOutlet private weak var playButton: UIButton!
-    @IBOutlet weak var cardView: UIView!
 
+    fileprivate var playerPhysicalPositions = [MCPeerID: CGPoint]()
     fileprivate var playerLabels = [UIView]()
     fileprivate var cardImages = [UIImageView]()
 
@@ -29,7 +28,6 @@ class GameTableViewController: UIViewController, StoryboardBased {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.myNameLabel.text = NetworkManager.me.displayName
         self.playButton.isEnabled = GameManager.isHost
 
         GameManager.shared.stateStream.asObservable()
@@ -49,7 +47,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] players in
                 guard let players = players else { return }
-                self.updatePlayerLabels(players.positions)
+                self.updatePlayerPhysicalPositions(players.positions)
             }
         ).disposed(by: self.disposeBag)
 
@@ -68,7 +66,15 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     let cards = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String: [Card]],
                     let myCards = cards[NetworkManager.me.displayName]
                 {
-                    self.dealHand(cards: myCards)
+                    self.updatePlayerCards(cards: myCards)
+                }
+
+                if
+                    event.action == .playedCard,
+                    let data = event.value,
+                    let card = NSKeyedUnarchiver.unarchiveObject(with: data) as? Card
+                {
+
                 }
             }
         ).disposed(by: self.disposeBag)
@@ -82,8 +88,6 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 GameManager.shared.startGame()
             } else if GameManager.isDealer && game.state == .dealing {
                 game.dealCards()
-            } else {
-                game.playCard()
             }
         }).disposed(by: self.disposeBag)
     }
@@ -99,7 +103,96 @@ class GameTableViewController: UIViewController, StoryboardBased {
         }
     }
 
-    func dealHand(cards: [Card]) {
+    func playMyCard(sender: UITapGestureRecognizer) {
+        guard let cardView = sender.view as? CardView else { return }
+        GameManager.shared.playCard(cardView.card)
+    }
+
+    func playCard(player: MCPeerID, cardView: CardView) {
+        guard let point2 = self.playerPhysicalPositions[player] else { return }
+
+        var frame = cardView.frame
+
+        let point1 = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
+        let padding: CGFloat = 1
+
+        let distance = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
+        let radius = padding / distance
+
+        let x = radius * point2.x + (1 - radius) * point1.x
+        let y = radius * point2.y + (1 - radius) * point1.y
+
+        let destination = CGPoint(x: x, y: y)
+
+        UIView.animate(withDuration: 5) {
+            frame.origin = destination
+            cardView.frame = frame
+        }
+
+        GameManager.shared.playCard(cardView.card)
+    }
+
+    func updatePlayerPhysicalPositions(_ positions: [MCPeerID]) {
+
+        let screenWidth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
+        let padding: CGFloat = 16
+
+        // start with me and then go clockwise around positions
+        guard let startIndex = positions.index(of: NetworkManager.me) else { return }
+
+        for index in 0...positions.count - 1 {
+            var playerIndex = startIndex + index
+            if playerIndex > positions.count - 1 {
+                playerIndex -= positions.count
+            }
+            let player = positions[playerIndex]
+
+            var point: CGPoint
+
+            switch index {
+            case 0:
+                point = CGPoint(x: screenWidth / 2, y: screenHeight - padding)
+            case 1:
+                point = CGPoint(x: padding, y: screenHeight / 2)
+            case 2:
+                point = CGPoint(x: screenWidth / 2, y: padding)
+            case 3:
+                point = CGPoint(x: screenWidth - padding, y: screenHeight / 2)
+            default:
+                continue
+            }
+
+            self.playerPhysicalPositions[player] = point
+
+        }
+
+        // update labels
+        self.updatePlayerLabels()
+
+        // update cards
+    }
+
+    func updatePlayerLabels() {
+        // Clear previous player labels
+        self.playerLabels.forEach { $0.removeFromSuperview() }
+        self.playerLabels.removeAll()
+
+        for (player, position) in self.playerPhysicalPositions {
+            let label = UILabel()
+            label.text = player.displayName
+            label.sizeToFit()
+
+            var frame = label.frame
+            frame.origin = position
+            label.frame = frame
+
+            self.view.addSubview(label)
+            self.playerLabels.append(label)
+        }
+    }
+
+    func updatePlayerCards(cards: [Card]) {
         for card in self.cardImages {
             card.removeFromSuperview()
         }
@@ -108,7 +201,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
         let maxHandWidth: CGFloat = 350
         let cardWidth: CGFloat = 80
         let cardHeight: CGFloat = 116
-//        let padding: CGFloat = 32
+        //        let padding: CGFloat = 32
         let yPos = self.view.frame.maxY - (cardHeight / 2)
         let positions = cards.count
         let offset = (maxHandWidth - cardWidth) / CGFloat(positions)
@@ -117,8 +210,9 @@ class GameTableViewController: UIViewController, StoryboardBased {
         let startXPos = (self.view.frame.width / 2) - CGFloat(maxHandWidth / 2)
         for card in orderCards(cards) {
             let imageView = card.view
-            let gesture = UITapGestureRecognizer(target: self, action: #selector(playCard(sender:)))
+            let gesture = UITapGestureRecognizer(target: self, action: #selector(playMyCard(sender:)))
             imageView.addGestureRecognizer(gesture)
+            imageView.isUserInteractionEnabled = true
 
             imageView.contentMode = .scaleAspectFit
             let xPos = startXPos + CGFloat(currentPos) * offset
@@ -128,55 +222,6 @@ class GameTableViewController: UIViewController, StoryboardBased {
             self.cardImages.append(imageView)
             self.view.addSubview(imageView)
             currentPos += 1
-        }
-    }
-
-    func playCard(sender: UIImageView) {
-        // move to table
-        let original = sender.frame
-
-
-        // update the others
-    }
-
-    func updatePlayerLabels(_ positions: [MCPeerID]) {
-
-        // Clear previous player labels
-        for view in self.playerLabels {
-            view.removeFromSuperview()
-        }
-        self.playerLabels.removeAll()
-
-        // Draw new player labels
-        let margins = self.view.layoutMarginsGuide
-        var index = 0
-        for player in positions {
-            if player == NetworkManager.me {
-                continue
-            }
-
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.text = player.displayName
-            self.view.addSubview(label)
-
-            switch index {
-            case 0: // Left side
-                label.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 8.0).isActive = true
-                label.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 8.0).isActive = true
-            case 1: // Top
-                label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 8.0).isActive = true
-                label.topAnchor.constraint(equalTo: margins.topAnchor, constant: 8.0).isActive = true
-            case 2: // Right side
-                label.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 8.0).isActive = true
-                label.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 8.0).isActive = true
-            default:
-                continue
-            }
-
-            self.playerLabels.append(label)
-
-            index += 1
         }
     }
 }
