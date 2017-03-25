@@ -20,7 +20,9 @@ class GameManager {
     // who played the card
     // the order in which the cards were played
     // the card played
-    var cardsPlayed = [Card]()
+    var cardsOnTable = [Card]()
+    var cardsPlayed = [MCPeerID: [Card]]()
+    var myCards = [Card]()
 
     var state: GameStatePacket.State
     var turn: MCPeerID
@@ -61,16 +63,26 @@ class GameManager {
 
                 // Action Packets
                 if let event = packet as? ActionPacket {
-                    if event.action == .dealt {
+                    if
+                        event.action == .dealt,
+                        let data = event.value,
+                        let cards = NSKeyedUnarchiver.unarchiveObject(with: data) as? [MCPeerID: [Card]],
+                        let myCards = cards[NetworkManager.me]
+                    {
+                        self.myCards = myCards
                         self.state = .playing
                     }
 
                     if
                         event.action == .playedCard,
                         let data = event.value,
-                        let card = NSKeyedUnarchiver.unarchiveObject(with: data) as? Card
+                        let payload = NSKeyedUnarchiver.unarchiveObject(with: data) as? CardPlayedPayload
                     {
-                        self.cardsPlayed.append(card)
+                        var playedCards = self.cardsPlayed[event.player] ?? [Card]()
+                        playedCards.append(payload.card)
+                        self.cardsPlayed[event.player] = playedCards
+
+                        self.cardsOnTable.append(payload.card)
                     }
 
                     if event.action == .wonTrick {
@@ -80,7 +92,7 @@ class GameManager {
                     }
 
                     self.eventStream.value = event
-                    self.evaluateSituation()
+                    self.evaluateCurrentState()
                 }
             }).disposed(by: self.disposeBag)
 
@@ -100,14 +112,6 @@ class GameManager {
                 }
             }
         ).disposed(by: self.disposeBag)
-
-//        // Make calculations after the UI has had a chance to draw
-//        self.eventStream.asObservable()
-//            .delay(1, scheduler: MainScheduler.instance)
-//            .subscribe(onNext: { [unowned self] packet in
-//
-//
-//            }).disposed(by: self.disposeBag)
     }
 
     func hostGame() {
@@ -120,12 +124,23 @@ class GameManager {
     }
 
     func startGame() {
-        guard let players = self.playersStream.value?.positions else { return }
+        self.setDealer()
+    }
 
-        // Let the other players know we are starting the game
-        let dealer = players[Int(arc4random_uniform(UInt32(players.count)))]
+    /**
+        Tells the players who the dealer is
+     
+        - Parameters:
+            - player: The player who is the dealer. If not specified, a player will be choosen at random
+    */
+    func setDealer(player: MCPeerID? = nil) {
+        let dealer: MCPeerID
+        if let player = player {
+            dealer = player
+        } else {
+            dealer = players[Int(arc4random_uniform(UInt32(players.count)))]
+        }
         let state = GameStatePacket(state: .dealing, dealer: dealer, turn: dealer)
-
         NetworkManager.shared.send(packet: state)
     }
 
@@ -136,15 +151,15 @@ class GameManager {
     /**
         Given the current situation, this method determines if any actions should be taken
     */
-    func evaluateSituation() {
+    func evaluateCurrentState() {
         // If everyone has played one card, then determine who wins this trick
         if
-            self.cardsPlayed.count == self.players.count,
-            let firstCard = self.cardsPlayed.first
+            self.cardsOnTable.count == self.players.count,
+            let firstCard = self.cardsOnTable.first
         {
             let followSuit = firstCard.suit
             var highCard = firstCard
-            for card in self.cardsPlayed {
+            for card in self.cardsOnTable {
                 if card.compare(firstCard) == .orderedSame {
                     continue
                 }
@@ -156,7 +171,7 @@ class GameManager {
                 }
             }
 
-            self.cardsPlayed.removeAll()
+            self.cardsOnTable.removeAll()
             if let player = highCard.owner {
                 NetworkManager.shared.sendToMe(packet: ActionPacket(player: player, action: .wonTrick))
             }
@@ -167,8 +182,12 @@ class GameManager {
         NetworkManager.shared.send(packet: ActionPacket.dealCards(to: self.players))
     }
 
-    func playCard(_ card: Card) {
-        NetworkManager.shared.send(packet: ActionPacket.player(NetworkManager.me, played: card))
+    func playCard(_ card: Card, fromPosition position: Int) {
+        NetworkManager.shared.send(packet: ActionPacket.player(
+            NetworkManager.me,
+            played: card,
+            fromPosition: position)
+        )
     }
 
     func getNextPlayer(currentPlayer: MCPeerID) -> MCPeerID? {

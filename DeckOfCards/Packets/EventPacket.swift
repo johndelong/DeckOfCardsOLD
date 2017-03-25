@@ -50,10 +50,6 @@ class ActionPacket: NSObject, PacketProtocol {
         aCoder.encode(self.value, forKey: "value")
     }
 
-    static var supportsSecureCoding: Bool {
-        return true
-    }
-
     static func dealCards(to players: [MCPeerID]) -> ActionPacket {
         let deck = Deck.euchre()
         var cards = [MCPeerID: [Card]]()
@@ -72,8 +68,35 @@ class ActionPacket: NSObject, PacketProtocol {
         return ActionPacket(player: NetworkManager.me, action: .dealt, value: data)
     }
 
-    static func player(_ player: MCPeerID, played card: Card) -> ActionPacket {
-        let data = NSKeyedArchiver.archivedData(withRootObject: card)
+    static func player(_ player: MCPeerID, played card: Card, fromPosition position: Int) -> ActionPacket {
+        let payload = CardPlayedPayload(card: card, position: position)
+        let data = NSKeyedArchiver.archivedData(withRootObject: payload)
         return ActionPacket(player: player, action: .playedCard, value: data)
+    }
+}
+
+class CardPlayedPayload: NSObject, NSCoding {
+    let card: Card
+    let positionInHand: Int
+
+    init(card: Card, position: Int) {
+        self.card = card
+        self.positionInHand = position
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        guard
+            let card = aDecoder.decodeObject(forKey: "card") as? Card
+        else {
+            return nil
+        }
+
+        self.card = card
+        self.positionInHand = aDecoder.decodeInteger(forKey: "position")
+    }
+
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.card, forKey: "card")
+        aCoder.encode(self.positionInHand, forKey: "position")
     }
 }

@@ -142,7 +142,7 @@ extension NetworkManager : MCSessionDelegate {
     }
 
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        NSLog("%@", "didReceiveData: \(data)")
+//        NSLog("%@", "didReceiveData: \(data)")
 
         self.communicationStream.value = data.decode()
     }

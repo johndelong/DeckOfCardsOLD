@@ -16,13 +16,19 @@ protocol CardViewDelegate: class {
 class CardView: UIImageView {
     static let size = CGSize(width: 80, height: 116)
 
-    var card: Card
+    private(set) var isFaceUp = false
+    var card: Card?
 
     var delegate: CardViewDelegate?
 
-    init(card: Card) {
+    convenience init(card: Card) {
+        self.init()
+
         self.card = card
-        super.init(image: card.image)
+    }
+
+    init() {
+        super.init(image: Card.faceDown)
 
         self.isUserInteractionEnabled = true
         self.contentMode = .scaleAspectFit
@@ -38,5 +44,12 @@ class CardView: UIImageView {
     func didTapCard(_ sender: UITapGestureRecognizer) {
         guard let cardView = sender.view as? CardView else { return }
         self.delegate?.didTapCard(cardView)
+    }
+
+    func flipCard() {
+        guard let card = self.card else { return }
+        self.isFaceUp = !self.isFaceUp
+
+        self.image = self.isFaceUp ? card.faceUp : Card.faceDown
     }
 }

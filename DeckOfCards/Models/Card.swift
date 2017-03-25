@@ -11,6 +11,8 @@ import UIKit
 import MultipeerConnectivity
 
 // Resources
+// http://byronknoll.blogspot.com/2011/03/vector-playing-cards.html
+// https://code.google.com/archive/p/vector-playing-cards/
 // http://opengameart.org/content/dice-trumps
 // http://stackoverflow.com/questions/24007461/how-to-enumerate-an-enum-with-string-type
 // http://opengameart.org/content/playing-cards-vector-png
@@ -108,7 +110,11 @@ class Card: NSObject, NSSecureCoding {
         return "\(rank.toString()) of \(suit.toString())"
     }
 
-    var image: UIImage? {
+    var faceUp: UIImage? {
         return UIImage(named: self.assetName())
+    }
+
+    static var faceDown: UIImage {
+        return #imageLiteral(resourceName: "card_back")
     }
 }
