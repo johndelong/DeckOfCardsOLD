@@ -31,6 +31,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
         super.viewDidLoad()
 
         self.playButton.isEnabled = GameManager.isHost
+        self.playButton.titleLabel?.text = "Start Game"
 
         GameManager.shared.stateStream.asObservable()
             .observeOn(MainScheduler.instance)
@@ -39,6 +40,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
                 if state.state == .dealing {
                     if state.dealer.isMe {
+                        self.playButton.titleLabel?.text = "Deal"
                         self.playButton.isEnabled = true
                     }
                 }
@@ -59,8 +61,10 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 guard let event = event else { return }
 
                 if GameManager.isMyTurn {
+                    self.playButton.titleLabel?.text = "Take Turn"
                     self.playButton.isEnabled = true
                 } else {
+                    self.playButton.titleLabel?.text = "Waiting..."
                     self.playButton.isEnabled = false
                 }
 
@@ -203,24 +207,26 @@ extension GameTableViewController {
 
             var index = 1
             for card in orderedCards {
-                let cardView: CardView
-                if player == NetworkManager.me {
-                    cardView = CardView(card: card)
-                    cardView.flipCard()
-                } else {
-                    cardView = CardView()
-                }
-
+                let cardView = CardView()
                 cardView.delegate = self
 
+                if player == NetworkManager.me {
+                    cardView.card = card
+                    cardView.flipCard()
+                }
+
                 let offset = (CGFloat(index) * increment)
-                let xPos = horizontal ? startXPos + offset : playerPos.x
-                let yPos = horizontal ? playerPos.y : startYPos + offset
+                let xPos = (horizontal ? startXPos + offset : playerPos.x) - (CardView.size.width / 2)
+                let yPos = (horizontal ? playerPos.y : startYPos + offset) - (CardView.size.height / 2)
                 cardView.frame = CGRect(origin: CGPoint(x: xPos, y: yPos), size: CardView.size)
 
                 var cardViews = self.playerCards[player] ?? [CardView]()
                 cardViews.append(cardView)
                 self.playerCards[player] = cardViews
+
+                if !horizontal {
+                    cardView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+                }
 
                 self.view.addSubview(cardView)
                 index += 1
@@ -255,8 +261,8 @@ extension GameTableViewController {
         let distance = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
         let radius = padding / distance
 
-        let x = radius * point2.x + (1 - radius) * point1.x
-        let y = radius * point2.y + (1 - radius) * point1.y
+        let x = (radius * point2.x + (1 - radius) * point1.x) - (CardView.size.width / 2)
+        let y = (radius * point2.y + (1 - radius) * point1.y) - (CardView.size.height / 2)
 
         let destination = CGPoint(x: x, y: y)
 

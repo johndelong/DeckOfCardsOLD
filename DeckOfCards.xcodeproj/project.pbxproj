@@ -30,6 +30,7 @@
 		15B4ED261E65B4E0001C72CF /* GameTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ED251E65B4E0001C72CF /* GameTableViewController.storyboard */; };
 		15B948CA1E67853A00E99113 /* Packets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B948C91E67853A00E99113 /* Packets.swift */; };
 		15EE4A111E86C000001A9292 /* AnimationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EE4A101E86C000001A9292 /* AnimationQueue.swift */; };
+		15EFE6F21E872473005CC1E0 /* StrategyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EFE6F11E872473005CC1E0 /* StrategyEngine.swift */; };
 		15FD42C21E7C14C800486072 /* EventPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FD42C11E7C14C800486072 /* EventPacket.swift */; };
 		5075347E41AB199AD02E36D5 /* Pods_DeckOfCardsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D66C5719C5B3F6155B96DE8C /* Pods_DeckOfCardsTests.framework */; };
 		F10F127338EB0369B3070260 /* Pods_DeckOfCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDD3970435A30C2D33401523 /* Pods_DeckOfCards.framework */; };
@@ -73,6 +74,7 @@
 		15B4ED251E65B4E0001C72CF /* GameTableViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GameTableViewController.storyboard; sourceTree = "<group>"; };
 		15B948C91E67853A00E99113 /* Packets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Packets.swift; path = DeckOfCards/Packets/Packets.swift; sourceTree = SOURCE_ROOT; };
 		15EE4A101E86C000001A9292 /* AnimationQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationQueue.swift; sourceTree = "<group>"; };
+		15EFE6F11E872473005CC1E0 /* StrategyEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrategyEngine.swift; sourceTree = "<group>"; };
 		15FD42C11E7C14C800486072 /* EventPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPacket.swift; sourceTree = "<group>"; };
 		319890A8556413D0640754AB /* Pods-DeckOfCards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCards.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCards/Pods-DeckOfCards.release.xcconfig"; sourceTree = "<group>"; };
 		8E3CEB088614C6DA17CA467A /* Pods-DeckOfCardsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeckOfCardsTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeckOfCardsTests/Pods-DeckOfCardsTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				15B4ED251E65B4E0001C72CF /* GameTableViewController.storyboard */,
 				1523F1FB1E7F2DC5001486BB /* CardView.swift */,
 				15EE4A101E86C000001A9292 /* AnimationQueue.swift */,
+				15EFE6F11E872473005CC1E0 /* StrategyEngine.swift */,
 			);
 			path = DeckOfCards;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 				15B4ED131E622CF8001C72CF /* GameManager.swift in Sources */,
 				15B4ED1B1E6463F6001C72CF /* StoryboardBased.swift in Sources */,
 				1523F1FC1E7F2DC5001486BB /* CardView.swift in Sources */,
+				15EFE6F21E872473005CC1E0 /* StrategyEngine.swift in Sources */,
 				15B948CA1E67853A00E99113 /* Packets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,6 +10,9 @@ import Foundation
 import MultipeerConnectivity
 import RxSwift
 
+public typealias Player = MCPeerID
+
+// TODO: Possibly rename to CommunicationManager
 class NetworkManager: NSObject {
     let myPeerId = MCPeerID(displayName: UIDevice.current.name)
     private let serviceAdvertiser: MCNearbyServiceAdvertiser
@@ -107,7 +110,7 @@ extension NetworkManager: MCNearbyServiceAdvertiserDelegate {
         invitationHandler: @escaping (Bool, MCSession?) -> Void
     ) {
         NSLog("%@", "didReceiveInvitationFromPeer \(peerID)") // Somebody would like to join my game
-        let canJoin = self.session.connectedPeers.count < GameManager.shared.maxPlayers - 1
+        let canJoin = self.session.connectedPeers.count < GameManager.shared.requiredPlayers - 1
         invitationHandler(canJoin, self.session) // Let them play!
     }
 }

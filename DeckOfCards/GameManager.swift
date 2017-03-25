@@ -13,15 +13,17 @@ import RxSwift
 class GameManager {
 
     // Game Properties
-    let maxPlayers = 4
+    let requiredPlayers = 4
+    let cardsInDeck = 24
 
     var players = [MCPeerID]()
 
     // who played the card
     // the order in which the cards were played
     // the card played
-    var cardsOnTable = [Card]()
-    var cardsPlayed = [MCPeerID: [Card]]()
+
+    var cardsInPlay = [Card]()
+    var cardsPlayed = [Card]()
     var myCards = [Card]()
 
     var state: GameStatePacket.State
@@ -78,15 +80,20 @@ class GameManager {
                         let data = event.value,
                         let payload = NSKeyedUnarchiver.unarchiveObject(with: data) as? CardPlayedPayload
                     {
-                        var playedCards = self.cardsPlayed[event.player] ?? [Card]()
-                        playedCards.append(payload.card)
-                        self.cardsPlayed[event.player] = playedCards
-
-                        self.cardsOnTable.append(payload.card)
+                        self.cardsPlayed.append(payload.card)
+                        self.cardsInPlay.append(payload.card)
                     }
 
                     if event.action == .wonTrick {
                         self.turn = event.player
+
+                        // If everyone's cards are gone, we need to deal again
+                        print("Cards played: \(self.cardsPlayed.count)")
+                        if self.cardsPlayed.count == self.cardsInDeck {
+                            print("Updating dealer...")
+
+                            self.setDealer(player: event.player)
+                        }
                     } else if let player = self.getNextPlayer(currentPlayer: event.player) {
                         self.turn = player
                     }
@@ -115,7 +122,7 @@ class GameManager {
     }
 
     func hostGame() {
-        self.playersStream.value = PlayerDetails(host: NetworkManager.me, positions: [NetworkManager.me])
+        NetworkManager.shared.sendToMe(packet: PlayerDetails(host: NetworkManager.me, positions: [NetworkManager.me]))
         NetworkManager.shared.startSearching()
     }
 
@@ -124,6 +131,24 @@ class GameManager {
     }
 
     func startGame() {
+        if self.players.count < self.requiredPlayers {
+            let computerNames = ["Jim", "Dwight", "Pam"]
+            var computers = [Player]()
+            var positions = self.playersStream.value?.positions ?? [Player]()
+            for index in 0...(self.requiredPlayers - self.players.count - 1) {
+                let computer = Player(displayName: computerNames[index])
+                computers.append(computer)
+                positions.append(computer)
+            }
+
+            NetworkManager.shared.send(packet: PlayerDetails(
+                    host: NetworkManager.me,
+                    positions: positions,
+                    computers: computers
+                )
+            )
+        }
+
         self.setDealer()
     }
 
@@ -154,12 +179,12 @@ class GameManager {
     func evaluateCurrentState() {
         // If everyone has played one card, then determine who wins this trick
         if
-            self.cardsOnTable.count == self.players.count,
-            let firstCard = self.cardsOnTable.first
+            self.cardsInPlay.count == self.players.count,
+            let firstCard = self.cardsInPlay.first
         {
             let followSuit = firstCard.suit
             var highCard = firstCard
-            for card in self.cardsOnTable {
+            for card in self.cardsInPlay {
                 if card.compare(firstCard) == .orderedSame {
                     continue
                 }
@@ -171,7 +196,7 @@ class GameManager {
                 }
             }
 
-            self.cardsOnTable.removeAll()
+            self.cardsInPlay.removeAll()
             if let player = highCard.owner {
                 NetworkManager.shared.sendToMe(packet: ActionPacket(player: player, action: .wonTrick))
             }

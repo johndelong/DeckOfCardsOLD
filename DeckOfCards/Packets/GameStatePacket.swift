@@ -26,10 +26,10 @@ class GameStatePacket: NSObject, PacketProtocol {
     }
 
     let state: State
-    let dealer: MCPeerID
-    let turn: MCPeerID
+    let dealer: Player
+    let turn: Player
 
-    init(state: State, dealer: MCPeerID, turn: MCPeerID) {
+    init(state: State, dealer: Player, turn: Player) {
         self.state = state
         self.dealer = dealer
         self.turn = turn
@@ -40,10 +40,10 @@ class GameStatePacket: NSObject, PacketProtocol {
         guard
             let stateValue = aDecoder.decodeObject(forKey: "state") as? String,
             let state = State(rawValue: stateValue),
-            let dealer = aDecoder.decodeObject(forKey: "dealer") as? MCPeerID,
-            let turn = aDecoder.decodeObject(forKey: "turn") as? MCPeerID
-            else {
-                return nil
+            let dealer = aDecoder.decodeObject(forKey: "dealer") as? Player,
+            let turn = aDecoder.decodeObject(forKey: "turn") as? Player
+        else {
+            return nil
         }
 
         self.state = state

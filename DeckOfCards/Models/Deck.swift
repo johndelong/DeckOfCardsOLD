@@ -11,8 +11,10 @@ import Foundation
 class Deck {
 
     var cards = [Card]()
+    let aceHigh: Bool
 
     init() {
+        self.aceHigh = true
         createDeck()
         shuffle()
     }
@@ -53,7 +55,12 @@ class Deck {
         let deck = Deck()
         var index = 0
         for card in deck.cards {
-            if card.rank.rawValue < 9 {
+            var calculatedRank = card.rank.rawValue
+            if card.rank.rawValue == 1 && deck.aceHigh {
+                calculatedRank = 14
+            }
+
+            if calculatedRank < 9 {
                 deck.cards.remove(at: index)
                 continue
             }
