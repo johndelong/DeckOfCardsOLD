@@ -31,6 +31,8 @@ trailing_comma:
 
 disabled_rules:
     - variable_name
+    - missing_docs
+    - todo
 
 # ALL TEH RULEZ
 opt_in_rules:

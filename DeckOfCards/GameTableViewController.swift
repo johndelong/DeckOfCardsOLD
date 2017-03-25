@@ -19,12 +19,14 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
     fileprivate var playerPhysicalPositions = [MCPeerID: CGPoint]()
     fileprivate var playerLabels = [UIView]()
-    fileprivate var cardImages = [UIImageView]()
+    fileprivate var playerCards = [MCPeerID: [CardView]]()
+    fileprivate var cardsPlayed = [CardView]()
+    fileprivate var animationQueue = AnimationQueue()
 
     let disposeBag = DisposeBag()
 
     var playerPositions = [Int: String]()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -63,10 +65,9 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 if
                     event.action == .dealt,
                     let data = event.value,
-                    let cards = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String: [Card]],
-                    let myCards = cards[NetworkManager.me.displayName]
+                    let cards = NSKeyedUnarchiver.unarchiveObject(with: data) as? [MCPeerID: [Card]]
                 {
-                    self.updatePlayerCards(cards: myCards)
+                    self.dealCards(cards)
                 }
 
                 if
@@ -74,7 +75,24 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     let data = event.value,
                     let card = NSKeyedUnarchiver.unarchiveObject(with: data) as? Card
                 {
+                    guard
+                        let hand = self.playerCards[event.player],
+                        let index = hand.index(where: { $0.card.compare(card) == .orderedSame }),
+                        let cardView = self.playerCards[event.player]?[index]
+                    else { return }
 
+                    print("playing card")
+                    self.cardsPlayed.append(cardView)
+                    self.playCard(player: event.player, cardView: cardView)
+                }
+
+                if event.action == .wonTrick {
+                    print("removing cards")
+                    self.animationQueue.animate(withDuration: 1, animations: { 
+                        self.cardsPlayed.forEach { $0.removeFromSuperview() }
+                        self.cardsPlayed.removeAll()
+
+                    })
                 }
             }
         ).disposed(by: self.disposeBag)
@@ -84,7 +102,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
             let game = GameManager.shared
 
-            if GameManager.shared.stateStream.value == nil {
+            if game.stateStream.value == nil {
                 GameManager.shared.startGame()
             } else if GameManager.isDealer && game.state == .dealing {
                 game.dealCards()
@@ -102,36 +120,10 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 (lhs.suit.rawValue == rhs.suit.rawValue && lhs.rank.rawValue > rhs.rank.rawValue)
         }
     }
+}
 
-    func playMyCard(sender: UITapGestureRecognizer) {
-        guard let cardView = sender.view as? CardView else { return }
-        GameManager.shared.playCard(cardView.card)
-    }
-
-    func playCard(player: MCPeerID, cardView: CardView) {
-        guard let point2 = self.playerPhysicalPositions[player] else { return }
-
-        var frame = cardView.frame
-
-        let point1 = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
-        let padding: CGFloat = 1
-
-        let distance = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
-        let radius = padding / distance
-
-        let x = radius * point2.x + (1 - radius) * point1.x
-        let y = radius * point2.y + (1 - radius) * point1.y
-
-        let destination = CGPoint(x: x, y: y)
-
-        UIView.animate(withDuration: 5) {
-            frame.origin = destination
-            cardView.frame = frame
-        }
-
-        GameManager.shared.playCard(cardView.card)
-    }
-
+// Drawing UI components and animation
+extension GameTableViewController {
     func updatePlayerPhysicalPositions(_ positions: [MCPeerID]) {
 
         let screenWidth = UIScreen.main.bounds.width
@@ -192,37 +184,75 @@ class GameTableViewController: UIViewController, StoryboardBased {
         }
     }
 
-    func updatePlayerCards(cards: [Card]) {
-        for card in self.cardImages {
-            card.removeFromSuperview()
-        }
-        self.cardImages.removeAll()
+    /**
+        Deal cards to every player at the table
+    */
+    func dealCards(_ cards: [MCPeerID: [Card]]) {
+        // Clear the table of any cards
+        self.playerCards.values.forEach { $0.forEach { $0.removeFromSuperview() } }
+        self.playerCards.removeAll()
 
         let maxHandWidth: CGFloat = 350
-        let cardWidth: CGFloat = 80
-        let cardHeight: CGFloat = 116
-        //        let padding: CGFloat = 32
-        let yPos = self.view.frame.maxY - (cardHeight / 2)
-        let positions = cards.count
-        let offset = (maxHandWidth - cardWidth) / CGFloat(positions)
 
-        var currentPos = 0
-        let startXPos = (self.view.frame.width / 2) - CGFloat(maxHandWidth / 2)
-        for card in orderCards(cards) {
-            let imageView = card.view
-            let gesture = UITapGestureRecognizer(target: self, action: #selector(playMyCard(sender:)))
-            imageView.addGestureRecognizer(gesture)
-            imageView.isUserInteractionEnabled = true
+        // Deal cards to each player
+        for (player, hand) in cards {
+            guard let playerPos = self.playerPhysicalPositions[player] else { continue }
 
-            imageView.contentMode = .scaleAspectFit
-            let xPos = startXPos + CGFloat(currentPos) * offset
-            let frame = CGRect(x: xPos, y: yPos, width: cardWidth, height: cardHeight)
-            imageView.frame = frame
+            let increment = (maxHandWidth - CardView.size.width) / CGFloat(hand.count)
 
-            self.cardImages.append(imageView)
-            self.view.addSubview(imageView)
-            currentPos += 1
+            // Determine the orientation of how to deal the cards
+            let horizontal = abs(playerPos.x - self.view.center.x) < abs(playerPos.y - self.view.center.y)
+
+            let startXPos = horizontal ? (self.view.frame.width / 2) - CGFloat(maxHandWidth / 2) : playerPos.x
+            let startYPos = horizontal ? playerPos.y : (self.view.frame.height / 2) - CGFloat(maxHandWidth / 2)
+
+            var index = 1
+            for card in orderCards(hand) {
+                let cardView = CardView(card: card)
+                cardView.delegate = self
+
+                let offset = (CGFloat(index) * increment)
+                let xPos = horizontal ? startXPos + offset : playerPos.x
+                let yPos = horizontal ? playerPos.y : startYPos + offset
+                cardView.frame = CGRect(origin: CGPoint(x: xPos, y: yPos), size: CardView.size)
+
+                var cardViews = self.playerCards[player] ?? [CardView]()
+                cardViews.append(cardView)
+                self.playerCards[player] = cardViews
+
+                self.view.addSubview(cardView)
+                index += 1
+            }
         }
+    }
+
+    /**
+        Animates a card from a player's hand to the center of the table
+ 
+        - Parameters:
+            - player: The person who played the card
+            - cardView: The view representing the card that was played
+    */
+    func playCard(player: MCPeerID, cardView: CardView) {
+        guard let point2 = self.playerPhysicalPositions[player] else { return }
+
+        var frame = cardView.frame
+
+        let point1 = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
+        let padding: CGFloat = 1
+
+        let distance = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
+        let radius = padding / distance
+
+        let x = radius * point2.x + (1 - radius) * point1.x
+        let y = radius * point2.y + (1 - radius) * point1.y
+
+        let destination = CGPoint(x: x, y: y)
+
+        self.animationQueue.animate(withDuration: 0.5, animations: {
+            frame.origin = destination
+            cardView.frame = frame
+        })
     }
 }
 
@@ -233,6 +263,14 @@ extension GameTableViewController {
             // Position elements for Landscape
         } else {
             // Position elements for Portrait
+        }
+    }
+}
+
+extension GameTableViewController: CardViewDelegate {
+    func didTapCard(_ cardView: CardView) {
+        if GameManager.isMyTurn && cardView.card.owner == NetworkManager.me {
+            GameManager.shared.playCard(cardView.card)
         }
     }
 }

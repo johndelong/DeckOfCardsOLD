@@ -58,6 +58,9 @@ class Card: NSObject, NSSecureCoding {
     let rank: Rank
     let suit: Suit
 
+    /// The player this card belongs to.
+    var owner: MCPeerID?
+
     init(rank: Rank, suit: Suit) {
         self.rank = rank
         self.suit = suit
@@ -66,18 +69,29 @@ class Card: NSObject, NSSecureCoding {
     required init?(coder aDecoder: NSCoder) {
         guard
             let rank = Rank(rawValue: Int(aDecoder.decodeInt64(forKey: "rank"))),
-            let suit = Suit(rawValue: Int(aDecoder.decodeInt64(forKey: "suit")))
+            let suit = Suit(rawValue: Int(aDecoder.decodeInt64(forKey: "suit"))),
+            let owner = aDecoder.decodeObject(forKey: "owner") as? MCPeerID
         else {
             return nil
         }
 
-         self.rank = rank
-         self.suit = suit
+        self.rank = rank
+        self.suit = suit
+        self.owner = owner
     }
 
     func encode(with aCoder: NSCoder) {
         aCoder.encode(self.rank.rawValue, forKey: "rank")
         aCoder.encode(self.suit.rawValue, forKey: "suit")
+        aCoder.encode(self.owner, forKey: "owner")
+    }
+
+    func compare(_ card: Card) -> ComparisonResult {
+        if self.rank.rawValue == card.rank.rawValue && self.suit.rawValue == card.suit.rawValue {
+            return .orderedSame
+        }
+
+        return .orderedDescending
     }
 
     static var supportsSecureCoding: Bool {
@@ -96,9 +110,5 @@ class Card: NSObject, NSSecureCoding {
 
     var image: UIImage? {
         return UIImage(named: self.assetName())
-    }
-
-    var view: CardView {
-        return CardView(card: self)
     }
 }

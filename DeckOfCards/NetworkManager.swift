@@ -24,7 +24,11 @@ class NetworkManager: NSObject {
 
     // MARK - Streams
     lazy var connectedPeers = Variable<[MCPeerID]>(NetworkManager.shared.session.connectedPeers)
-    lazy var communication = Variable<PacketProtocol?>(nil)
+
+    fileprivate let communicationStream = Variable<PacketProtocol?>(nil)
+    lazy var communication: Observable<PacketProtocol?> = {
+        return self.communicationStream.asObservable()
+    }()
 
     // Service type must be a unique string, at most 15 characters long
     // and can contain only ASCII lowercase letters, numbers and hyphens.
@@ -70,13 +74,21 @@ class NetworkManager: NSObject {
 
     // MARK - Communication Functions
     func send(packet: PacketProtocol) {
-        if !session.connectedPeers.isEmpty {
-            do {
+        do {
+            // Send to all users...
+            if !session.connectedPeers.isEmpty {
                 try self.session.send(packet.encode(), toPeers: session.connectedPeers, with: .reliable)
-            } catch let error {
-                NSLog("%@", "Error for sending: \(error)")
             }
+
+            // ...including me!
+            self.communicationStream.value = packet
+        } catch let error {
+            NSLog("%@", "Error for sending: \(error)")
         }
+    }
+
+    func sendToMe(packet: PacketProtocol) {
+        self.communicationStream.value = packet
     }
 }
 
@@ -125,14 +137,14 @@ extension NetworkManager : MCNearbyServiceBrowserDelegate {
 extension NetworkManager : MCSessionDelegate {
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        NSLog("%@", "peer \(peerID) didChangeState: \(state)")
+        NSLog("%@", "peer \(peerID) didChangeState: \(state.rawValue)")
         self.connectedPeers.value = session.connectedPeers
     }
 
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         NSLog("%@", "didReceiveData: \(data)")
 
-        self.communication.value = data.decode()
+        self.communicationStream.value = data.decode()
     }
 
     func session(

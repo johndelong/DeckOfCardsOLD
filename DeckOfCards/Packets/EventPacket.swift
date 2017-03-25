@@ -9,11 +9,13 @@
 import Foundation
 import MultipeerConnectivity
 
+// IDEA: Make subclass of this class for every event type
 // player, action, value
 class ActionPacket: NSObject, PacketProtocol {
     enum Action: String {
         case dealt
         case playedCard
+        case wonTrick
     }
 
     let player: MCPeerID // The player that took a specific action
@@ -54,14 +56,16 @@ class ActionPacket: NSObject, PacketProtocol {
 
     static func dealCards(to players: [MCPeerID]) -> ActionPacket {
         let deck = Deck.euchre()
-        var cards = [String: [Card]]()
+        var cards = [MCPeerID: [Card]]()
         var index = 0
         for card in deck.cards {
-            if cards.count != players.count {
-                cards[players[index].displayName] = [card]
-            } else {
-                cards[players[index % players.count].displayName]?.append(card)
-            }
+            let player = players[index % players.count]
+            card.owner = player
+
+            var hand = cards[player] ?? [Card]()
+            hand.append(card)
+            cards[player] = hand
+
             index += 1
         }
         let data = NSKeyedArchiver.archivedData(withRootObject: cards)
