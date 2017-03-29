@@ -9,79 +9,92 @@
 import Foundation
 import MultipeerConnectivity
 
-// IDEA: Make subclass of this class for every event type
-// player, action, value
+/**
+    This packet describes a Player taking an Action of some kind
+ */
 class ActionPacket: NSObject, PacketProtocol {
-    enum Action: String {
+    enum ActionType: String {
         case dealt
         case playedCard
         case wonTrick
     }
 
-    let player: MCPeerID // The player that took a specific action
-    let action: Action
-    let value: Data?
+    let player: Player // The player that took a specific action
+    let type: ActionType
 
-    init(player: MCPeerID, action: Action, value: Data? = nil) {
+    init(player: Player, action: ActionType) {
         self.player = player
-        self.action = action
-        self.value = value
+        self.type = action
     }
 
     required init?(coder aDecoder: NSCoder) {
         guard
-            let player = aDecoder.decodeObject(forKey: "player") as? MCPeerID,
-            let actionRaw = aDecoder.decodeObject(forKey: "action") as? String,
-            let action = Action(rawValue: actionRaw)
-            else {
-                return nil
+            let player = aDecoder.decodeObject(forKey: "player") as? Player,
+            let actionRaw = aDecoder.decodeObject(forKey: "action_type") as? String,
+            let type = ActionType(rawValue: actionRaw)
+        else {
+            return nil
         }
 
         self.player = player
-        self.action = action
-
-        let value = aDecoder.decodeObject(forKey: "value") as? Data
-        self.value = value
+        self.type = type
     }
 
     func encode(with aCoder: NSCoder) {
         aCoder.encode(self.player, forKey: "player")
-        aCoder.encode(self.action.rawValue, forKey: "action")
-        aCoder.encode(self.value, forKey: "value")
+        aCoder.encode(self.type.rawValue, forKey: "action_type")
     }
 
-    static func dealCards(to players: [MCPeerID]) -> ActionPacket {
-        let deck = Deck.euchre()
-        var cards = [MCPeerID: [Card]]()
+}
+
+class DealCardsPacket: ActionPacket {
+
+    let cards: [PlayerID: [Card]]
+
+    init(player: Player, deals deck: Deck, to players: [Player]){
+        var cards = [PlayerID: [Card]]()
         var index = 0
         for card in deck.cards {
             let player = players[index % players.count]
             card.owner = player
 
-            var hand = cards[player] ?? [Card]()
+            var hand = cards[player.id] ?? [Card]()
             hand.append(card)
-            cards[player] = hand
+            cards[player.id] = hand
 
             index += 1
         }
-        let data = NSKeyedArchiver.archivedData(withRootObject: cards)
-        return ActionPacket(player: NetworkManager.me, action: .dealt, value: data)
+
+        self.cards = cards
+
+        super.init(player: player, action: .dealt)
     }
 
-    static func player(_ player: MCPeerID, played card: Card, fromPosition position: Int) -> ActionPacket {
-        let payload = CardPlayedPayload(card: card, position: position)
-        let data = NSKeyedArchiver.archivedData(withRootObject: payload)
-        return ActionPacket(player: player, action: .playedCard, value: data)
+    required init?(coder aDecoder: NSCoder) {
+        guard
+            let cards = aDecoder.decodeObject(forKey: "dealt_cards") as? [PlayerID: [Card]]
+        else { return nil }
+
+        self.cards = cards
+        super.init(coder: aDecoder)
+    }
+
+    override func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.cards, forKey: "dealt_cards")
+
+        super.encode(with: aCoder)
     }
 }
 
-class CardPlayedPayload: NSObject, NSCoding {
+class PlayCardPacket: ActionPacket {
     let card: Card
     let positionInHand: Int
 
-    init(card: Card, position: Int) {
+    init(player: Player, card: Card, position: Int) {
         self.card = card
         self.positionInHand = position
+
+        super.init(player: player, action: .playedCard)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -93,10 +106,14 @@ class CardPlayedPayload: NSObject, NSCoding {
 
         self.card = card
         self.positionInHand = aDecoder.decodeInteger(forKey: "position")
+
+        super.init(coder: aDecoder)
     }
 
-    func encode(with aCoder: NSCoder) {
+    override func encode(with aCoder: NSCoder) {
         aCoder.encode(self.card, forKey: "card")
         aCoder.encode(self.positionInHand, forKey: "position")
+
+        super.encode(with: aCoder)
     }
 }

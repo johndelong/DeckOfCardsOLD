@@ -10,17 +10,14 @@ import Foundation
 import MultipeerConnectivity
 import RxSwift
 
-public typealias Player = MCPeerID
-
 // TODO: Possibly rename to CommunicationManager
 class NetworkManager: NSObject {
-    let myPeerId = MCPeerID(displayName: UIDevice.current.name)
     private let serviceAdvertiser: MCNearbyServiceAdvertiser
     private let serviceBrowser: MCNearbyServiceBrowser
 
     // Sessions are created by advertisers, and passed to peers when accepting an invitation to connect
     lazy var session: MCSession = {
-        let session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .none)
+        let session = MCSession(peer: Player.me.id, securityIdentity: nil, encryptionPreference: .none)
         session.delegate = self
         return session
     }()
@@ -40,11 +37,11 @@ class NetworkManager: NSObject {
     static let shared = NetworkManager()
     private override init() {
         self.serviceAdvertiser = MCNearbyServiceAdvertiser(
-            peer: myPeerId,
+            peer: Player.me.id,
             discoveryInfo: nil,
             serviceType: GameServiceType
         )
-        self.serviceBrowser = MCNearbyServiceBrowser(peer: myPeerId, serviceType: GameServiceType)
+        self.serviceBrowser = MCNearbyServiceBrowser(peer: Player.me.id, serviceType: GameServiceType)
 
         super.init()
 
@@ -69,10 +66,6 @@ class NetworkManager: NSObject {
     func disconnect() {
         self.stopSearching()
         self.session.disconnect()
-    }
-
-    static var me: MCPeerID {
-        return NetworkManager.shared.myPeerId
     }
 
     // MARK - Communication Functions

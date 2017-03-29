@@ -61,7 +61,7 @@ class Card: NSObject, NSSecureCoding {
     let suit: Suit
 
     /// The player this card belongs to.
-    var owner: MCPeerID?
+    var owner: Player?
 
     init(rank: Rank, suit: Suit) {
         self.rank = rank
@@ -70,9 +70,9 @@ class Card: NSObject, NSSecureCoding {
 
     required init?(coder aDecoder: NSCoder) {
         guard
-            let rank = Rank(rawValue: Int(aDecoder.decodeInt64(forKey: "rank"))),
-            let suit = Suit(rawValue: Int(aDecoder.decodeInt64(forKey: "suit"))),
-            let owner = aDecoder.decodeObject(forKey: "owner") as? MCPeerID
+            let rank = Rank(rawValue: aDecoder.decodeInteger(forKey: "rank")),
+            let suit = Suit(rawValue: aDecoder.decodeInteger(forKey: "suit")),
+            let owner = aDecoder.decodeObject(forKey: "owner") as? Player
         else {
             return nil
         }

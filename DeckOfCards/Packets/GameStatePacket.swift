@@ -19,10 +19,10 @@ import MultipeerConnectivity
  */
 class GameStatePacket: NSObject, PacketProtocol {
     enum State: String {
-        //        case start
+        case unknown
+        case readyToStartGame
         case dealing
         case playing
-        case unknown
     }
 
     let state: State

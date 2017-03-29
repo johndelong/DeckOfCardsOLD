@@ -17,9 +17,9 @@ class GameTableViewController: UIViewController, StoryboardBased {
     @IBOutlet private weak var exitButton: UIButton!
     @IBOutlet private weak var playButton: UIButton!
 
-    fileprivate var playerPhysicalPositions = [MCPeerID: CGPoint]()
+    fileprivate var playerPhysicalPositions = [PlayerID: CGPoint]()
     fileprivate var playerLabels = [UIView]()
-    fileprivate var playerCards = [MCPeerID: [CardView]]()
+    fileprivate var playerCards = [PlayerID: [CardView]]()
     fileprivate var cardsPlayed = [CardView]()
     fileprivate var animationQueue = AnimationQueue()
 
@@ -30,16 +30,16 @@ class GameTableViewController: UIViewController, StoryboardBased {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.playButton.isEnabled = GameManager.isHost
+        let game = GameManager.shared
+
+        self.playButton.isEnabled = game.host.isMe
         self.playButton.titleLabel?.text = "Start Game"
 
         GameManager.shared.stateStream.asObservable()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] state in
-                guard let state = state else { return }
-
                 if state.state == .dealing {
-                    if state.dealer.isMe {
+                    if game.dealer.isMe {
                         self.playButton.titleLabel?.text = "Deal"
                         self.playButton.isEnabled = true
                     }
@@ -50,17 +50,15 @@ class GameTableViewController: UIViewController, StoryboardBased {
         GameManager.shared.playersStream.asObservable()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] players in
-                guard let players = players else { return }
                 self.updatePlayerPhysicalPositions(players.positions)
             }
         ).disposed(by: self.disposeBag)
 
-        GameManager.shared.eventStream.asObservable()
+        GameManager.shared.actionStream.asObservable()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] event in
-                guard let event = event else { return }
+            .subscribe(onNext: { [unowned self] action in
 
-                if GameManager.isMyTurn {
+                if game.turn.isMe {
                     self.playButton.titleLabel?.text = "Take Turn"
                     self.playButton.isEnabled = true
                 } else {
@@ -68,28 +66,20 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     self.playButton.isEnabled = false
                 }
 
-                if event.action == .dealt {
-                    self.dealCards(GameManager.shared.myCards)
-                }
+                if action.type == .dealt {
+                    // Animate the deal of the cards
+                    self.dealCards(GameManager.shared.cards(for: Player.me.id))
+                } else if let action = action as? PlayCardPacket {
+                    // Animate the card being played
+                    if let cardView = self.playerCards[action.player.id]?[action.positionInHand] {
+                        cardView.card = action.card
 
-                if
-                    event.action == .playedCard,
-                    let data = event.value,
-                    let payload = NSKeyedUnarchiver.unarchiveObject(with: data) as? CardPlayedPayload
-                {
-                    guard
-                        let cardView = self.playerCards[event.player]?[payload.positionInHand]
-                    else { return }
-
-                    cardView.card = payload.card
-
-                    print("\(event.player.displayName) played the \(payload.card.displayName())")
-                    self.cardsPlayed.append(cardView)
-                    self.playCard(player: event.player, cardView: cardView)
-                }
-
-                if event.action == .wonTrick {
-                    print("\(event.player.displayName) won the trick!")
+                        print("\(action.player.displayName) played the \(action.card.displayName())")
+                        self.cardsPlayed.append(cardView)
+                        self.playCard(player: action.player, cardView: cardView)
+                    }
+                } else if action.type == .wonTrick {
+                    print("\(action.player.displayName) won the trick!")
                     self.animationQueue.animate(withDuration: 1, animations: {
                         self.cardsPlayed.forEach { $0.alpha = 0 }
                     }, completion: {
@@ -101,13 +91,9 @@ class GameTableViewController: UIViewController, StoryboardBased {
         ).disposed(by: self.disposeBag)
 
         self.playButton.rx.tap.subscribe(onNext: {
-//            self.playButton.isEnabled = false
-
-            let game = GameManager.shared
-
-            if game.stateStream.value == nil {
+            if game.state == .readyToStartGame {
                 GameManager.shared.startGame()
-            } else if GameManager.isDealer && game.state == .dealing {
+            } else if GameManager.shared.shouldDeal && game.state == .dealing {
                 game.dealCards()
             }
         }).disposed(by: self.disposeBag)
@@ -127,14 +113,14 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
 // Drawing UI components and animation
 extension GameTableViewController {
-    func updatePlayerPhysicalPositions(_ positions: [MCPeerID]) {
+    func updatePlayerPhysicalPositions(_ positions: [Player]) {
 
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
         let padding: CGFloat = 16
 
         // start with me and then go clockwise around positions
-        guard let startIndex = positions.index(of: NetworkManager.me) else { return }
+        guard let startIndex = positions.index(of: Player.me) else { return }
 
         for index in 0...positions.count - 1 {
             var playerIndex = startIndex + index
@@ -158,7 +144,7 @@ extension GameTableViewController {
                 continue
             }
 
-            self.playerPhysicalPositions[player] = point
+            self.playerPhysicalPositions[player.id] = point
 
         }
 
@@ -196,7 +182,7 @@ extension GameTableViewController {
         let orderedCards = self.orderCards(cards)
         let maxHandWidth: CGFloat = 350
 
-        for (player, playerPos) in self.playerPhysicalPositions {
+        for (playerID, playerPos) in self.playerPhysicalPositions {
             let increment = (maxHandWidth - CardView.size.width) / CGFloat(cards.count)
 
             // Determine the orientation of how to deal the cards
@@ -210,7 +196,7 @@ extension GameTableViewController {
                 let cardView = CardView()
                 cardView.delegate = self
 
-                if player == NetworkManager.me {
+                if playerID == Player.me.id {
                     cardView.card = card
                     cardView.flipCard()
                 }
@@ -220,9 +206,9 @@ extension GameTableViewController {
                 let yPos = (horizontal ? playerPos.y : startYPos + offset) - (CardView.size.height / 2)
                 cardView.frame = CGRect(origin: CGPoint(x: xPos, y: yPos), size: CardView.size)
 
-                var cardViews = self.playerCards[player] ?? [CardView]()
+                var cardViews = self.playerCards[Player.me.id] ?? [CardView]()
                 cardViews.append(cardView)
-                self.playerCards[player] = cardViews
+                self.playerCards[Player.me.id] = cardViews
 
                 if !horizontal {
                     cardView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
@@ -246,8 +232,8 @@ extension GameTableViewController {
             - player: The person who played the card
             - cardView: The view representing the card that was played
     */
-    func playCard(player: MCPeerID, cardView: CardView) {
-        guard let point2 = self.playerPhysicalPositions[player] else { return }
+    func playCard(player: Player, cardView: CardView) {
+        guard let point2 = self.playerPhysicalPositions[player.id] else { return }
 
         if !cardView.isFaceUp {
             cardView.flipCard()
@@ -287,17 +273,12 @@ extension GameTableViewController {
 extension GameTableViewController: CardViewDelegate {
     func didTapCard(_ cardView: CardView) {
         guard
+            GameManager.shared.turn.isMe,
             let card = cardView.card,
-            card.owner == NetworkManager.me,
-            let position = self.playerCards[NetworkManager.me]?.index(of: cardView)
+            card.owner == Player.me,
+            let position = self.playerCards[Player.me.id]?.index(of: cardView)
         else { return }
 
         GameManager.shared.playCard(card, fromPosition: position)
-    }
-}
-
-extension MCPeerID {
-    var isMe: Bool {
-        return self == NetworkManager.me
     }
 }
