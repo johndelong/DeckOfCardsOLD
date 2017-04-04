@@ -67,12 +67,22 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 }
 
                 if action.type == .dealt {
-                    // Animate the deal of the cards
-                    self.dealCards(GameManager.shared.cards(for: Player.me.id))
+                    // Reset variables
+                    self.clearTable()
+
+                    // assign cards
+                    game.playersCards.forEach { (player, cards) in
+                        self.playerCards[player] = self.orderCards(cards).map { CardView(card: $0) }
+                    }
+
+                    // deal cards
+                    self.animationQueue.animate(withDuration: 1, animations: {
+                        self.dealCards()
+                    })
                 } else if let action = action as? PlayCardPacket {
                     // Animate the card being played
                     if let cardView = self.playerCards[action.player.id]?[action.positionInHand] {
-                        cardView.card = action.card
+                        self.playerCards[action.player.id]?.remove(at: action.positionInHand)
 
                         print("\(action.player.displayName) played the \(action.card.displayName())")
                         self.cardsPlayed.append(cardView)
@@ -80,11 +90,13 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     }
                 } else if action.type == .wonTrick {
                     print("\(action.player.displayName) won the trick!")
+                    let cards = self.cardsPlayed
+                    self.cardsPlayed.removeAll()
+
                     self.animationQueue.animate(withDuration: 1, animations: {
-                        self.cardsPlayed.forEach { $0.alpha = 0 }
+                        cards.forEach { $0.alpha = 0 }
                     }, completion: {
-                        self.cardsPlayed.forEach { $0.removeFromSuperview() }
-                        self.cardsPlayed.removeAll()
+                        cards.forEach { $0.removeFromSuperview() }
                     })
                 }
             }
@@ -94,7 +106,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
             if game.state == .readyToStartGame {
                 GameManager.shared.startGame()
             } else if GameManager.shared.shouldDeal && game.state == .dealing {
-                game.dealCards()
+                game.deal(as: Player.me)
             }
         }).disposed(by: self.disposeBag)
     }
@@ -176,14 +188,13 @@ extension GameTableViewController {
     /**
         Deal cards to every player at the table
     */
-    func dealCards(_ cards: [Card]) {
-        self.clearTable()
-
-        let orderedCards = self.orderCards(cards)
+    func dealCards() {
         let maxHandWidth: CGFloat = 350
 
         for (playerID, playerPos) in self.playerPhysicalPositions {
-            let increment = (maxHandWidth - CardView.size.width) / CGFloat(cards.count)
+            let cardViews = self.playerCards[playerID] ?? []
+
+            let increment = (maxHandWidth - CardView.size.width) / CGFloat(cardViews.count)
 
             // Determine the orientation of how to deal the cards
             let horizontal = abs(playerPos.x - self.view.center.x) < abs(playerPos.y - self.view.center.y)
@@ -192,12 +203,11 @@ extension GameTableViewController {
             let startYPos = horizontal ? playerPos.y : (self.view.frame.height / 2) - CGFloat(maxHandWidth / 2)
 
             var index = 1
-            for card in orderedCards {
-                let cardView = CardView()
+
+            for cardView in cardViews {
                 cardView.delegate = self
 
                 if playerID == Player.me.id {
-                    cardView.card = card
                     cardView.flipCard()
                 }
 
@@ -205,10 +215,6 @@ extension GameTableViewController {
                 let xPos = (horizontal ? startXPos + offset : playerPos.x) - (CardView.size.width / 2)
                 let yPos = (horizontal ? playerPos.y : startYPos + offset) - (CardView.size.height / 2)
                 cardView.frame = CGRect(origin: CGPoint(x: xPos, y: yPos), size: CardView.size)
-
-                var cardViews = self.playerCards[Player.me.id] ?? [CardView]()
-                cardViews.append(cardView)
-                self.playerCards[Player.me.id] = cardViews
 
                 if !horizontal {
                     cardView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
@@ -218,6 +224,8 @@ extension GameTableViewController {
                 index += 1
             }
         }
+
+        print("Finished animating cards being delt")
     }
 
     func clearTable() {
@@ -235,14 +243,10 @@ extension GameTableViewController {
     func playCard(player: Player, cardView: CardView) {
         guard let point2 = self.playerPhysicalPositions[player.id] else { return }
 
-        if !cardView.isFaceUp {
-            cardView.flipCard()
-        }
-
         var frame = cardView.frame
 
         let point1 = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
-        let padding: CGFloat = 1
+        let padding: CGFloat = 100
 
         let distance = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
         let radius = padding / distance
@@ -253,6 +257,10 @@ extension GameTableViewController {
         let destination = CGPoint(x: x, y: y)
 
         self.animationQueue.animate(withDuration: 0.5, animations: {
+            if !cardView.isFaceUp {
+                cardView.flipCard()
+            }
+
             frame.origin = destination
             cardView.frame = frame
         })
@@ -279,6 +287,6 @@ extension GameTableViewController: CardViewDelegate {
             let position = self.playerCards[Player.me.id]?.index(of: cardView)
         else { return }
 
-        GameManager.shared.playCard(card, fromPosition: position)
+        GameManager.shared.player(Player.me, playedCard: card, fromPosition: position)
     }
 }

@@ -80,6 +80,14 @@ class GameManager {
                 if let event = packet as? ActionPacket {
                     self.handleActionPacket(event)
                 }
+
+                // Make additional calculations
+                if self.state == .playing {
+                    self.evaluatePlayingState()
+                } else if self.state == .dealing {
+                    self.evaluateDealingState()
+                }
+
             }).disposed(by: self.disposeBag)
 
         NetworkManager.shared.connectedPeers.asObservable()
@@ -104,14 +112,21 @@ class GameManager {
             self.state = .playing
         case .playedCard:
             guard let action = action as? PlayCardPacket else { return }
+            self.playersCards[action.player.id]?.remove(at: action.positionInHand)
             self.cardsPlayed.append(action.card)
             self.cardsInPlay.append(action.card)
         case .wonTrick:
             self.turn = action.player
 
             // If everyone's cards are gone, we need to deal again
-            print("Cards played: \(self.cardsPlayed.count)")
+            print("Played \(self.cardsPlayed.count) of \(self.cardsInDeck)")
             if self.cardsPlayed.count == self.cardsInDeck {
+                // Reset round dependant properties
+
+                self.cardsPlayed.removeAll()
+                self.playersCards.removeAll()
+                self.cardsInPlay.removeAll()
+
                 print("Updating dealer...")
 
                 self.setDealer(player: action.player)
@@ -119,14 +134,13 @@ class GameManager {
         }
 
         // Update the players turn
-        if let player = self.getNextPlayer(currentPlayer: action.player) {
-            self.turn = player
+        if action.type != .wonTrick {
+            if let player = self.getNextPlayer(currentPlayer: action.player) {
+                self.turn = player
+            }
         }
 
         self.actionStream.onNext(action)
-
-        // Make additional calculations
-        self.evaluateCurrentState()
     }
 
     func hostGame() {
@@ -179,7 +193,7 @@ class GameManager {
     /**
         Given the current situation, this method determines if any actions should be taken
     */
-    func evaluateCurrentState() {
+    func evaluatePlayingState() {
         // If everyone has played one card, then determine who wins this trick
         if
             self.cardsInPlay.count == self.players.count,
@@ -203,18 +217,33 @@ class GameManager {
             if let player = highCard.owner {
                 NetworkManager.shared.sendToMe(packet: ActionPacket(player: player, action: .wonTrick))
             }
-        } else if (self.turn.isComputer && self.host.isMe) {
-//            let hand = self.playersCards[
-//            StrategyEngine.determineCardToPlay(from: <#T##[Card]#>)
+        } else if self.turn.isComputer && self.host.isMe {
+            if
+                let computer = self.turn,
+                let hand = self.playersCards[computer.id],
+                let card = StrategyEngine.determineCardToPlay(from: hand),
+                let index = hand.index(of: card)
+            {
+                print("It's \(computer.displayName)'s turn")
+                self.player(computer, playedCard: card, fromPosition: index)
+            }
         }
     }
 
-    func dealCards() {
-        NetworkManager.shared.send(packet: DealCardsPacket(player: Player.me, deals: Deck.euchre(), to: self.players))
+    func evaluateDealingState() {
+        guard let player = self.dealer else { return }
+
+        if player.isComputer && self.host.isMe {
+            self.deal(as: player)
+        }
     }
 
-    func playCard(_ card: Card, fromPosition position: Int) {
-        NetworkManager.shared.send(packet: PlayCardPacket(player: Player.me, card: card, position: position))
+    func deal(as player: Player) {
+        NetworkManager.shared.send(packet: DealCardsPacket(player: player, deals: Deck.euchre(), to: self.players))
+    }
+
+    func player(_ player: Player, playedCard card: Card, fromPosition position: Int) {
+        NetworkManager.shared.send(packet: PlayCardPacket(player: player, card: card, position: position))
     }
 
     func getNextPlayer(currentPlayer: Player) -> Player? {

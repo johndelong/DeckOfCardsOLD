@@ -54,12 +54,22 @@ class Player: NSObject, NSCoding {
     }()
 }
 
-extension Optional where Wrapped: Player {
+extension Player {
     var isMe: Bool {
-        return self?.id == Player.me.id
+        return self.id == Player.me.id
     }
 
     var isComputer: Bool {
-        return self?.type == .computer
+        return self.type == .computer
+    }
+}
+
+extension Optional where Wrapped: Player {
+    var isMe: Bool {
+        return self?.isMe ?? false
+    }
+
+    var isComputer: Bool {
+        return self?.isComputer ?? false
     }
 }
