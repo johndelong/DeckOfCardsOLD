@@ -25,6 +25,7 @@ class CardView: UIImageView {
         self.init()
 
         self.card = card
+        self.frame = CGRect(x: 0, y: 0, width: CardView.size.width, height: CardView.size.height)
     }
 
     init() {

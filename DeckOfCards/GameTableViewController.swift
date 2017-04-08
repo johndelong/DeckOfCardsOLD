@@ -26,105 +26,101 @@ class GameTableViewController: UIViewController, StoryboardBased {
     let disposeBag = DisposeBag()
 
     var playerPositions = [Int: String]()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let game = GameManager.shared
-
-        self.playButton.isEnabled = game.host.isMe
+        self.playButton.isEnabled = GameManager.shared.host.isMe
         self.playButton.titleLabel?.text = "Start Game"
 
-        GameManager.shared.stateStream.asObservable()
+        GameManager.shared.eventStream.asObservable()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] state in
-                if state.state == .dealing {
-                    if game.dealer.isMe {
-                        self.playButton.titleLabel?.text = "Deal"
-                        self.playButton.isEnabled = true
+            .subscribe(onNext: { [unowned self] event in
+                if let action = event as? ActionPacket {
+                    self.handleActionEvent(action)
+                } else if let players = event as? PlayerDetails {
+                    self.updatePlayerPhysicalPositions(players.positions)
+                } else if let state = event as? GameStatePacket {
+                    if state.state == .dealing {
+                        print("\(state.dealer.displayName) is now dealing")
+                        if GameManager.shared.turn.isMe {
+                            self.playButton.titleLabel?.text = "Deal"
+                            self.playButton.isEnabled = true
+                        }
                     }
                 }
-            }
-        ).disposed(by: self.disposeBag)
 
-        GameManager.shared.playersStream.asObservable()
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] players in
-                self.updatePlayerPhysicalPositions(players.positions)
-            }
-        ).disposed(by: self.disposeBag)
-
-        GameManager.shared.actionStream.asObservable()
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] action in
-
-                if game.turn.isMe {
-                    self.playButton.titleLabel?.text = "Take Turn"
-                    self.playButton.isEnabled = true
-                } else {
-                    self.playButton.titleLabel?.text = "Waiting..."
-                    self.playButton.isEnabled = false
-                }
-
-                if action.type == .dealt {
-                    // Reset variables
-                    self.clearTable()
-
-                    // assign cards
-                    game.playersCards.forEach { (player, cards) in
-                        self.playerCards[player] = self.orderCards(cards).map { CardView(card: $0) }
-                    }
-
-                    // deal cards
-                    self.animationQueue.animate(withDuration: 1, animations: {
-                        self.dealCards()
-                    })
-                } else if let action = action as? PlayCardPacket {
-                    // Animate the card being played
-                    if let cardView = self.playerCards[action.player.id]?[action.positionInHand] {
-                        self.playerCards[action.player.id]?.remove(at: action.positionInHand)
-
-                        print("\(action.player.displayName) played the \(action.card.displayName())")
-                        self.cardsPlayed.append(cardView)
-                        self.playCard(player: action.player, cardView: cardView)
-                    }
-                } else if action.type == .wonTrick {
-                    print("\(action.player.displayName) won the trick!")
-                    let cards = self.cardsPlayed
-                    self.cardsPlayed.removeAll()
-
-                    self.animationQueue.animate(withDuration: 1, animations: {
-                        cards.forEach { $0.alpha = 0 }
-                    }, completion: {
-                        cards.forEach { $0.removeFromSuperview() }
-                    })
-                }
             }
         ).disposed(by: self.disposeBag)
 
         self.playButton.rx.tap.subscribe(onNext: {
-            if game.state == .readyToStartGame {
+            if GameManager.shared.state == .readyToStartGame {
                 GameManager.shared.startGame()
-            } else if GameManager.shared.shouldDeal && game.state == .dealing {
-                game.deal(as: Player.me)
+            } else if GameManager.shared.turn.isMe && GameManager.shared.state == .dealing {
+                GameManager.shared.deal(as: Player.me)
             }
         }).disposed(by: self.disposeBag)
+    }
+
+    func handleActionEvent(_ action: ActionPacket) {
+        if GameManager.shared.turn.isMe {
+            self.playButton.titleLabel?.text = "Take Turn"
+            self.playButton.isEnabled = true
+        } else {
+            self.playButton.titleLabel?.text = "Waiting..."
+            self.playButton.isEnabled = false
+        }
+
+        if action.type == .dealt {
+            // assign cards
+            GameManager.shared.playersCards.forEach { (player, cards) in
+                self.playerCards[player] = cards.map { CardView(card: $0) }
+            }
+
+            // deal cards
+            let cards = self.playerCards
+            let playersInPosition = self.playerPhysicalPositions
+            self.animationQueue.animate(withDuration: 1, animations: {
+                self.player(action.player, deal: cards, to: playersInPosition)
+            })
+        } else if let action = action as? PlayCardPacket {
+            if let cardView = self.playerCards[action.player.id]?[action.positionInHand] {
+
+                print("\(action.player.displayName) played the \(action.card.displayName())")
+
+                self.playerCards[action.player.id]?.remove(at: action.positionInHand)
+
+                self.cardsPlayed.append(cardView)
+
+                // Animate the card being played
+                self.player(action.player, playedCard: cardView)
+            }
+        } else if action.type == .wonTrick {
+            print("\(action.player.displayName) won the trick!")
+            self.clearTable()
+        }
     }
 
     @IBAction func exitPressed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
-
-    func orderCards(_ cards: [Card]) -> [Card] {
-        return cards.sorted { (lhs, rhs) -> Bool in
-            return lhs.suit.rawValue > rhs.suit.rawValue ||
-                (lhs.suit.rawValue == rhs.suit.rawValue && lhs.rank.rawValue > rhs.rank.rawValue)
-        }
-    }
 }
 
 // Drawing UI components and animation
 extension GameTableViewController {
+
+    func clearTable() {
+        let cards = self.cardsPlayed
+        self.cardsPlayed.removeAll()
+
+        self.animationQueue.animate(withDuration: 1, animations: {
+            cards.forEach { $0.alpha = 0 }
+        }, completion: {
+            cards.forEach { $0.removeFromSuperview() }
+            print("table was cleared")
+        })
+    }
+
     func updatePlayerPhysicalPositions(_ positions: [Player]) {
 
         let screenWidth = UIScreen.main.bounds.width
@@ -188,11 +184,17 @@ extension GameTableViewController {
     /**
         Deal cards to every player at the table
     */
-    func dealCards() {
+    func player(
+        _ player: Player,
+        deal cards: [PlayerID: [CardView]],
+        to players: [PlayerID: CGPoint],
+        animated: Bool = true
+    ) {
+
         let maxHandWidth: CGFloat = 350
 
-        for (playerID, playerPos) in self.playerPhysicalPositions {
-            let cardViews = self.playerCards[playerID] ?? []
+        for (playerID, playerPos) in players {
+            let cardViews = cards[playerID] ?? []
 
             let increment = (maxHandWidth - CardView.size.width) / CGFloat(cardViews.count)
 
@@ -214,10 +216,10 @@ extension GameTableViewController {
                 let offset = (CGFloat(index) * increment)
                 let xPos = (horizontal ? startXPos + offset : playerPos.x) - (CardView.size.width / 2)
                 let yPos = (horizontal ? playerPos.y : startYPos + offset) - (CardView.size.height / 2)
-                cardView.frame = CGRect(origin: CGPoint(x: xPos, y: yPos), size: CardView.size)
+                cardView.frame.origin = CGPoint(x: xPos, y: yPos)
 
                 if !horizontal {
-                    cardView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+                    cardView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
                 }
 
                 self.view.addSubview(cardView)
@@ -228,11 +230,6 @@ extension GameTableViewController {
         print("Finished animating cards being delt")
     }
 
-    func clearTable() {
-        self.playerCards.values.forEach { $0.forEach { $0.removeFromSuperview() } }
-        self.playerCards.removeAll()
-    }
-
     /**
         Animates a card from a player's hand to the center of the table
  
@@ -240,10 +237,8 @@ extension GameTableViewController {
             - player: The person who played the card
             - cardView: The view representing the card that was played
     */
-    func playCard(player: Player, cardView: CardView) {
+    func player(_ player: Player, playedCard cardView: CardView, animated: Bool = true) {
         guard let point2 = self.playerPhysicalPositions[player.id] else { return }
-
-        var frame = cardView.frame
 
         let point1 = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
         let padding: CGFloat = 100
@@ -261,16 +256,14 @@ extension GameTableViewController {
                 cardView.flipCard()
             }
 
-            frame.origin = destination
-            cardView.frame = frame
+            cardView.frame.origin = destination
         })
     }
 }
 
 extension GameTableViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        if (size.width > size.height)
-        {
+        if size.width > size.height {
             // Position elements for Landscape
         } else {
             // Position elements for Portrait

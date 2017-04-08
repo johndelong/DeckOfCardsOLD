@@ -89,11 +89,15 @@ class Card: NSObject, NSSecureCoding {
     }
 
     func compare(_ card: Card) -> ComparisonResult {
-        if self.rank.rawValue == card.rank.rawValue && self.suit.rawValue == card.suit.rawValue {
-            return .orderedSame
-        }
+        guard self.suit == card.suit else { return .orderedDescending }
 
-        return .orderedDescending
+        if self.rank.rawValue == card.rank.rawValue {
+            return .orderedSame
+        } else if self.rank.rawValue > card.rank.rawValue {
+            return .orderedDescending
+        } else {
+            return .orderedAscending
+        }
     }
 
     static var supportsSecureCoding: Bool {
