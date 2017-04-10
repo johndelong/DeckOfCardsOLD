@@ -238,16 +238,17 @@ extension GameTableViewController {
             - cardView: The view representing the card that was played
     */
     func player(_ player: Player, playedCard cardView: CardView, animated: Bool = true) {
-        guard let point2 = self.playerPhysicalPositions[player.id] else { return }
+        guard let playerPos = self.playerPhysicalPositions[player.id] else { return }
 
-        let point1 = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
-        let padding: CGFloat = 100
+        let centerOfScreen = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
+        let distanceFromCenter: CGFloat = CardView.size.height / 2
 
-        let distance = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
-        let radius = padding / distance
+        let distance = sqrt(pow(playerPos.x - centerOfScreen.x, 2) + pow(playerPos.y - centerOfScreen.y, 2))
+        let radius = distanceFromCenter / distance
 
-        let x = (radius * point2.x + (1 - radius) * point1.x) - (CardView.size.width / 2)
-        let y = (radius * point2.y + (1 - radius) * point1.y) - (CardView.size.height / 2)
+        // Get coordinates of point some distance from center
+        let x = (radius * playerPos.x + (1 - radius) * centerOfScreen.x)
+        let y = (radius * playerPos.y + (1 - radius) * centerOfScreen.y)
 
         let destination = CGPoint(x: x, y: y)
 
@@ -256,7 +257,11 @@ extension GameTableViewController {
                 cardView.flipCard()
             }
 
-            cardView.frame.origin = destination
+            // Add some flair (spin card and randomize angle)
+            let degree = CGFloat(Double.pi) + CGFloat(Int(arc4random()) % 10) / 50 - 0.1
+            cardView.transform = cardView.transform.rotated(by: degree)
+
+            cardView.center = destination
         })
     }
 }

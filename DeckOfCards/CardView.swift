@@ -19,7 +19,7 @@ class CardView: UIImageView {
     private(set) var isFaceUp = false
     var card: Card?
 
-    var delegate: CardViewDelegate?
+    weak var delegate: CardViewDelegate?
 
     convenience init(card: Card) {
         self.init()

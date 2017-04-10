@@ -12,6 +12,7 @@
 		1523F1FC1E7F2DC5001486BB /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1523F1FB1E7F2DC5001486BB /* CardView.swift */; };
 		1533520C1E69148300C997FB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520A1E69148300C997FB /* Card.swift */; };
 		1533520D1E69148300C997FB /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520B1E69148300C997FB /* Deck.swift */; };
+		15A1E7DD1E991ED7009BA96D /* StrategyEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A1E7DC1E991ED7009BA96D /* StrategyEngineTests.swift */; };
 		15B4ECE91E620446001C72CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECE81E620446001C72CF /* AppDelegate.swift */; };
 		15B4ECEE1E620446001C72CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ECEC1E620446001C72CF /* Main.storyboard */; };
 		15B4ECF11E620446001C72CF /* DeckOfCards.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECEF1E620446001C72CF /* DeckOfCards.xcdatamodeld */; };
@@ -53,6 +54,7 @@
 		1523F1FB1E7F2DC5001486BB /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		1533520A1E69148300C997FB /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		1533520B1E69148300C997FB /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
+		15A1E7DC1E991ED7009BA96D /* StrategyEngineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrategyEngineTests.swift; sourceTree = "<group>"; };
 		15B4ECE51E620446001C72CF /* DeckOfCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeckOfCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B4ECE81E620446001C72CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15B4ECED1E620446001C72CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				15B4ED001E620446001C72CF /* DeckOfCardsTests.swift */,
+				15A1E7DC1E991ED7009BA96D /* StrategyEngineTests.swift */,
 				15B4ED021E620446001C72CF /* Info.plist */,
 			);
 			path = DeckOfCardsTests;
@@ -468,6 +471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15A1E7DD1E991ED7009BA96D /* StrategyEngineTests.swift in Sources */,
 				15B4ED011E620446001C72CF /* DeckOfCardsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
