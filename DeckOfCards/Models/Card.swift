@@ -55,6 +55,11 @@ class Card: NSObject, NSSecureCoding {
                 return String(self.rawValue)
             }
         }
+
+        static var count: Int {
+            // Number of different cards in suit
+            return 13
+        }
     }
 
     let rank: Rank
@@ -88,16 +93,73 @@ class Card: NSObject, NSSecureCoding {
         aCoder.encode(self.owner, forKey: "owner")
     }
 
-    func compare(_ card: Card) -> ComparisonResult {
+    struct CompareOption {
+        var trump: Suit?
+        var bowers = true
+        var aceHigh = true
+    }
+
+    func compare(_ card: Card, options: CompareOption = CompareOption()) -> ComparisonResult {
+        // Extrapolate card weights
+        let cardVals = [self, card].map { card -> Int in
+            var val = card.rank.rawValue
+
+            // Ace High
+            if card.rank == .Ace && options.aceHigh {
+                val += Rank.count // 14
+            }
+
+            // Trump
+            if let trump = options.trump {
+                if card.suit == trump {
+                    val += Rank.count
+                }
+
+                // Bowers
+                if card.isLeftBower(suit: trump) {
+                    val += 4 // 15
+                } else if card.isRightBower(suit: trump) {
+                    val += 5 // 16
+                }
+            }
+
+            return val
+        }
+
+        let lhs = cardVals.first! // swiftlint:disable:this force_unwrapping
+        let rhs = cardVals.last! // swiftlint:disable:this force_unwrapping
+
         guard self.suit == card.suit else { return .orderedDescending }
 
-        if self.rank.rawValue == card.rank.rawValue {
+        if lhs == rhs {
             return .orderedSame
-        } else if self.rank.rawValue > card.rank.rawValue {
+        } else if lhs > rhs {
             return .orderedDescending
         } else {
             return .orderedAscending
         }
+    }
+
+    func isLeftBower(suit: Suit) -> Bool {
+        guard self.rank == .Jack else { return false }
+
+        let leftSuit: Suit
+        switch suit {
+        case .Diamonds:
+            leftSuit = .Hearts
+        case .Clubs:
+            leftSuit = .Spades
+        case .Hearts:
+            leftSuit = .Diamonds
+        case .Spades:
+            leftSuit = .Clubs
+        }
+
+        return self.suit == leftSuit
+    }
+
+    func isRightBower(suit: Suit) -> Bool {
+        return self.suit == suit && self.rank == .Jack
     }
 
     static var supportsSecureCoding: Bool {
