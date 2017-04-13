@@ -88,4 +88,28 @@ class StrategyEngine {
         }
         return lowCard
     }
+
+    /**
+     Determines whether a card can be played or not. 
+     
+     Assumes the following rules.
+        - Must follow suit
+    */
+    static func canPlay(card: Card, from cards: [Card]) -> Bool {
+        guard let firstCard = GameManager.shared.cardsInPlay.first else { return true }
+
+        if card.suit == firstCard.suit {
+            return true
+        }
+
+        let canFollowSuit = cards.contains { (card) -> Bool in
+            return card.suit == firstCard.suit
+        }
+
+        if !canFollowSuit {
+            return true
+        }
+
+        return false
+    }
 }

@@ -282,6 +282,7 @@ extension GameTableViewController: CardViewDelegate {
             GameManager.shared.turn.isMe,
             let card = cardView.card,
             card.owner == Player.me,
+            StrategyEngine.canPlay(card: card, from: GameManager.shared.cards(for: Player.me.id)),
             let position = self.playerCards[Player.me.id]?.index(of: cardView)
         else { return }
 
