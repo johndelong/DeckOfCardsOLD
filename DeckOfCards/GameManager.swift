@@ -254,7 +254,7 @@ class GameManager {
     func orderCards(_ cards: [Card]) -> [Card] {
         return cards.sorted { (lhs, rhs) -> Bool in
             return lhs.suit.rawValue > rhs.suit.rawValue ||
-                (lhs.suit.rawValue == rhs.suit.rawValue && lhs.rank.rawValue > rhs.rank.rawValue)
+                (lhs.suit.rawValue == rhs.suit.rawValue && lhs.compare(rhs) == .orderedDescending)
         }
     }
 
