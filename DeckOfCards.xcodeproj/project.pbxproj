@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15026AF11EBF9E4100A072EF /* PlayerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15026AF01EBF9E4100A072EF /* PlayerCard.swift */; };
 		1523F1F71E7F2CED001486BB /* GameStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1523F1F61E7F2CED001486BB /* GameStatePacket.swift */; };
 		1523F1F91E7F2D22001486BB /* PlayersPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1523F1F81E7F2D22001486BB /* PlayersPacket.swift */; };
 		1523F1FC1E7F2DC5001486BB /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1523F1FB1E7F2DC5001486BB /* CardView.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		15026AF01EBF9E4100A072EF /* PlayerCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCard.swift; sourceTree = "<group>"; };
 		1523F1F61E7F2CED001486BB /* GameStatePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatePacket.swift; sourceTree = "<group>"; };
 		1523F1F81E7F2D22001486BB /* PlayersPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayersPacket.swift; sourceTree = "<group>"; };
 		1523F1FB1E7F2DC5001486BB /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				1533520A1E69148300C997FB /* Card.swift */,
 				1533520B1E69148300C997FB /* Deck.swift */,
 				15D09F891E8B47660029BFFD /* Player.swift */,
+				15026AF01EBF9E4100A072EF /* PlayerCard.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -449,6 +452,7 @@
 				15EE4A111E86C000001A9292 /* AnimationQueue.swift in Sources */,
 				15B4ECF11E620446001C72CF /* DeckOfCards.xcdatamodeld in Sources */,
 				15B4ED221E65ADB3001C72CF /* JoinViewController.swift in Sources */,
+				15026AF11EBF9E4100A072EF /* PlayerCard.swift in Sources */,
 				15B4ED1D1E6463F6001C72CF /* NibOwnerLoadable.swift in Sources */,
 				1533520C1E69148300C997FB /* Card.swift in Sources */,
 				1523F1F91E7F2D22001486BB /* PlayersPacket.swift in Sources */,

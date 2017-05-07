@@ -31,7 +31,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
         super.viewDidLoad()
 
         self.playButton.isEnabled = GameManager.shared.host.isMe
-        self.playButton.titleLabel?.text = "Start Game"
+        self.playButton.setTitle("Start Game", for: .normal)
 
         GameManager.shared.eventStream.asObservable()
             .observeOn(MainScheduler.instance)
@@ -44,9 +44,11 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     if state.state == .dealing {
                         print("\(state.dealer.displayName) is now dealing")
                         if GameManager.shared.turn.isMe {
-                            self.playButton.titleLabel?.text = "Deal"
+                            self.playButton.setTitle("Deal", for: .normal)
                             self.playButton.isEnabled = true
                         }
+                    } else if state.state == .predictions {
+                        print("\(state.turn.displayName)'s turn to decide trump")
                     }
                 }
 
@@ -64,10 +66,10 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
     func handleActionEvent(_ action: ActionPacket) {
         if GameManager.shared.turn.isMe {
-            self.playButton.titleLabel?.text = "Take Turn"
+            self.playButton.setTitle("Take Turn", for: .normal)
             self.playButton.isEnabled = true
         } else {
-            self.playButton.titleLabel?.text = "Waiting..."
+            self.playButton.setTitle("Waiting", for: .normal)
             self.playButton.isEnabled = false
         }
 
@@ -83,6 +85,18 @@ class GameTableViewController: UIViewController, StoryboardBased {
             self.animationQueue.animate(withDuration: 1, animations: {
                 self.player(action.player, deal: cards, to: playersInPosition)
             })
+
+            // Show top card of kitty
+            self.animationQueue.animate(withDuration: 1, animations: {
+                if let card = GameManager.shared.kitty.first {
+                    let cardView = CardView(card: card)
+                    cardView.flipCard()
+                    self.view.addSubview(cardView)
+                    cardView.center = self.view.center
+                }
+            })
+        } else if let action = action as? PlayerDecision {
+            print("\(action.player.displayName) decided trump")
         } else if let action = action as? PlayCardPacket {
             if let cardView = self.playerCards[action.player.id]?[action.positionInHand] {
 
@@ -280,12 +294,12 @@ extension GameTableViewController: CardViewDelegate {
     func didTapCard(_ cardView: CardView) {
         guard
             GameManager.shared.turn.isMe,
-            let card = cardView.card,
+            let card = cardView.card as? PlayerCard,
             card.owner == Player.me,
             StrategyEngine.canPlay(card: card, from: GameManager.shared.cards(for: Player.me.id)),
             let position = self.playerCards[Player.me.id]?.index(of: cardView)
         else { return }
 
-        GameManager.shared.player(Player.me, playedCard: card, fromPosition: position)
+        GameManager.shared.player(played: card, fromPosition: position)
     }
 }

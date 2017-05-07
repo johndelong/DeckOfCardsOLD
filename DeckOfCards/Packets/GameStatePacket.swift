@@ -22,6 +22,7 @@ class GameStatePacket: NSObject, PacketProtocol {
         case unknown
         case readyToStartGame
         case dealing
+        case predictions // players take turns (before game play has started) making predictions about the outcome
         case playing
     }
 

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UWi-0T-xxd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UWi-0T-xxd">
     <device id="retina4_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -32,11 +33,21 @@
                                 <rect key="frame" x="16" y="329" width="53" height="30"/>
                                 <state key="normal" title="My turn"/>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RAs-Rf-TRT">
+                                <rect key="frame" x="332" y="186" width="2" height="2"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="RAs-Rf-TRT" secondAttribute="height" multiplier="1:1" id="GtR-KU-V31"/>
+                                    <constraint firstAttribute="height" constant="2" id="Iuh-6s-NgZ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="RAs-Rf-TRT" firstAttribute="centerX" secondItem="P8u-b5-96b" secondAttribute="centerX" id="WFq-tJ-Yz2"/>
                             <constraint firstItem="wHA-ya-5N0" firstAttribute="leading" secondItem="P8u-b5-96b" secondAttribute="leading" constant="16" id="a4S-i8-B2z"/>
                             <constraint firstItem="2Km-LU-LZw" firstAttribute="top" secondItem="24Y-fL-sJU" secondAttribute="bottom" constant="16" id="gpX-BB-8Gp"/>
+                            <constraint firstItem="RAs-Rf-TRT" firstAttribute="centerY" secondItem="P8u-b5-96b" secondAttribute="centerY" id="vof-do-myh"/>
                             <constraint firstItem="2Km-LU-LZw" firstAttribute="leading" secondItem="P8u-b5-96b" secondAttribute="leading" constant="16" id="w7P-l9-oDd"/>
                             <constraint firstItem="GGb-mc-b8B" firstAttribute="top" secondItem="wHA-ya-5N0" secondAttribute="bottom" constant="16" id="z3f-LR-jNc"/>
                         </constraints>

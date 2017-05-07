@@ -17,19 +17,16 @@ class CardView: UIImageView {
     static let size = CGSize(width: 80, height: 116)
 
     private(set) var isFaceUp = false
-    var card: Card?
+    var card: Card
 
     weak var delegate: CardViewDelegate?
 
-    convenience init(card: Card) {
-        self.init()
-
+    init(card: Card) {
         self.card = card
-        self.frame = CGRect(x: 0, y: 0, width: CardView.size.width, height: CardView.size.height)
-    }
 
-    init() {
         super.init(image: Card.faceDown)
+
+        self.frame = CGRect(x: 0, y: 0, width: CardView.size.width, height: CardView.size.height)
 
         self.isUserInteractionEnabled = true
         self.contentMode = .scaleAspectFit
@@ -48,7 +45,6 @@ class CardView: UIImageView {
     }
 
     func flipCard() {
-        guard let card = self.card else { return }
         self.isFaceUp = !self.isFaceUp
 
         self.image = self.isFaceUp ? card.faceUp : Card.faceDown

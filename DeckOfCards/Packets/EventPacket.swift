@@ -17,6 +17,7 @@ class ActionPacket: NSObject, PacketProtocol {
         case dealt
         case playedCard
         case wonTrick
+        case madePrediction
     }
 
     let player: Player // The player that took a specific action
@@ -49,57 +50,66 @@ class ActionPacket: NSObject, PacketProtocol {
 
 class DealCardsPacket: ActionPacket {
 
-    let cards: [PlayerID: [Card]]
+    let playerCards: [PlayerID: [PlayerCard]]
+    var kitty = [Card]()
 
-    init(player: Player, deals deck: Deck, to players: [Player]){
-        var cards = [PlayerID: [Card]]()
-        var index = 0
-        for card in deck.cards {
-            let player = players[index % players.count]
-            card.owner = player
+    init(player: Player, deals number: Int? = nil, from deck: Deck, to players: [Player]) {
 
-            var hand = cards[player.id] ?? [Card]()
-            hand.append(card)
-            cards[player.id] = hand
+        // I'm not sure I like this logic in here. Maybe I should make another class that manages creating decks
+        // for different games
+        var playerCards = [PlayerID: [PlayerCard]]()
+        let max = number ?? deck.cards.count
+        for index in 0...deck.cards.count - 1 {
+            let card = deck.cards[index]
+            if index < max {
+                let player = players[index % players.count]
 
-            index += 1
+                var hand = playerCards[player.id] ?? [PlayerCard]()
+                hand.append(PlayerCard(owner: player, card: card))
+                playerCards[player.id] = hand
+            } else {
+                self.kitty.append(card)
+            }
         }
 
-        self.cards = cards
+        self.playerCards = playerCards
 
         super.init(player: player, action: .dealt)
     }
 
     required init?(coder aDecoder: NSCoder) {
         guard
-            let cards = aDecoder.decodeObject(forKey: "dealt_cards") as? [PlayerID: [Card]]
+            let playerCards = aDecoder.decodeObject(forKey: "dealt_cards") as? [PlayerID: [PlayerCard]],
+            let kitty = aDecoder.decodeObject(forKey: "kitty") as? [Card]
         else { return nil }
 
-        self.cards = cards
+        self.playerCards = playerCards
+        self.kitty = kitty
         super.init(coder: aDecoder)
     }
 
     override func encode(with aCoder: NSCoder) {
-        aCoder.encode(self.cards, forKey: "dealt_cards")
+        aCoder.encode(self.playerCards, forKey: "dealt_cards")
+        aCoder.encode(self.kitty, forKey: "kitty")
 
         super.encode(with: aCoder)
     }
 }
 
 class PlayCardPacket: ActionPacket {
-    let card: Card
+    let card: PlayerCard
     let positionInHand: Int
 
-    init(player: Player, card: Card, position: Int) {
+    init(card: PlayerCard, position: Int) {
         self.card = card
         self.positionInHand = position
 
-        super.init(player: player, action: .playedCard)
+        super.init(player: card.owner, action: .playedCard)
     }
 
     required init?(coder aDecoder: NSCoder) {
         guard
-            let card = aDecoder.decodeObject(forKey: "card") as? Card
+            let card = aDecoder.decodeObject(forKey: "card") as? PlayerCard
         else {
             return nil
         }
@@ -113,6 +123,43 @@ class PlayCardPacket: ActionPacket {
     override func encode(with aCoder: NSCoder) {
         aCoder.encode(self.card, forKey: "card")
         aCoder.encode(self.positionInHand, forKey: "position")
+
+        super.encode(with: aCoder)
+    }
+}
+
+class PlayerDecision: ActionPacket {
+    enum DecisionType: String {
+        case trump
+    }
+
+    let decision: String
+    let decisionType: DecisionType
+
+    init(player: Player, decides: String, for decisionType: DecisionType) {
+        self.decision = decides
+        self.decisionType = decisionType
+        super.init(player: player, action: .madePrediction)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        guard
+            let decision = aDecoder.decodeObject(forKey: "player_decision") as? String,
+            let rawDecisionType = aDecoder.decodeObject(forKey: "decision_type") as? String,
+            let decisionType = DecisionType(rawValue: rawDecisionType)
+        else {
+            return nil
+        }
+
+        self.decision = decision
+        self.decisionType = decisionType
+
+        super.init(coder: aDecoder)
+    }
+
+    override func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.decision, forKey: "player_decision")
+        aCoder.encode(self.decisionType.rawValue, forKey: "decision_type")
 
         super.encode(with: aCoder)
     }

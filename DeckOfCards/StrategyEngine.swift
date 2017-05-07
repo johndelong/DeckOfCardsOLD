@@ -18,7 +18,7 @@ class StrategyEngine {
             - Trump if cannot follow suit
             - Use teams to determine when to "lay low" if a partner already has the trick
      */
-    static func determineCardToPlay(from hand: [Card]) -> Card? {
+    static func determineCardToPlay(from hand: [PlayerCard]) -> PlayerCard? {
         guard !hand.isEmpty else { return nil }
 
         let cardsInPlay = GameManager.shared.cardsInPlay
@@ -38,10 +38,10 @@ class StrategyEngine {
         }
     }
 
-    static private func card(from cards: [Card], thatBeats highCard: Card) -> Card? {
-        var minCard: Card?
+    static private func card(from hand: [PlayerCard], thatBeats highCard: Card) -> PlayerCard? {
+        var minCard: PlayerCard?
 
-        cards.forEach {
+        hand.forEach {
             if $0.suit == highCard.suit
                 && highCard.compare($0) == .orderedAscending
                 // swiftlint:disable:next opening_brace
@@ -54,10 +54,10 @@ class StrategyEngine {
         return minCard
     }
 
-    static private func getHighestCard(from cards: [Card], of suit: Card.Suit? = nil) -> Card? {
-        guard var highCard = cards.first else { return nil }
+    static private func getHighestCard(from hand: [PlayerCard], of suit: Card.Suit? = nil) -> PlayerCard? {
+        guard var highCard = hand.first else { return nil }
 
-        cards.forEach {
+        hand.forEach {
             if let suit = suit {
                 if $0.suit == suit && highCard.compare($0) == .orderedAscending {
                     highCard = $0
@@ -72,10 +72,10 @@ class StrategyEngine {
         return highCard
     }
 
-    static private func getLowestCard(from cards: [Card], of suit: Card.Suit? = nil) -> Card? {
-        guard var lowCard = cards.first else { return nil }
+    static private func getLowestCard(from hand: [PlayerCard], of suit: Card.Suit? = nil) -> PlayerCard? {
+        guard var lowCard = hand.first else { return nil }
 
-        cards.forEach {
+        hand.forEach {
             if let suit = suit {
                 if $0.suit == suit && lowCard.compare($0) == .orderedDescending {
                     lowCard = $0
@@ -95,14 +95,14 @@ class StrategyEngine {
      Assumes the following rules.
         - Must follow suit
     */
-    static func canPlay(card: Card, from cards: [Card]) -> Bool {
+    static func canPlay(card: PlayerCard, from hand: [PlayerCard]) -> Bool {
         guard let firstCard = GameManager.shared.cardsInPlay.first else { return true }
 
         if card.suit == firstCard.suit {
             return true
         }
 
-        let canFollowSuit = cards.contains { (card) -> Bool in
+        let canFollowSuit = hand.contains { (card) -> Bool in
             return card.suit == firstCard.suit
         }
 

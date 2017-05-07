@@ -23,16 +23,73 @@ class StrategyEngineTests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
+    func testBowers() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
 
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        let player1 = Player(computerName: "com1")
+        let player2 = Player(computerName: "com2")
+        let player3 = Player(computerName: "com3")
+        let player4 = Player(computerName: "com4")
+
+        var options = Card.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
+
+        var cardsInPlay = [Card]()
+
+        // Test Right Bower
+        cardsInPlay = [
+            Card(rank: .Queen, suit: .Spades, owner: player1),
+            Card(rank: .King, suit: .Spades, owner: player2),
+            Card(rank: .Jack, suit: .Spades, owner: player3),
+            Card(rank: .Jack, suit: .Clubs, owner: player4),
+        ]
+
+        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
+            XCTAssert(player.id == player3.id)
+        }
+
+        // Test Left Bower
+        cardsInPlay = [
+            Card(rank: .Queen, suit: .Spades, owner: player1),
+            Card(rank: .King, suit: .Spades, owner: player2),
+            Card(rank: .Ace, suit: .Diamonds, owner: player3),
+            Card(rank: .Jack, suit: .Clubs, owner: player4),
+        ]
+
+        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
+            XCTAssert(player.id == player4.id)
+        }
+
+        // Test no bower
+        cardsInPlay = [
+            Card(rank: .Queen, suit: .Spades, owner: player1),
+            Card(rank: .King, suit: .Spades, owner: player2),
+            Card(rank: .Ace, suit: .Diamonds, owner: player3),
+            Card(rank: .Jack, suit: .Diamonds, owner: player4),
+        ]
+
+        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
+            XCTAssert(player.id == player2.id)
+        }
+
+        options = Card.CompareOptions(trump: .Diamonds, bowers: true, aceHigh: true)
+        cardsInPlay = [
+            Card(rank: .Ace, suit: .Clubs, owner: player1),
+            Card(rank: .King, suit: .Diamonds, owner: player2),
+            Card(rank: .Ten, suit: .Hearts, owner: player3),
+            Card(rank: .Queen, suit: .Diamonds, owner: player4),
+        ]
+
+        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
+            XCTAssert(player.id == player2.id)
         }
     }
 
+    func testTrump() {
+
+    }
+
+    func testFollowingSuit() {
+
+    }
 }
