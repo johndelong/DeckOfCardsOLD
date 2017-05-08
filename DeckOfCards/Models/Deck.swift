@@ -24,7 +24,7 @@ class Deck {
         while let suit = Card.Suit(rawValue: suitIndex) {
             var rankIndex = 1
             while let rank = Card.Rank(rawValue: rankIndex) {
-                let card = Card(rank: rank, suit: suit)
+                let card = Card(rank, of: suit)
                 self.cards.append(card)
                 rankIndex += 1
             }

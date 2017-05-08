@@ -16,6 +16,7 @@ class GameManager {
     let requiredPlayers = 4
     let cardsInDeck = 24
 
+    var ai = StrategyEngine()
     var state: GameStatePacket.State = .readyToStartGame
 
     // ====================================
@@ -50,9 +51,6 @@ class GameManager {
 
     /// The cards currently in play on the table
     var cardsInPlay = [PlayerCard]()
-
-    /// Describes how to compare cards
-    var cardOptions = Card.CompareOptions()
 
     // ====================================
     // Decisions
@@ -148,7 +146,7 @@ class GameManager {
         } else if self.state == .playing {
             // If everyone has played a card, determine who the winner is
             if self.cardsInPlay.count == self.players.count {
-                if let player = GameManager.determineWinnerOfTrick(self.cardsInPlay, options: self.cardOptions) {
+                if let player = self.ai.determineWinnerOfTrick(self.cardsInPlay) {
                     self.cardsInPlay.removeAll()
                     NetworkManager.shared.send(packet: ActionPacket(player: player, action: .wonTrick))
                     return true
@@ -184,7 +182,7 @@ class GameManager {
         if self.state == .playing {
             if
                 let hand = self.playersCards[computer.id],
-                let card = StrategyEngine.determineCardToPlay(from: hand),
+                let card = ai.determineCardToPlay(from: hand),
                 let index = hand.index(of: card)
             {
                 self.player(played: card, fromPosition: index)
@@ -205,7 +203,7 @@ class GameManager {
             guard let action = action as? DealCardsPacket else { return }
             self.turn = self.getNextPlayer(currentPlayer: action.player) ?? Player.me
             action.playerCards.forEach { (player, cards) in
-                self.playersCards[player] = self.orderCards(cards)
+                self.playersCards[player] = self.ai.orderCards(cards)
             }
             self.kitty = action.kitty
 
@@ -227,8 +225,12 @@ class GameManager {
 
                         return action.decision.caseInsensitiveCompare(suit.toString()) == .orderedSame
                     }) as? Card.Suit {
-                        self.cardOptions.trump = trump
+                        self.ai.options.trump = trump
                         self.state = .playing
+
+                        for (playerId, hand) in self.playersCards {
+                            self.playersCards[playerId] = self.ai.orderCards(hand)
+                        }
                     }
                 }
             }
@@ -289,31 +291,6 @@ class GameManager {
 
     func leaveGame() {
         NetworkManager.shared.disconnect()
-    }
-
-    static func determineWinnerOfTrick(_ cards: [PlayerCard], options: Card.CompareOptions) -> Player? {
-        guard let firstCard = cards.first else { return nil }
-
-        let followSuit = firstCard.suit
-        var highCard = firstCard
-
-        for card in cards {
-            if (
-                (card.isSuit(followSuit, options: options) || card.isTrump(options.trump))
-                && card.compare(highCard, options: options) == .orderedDescending
-            ) {
-                highCard = card
-            }
-        }
-
-        return highCard.owner
-    }
-
-    func orderCards(_ hand: [PlayerCard]) -> [PlayerCard] {
-        return hand.sorted { (lhs, rhs) -> Bool in
-            return lhs.suit.rawValue > rhs.suit.rawValue ||
-                (lhs.suit.rawValue == rhs.suit.rawValue && lhs.compare(rhs) == .orderedDescending)
-        }
     }
 
     func deal(as player: Player) {

@@ -97,6 +97,8 @@ class GameTableViewController: UIViewController, StoryboardBased {
             })
         } else if let action = action as? PlayerDecision {
             print("\(action.player.displayName) decided trump")
+
+            self.updateCardPositions()
         } else if let action = action as? PlayCardPacket {
             if let cardView = self.playerCards[action.player.id]?[action.positionInHand] {
 
@@ -167,7 +169,6 @@ extension GameTableViewController {
             }
 
             self.playerPhysicalPositions[player.id] = point
-
         }
 
         // update labels
@@ -204,7 +205,6 @@ extension GameTableViewController {
         to players: [PlayerID: CGPoint],
         animated: Bool = true
     ) {
-
         let maxHandWidth: CGFloat = 350
 
         for (playerID, playerPos) in players {
@@ -242,6 +242,19 @@ extension GameTableViewController {
         }
 
         print("Finished animating cards being delt")
+    }
+
+    /**
+        Update card positions in hand
+    */
+    func updateCardPositions() {
+        print("updating card positions...")
+        for (playerId, hand) in self.playerCards {
+            guard let ordered = GameManager.shared.playersCards[playerId] else { continue }
+            for index in 0...ordered.count - 1 {
+                hand[index].card = ordered[index]
+            }
+        }
     }
 
     /**
@@ -296,7 +309,7 @@ extension GameTableViewController: CardViewDelegate {
             GameManager.shared.turn.isMe,
             let card = cardView.card as? PlayerCard,
             card.owner == Player.me,
-            StrategyEngine.canPlay(card: card, from: GameManager.shared.cards(for: Player.me.id)),
+            GameManager.shared.ai.canPlay(card: card, from: GameManager.shared.cards(for: Player.me.id)),
             let position = self.playerCards[Player.me.id]?.index(of: cardView)
         else { return }
 

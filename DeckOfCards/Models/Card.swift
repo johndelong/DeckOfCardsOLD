@@ -62,10 +62,13 @@ class Card: NSObject, NSCoding {
         }
     }
 
+    /// Visible Rank of this card
     let rank: Rank
+
+    /// Visible Suit of this card
     let suit: Suit
 
-    init(rank: Rank, suit: Suit) {
+    init(_ rank: Rank, of suit: Suit) {
         self.rank = rank
         self.suit = suit
     }
@@ -114,9 +117,22 @@ extension Card {
         var aceHigh = true
     }
 
-    func compare(_ card: Card, options: CompareOptions = CompareOptions()) -> ComparisonResult {
-        guard self.isSuit(card.suit, options: options) else { return .orderedDescending }
+    /// Calculated suit of this card. Is not necessarilly the same as the visible suit
+    func isSuit(_ suit: Suit, options: CompareOptions) -> Bool {
+        if self.suit == suit {
+            return true
+        }
 
+        if let trump = options.trump, options.bowers {
+            if trump == suit && self.isLeftBower(suit: trump) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    func compare(_ card: Card, options: CompareOptions) -> ComparisonResult {
         // Extrapolate card weights
         let cardVals = [self, card].map { card -> Int in
             var val = card.rank.rawValue
@@ -128,7 +144,7 @@ extension Card {
 
             // Trump
             if let trump = options.trump {
-                if card.isTrump(trump) {
+                if card.isSuit(trump, options: options) {
                     val += Rank.count
                 }
 
@@ -154,43 +170,24 @@ extension Card {
             return .orderedAscending
         }
     }
+
+    func implicitSuit(with options: CompareOptions) -> Suit {
+        guard let trump = options.trump, options.bowers else { return self.suit }
+        if self.isLeftBower(suit: trump) {
+            return trump
+        }
+
+        return self.suit
+    }
 }
 
 /// Trump Related Functions
 extension Card {
-    func isTrump(_ trump: Suit?) -> Bool {
-        guard let trump = trump else { return false }
-
-        if self.suit == trump {
-            return true
-        }
-
-        if self.isLeftBower(suit: trump) {
-            return true
-        }
-
-        return false
-    }
-
-    func isSuit(_ suit: Suit, options: CompareOptions = CompareOptions()) -> Bool {
-        if self.suit == suit {
-            return true
-        }
-
-        if let trump = options.trump {
-            if suit == trump && self.isTrump(trump) {
-                return true
-            }
-        }
-
-        return false
-    }
-
     func isLeftBower(suit: Suit?) -> Bool {
         guard
             let suit = suit,
             self.rank == .Jack
-            else { return false }
+        else { return false }
 
         let leftSuit: Suit
         switch suit {

@@ -32,64 +32,116 @@ class StrategyEngineTests: XCTestCase {
         let player3 = Player(computerName: "com3")
         let player4 = Player(computerName: "com4")
 
-        var options = Card.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
+        let ai = StrategyEngine()
+        ai.options = Card.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
 
-        var cardsInPlay = [Card]()
+        var cardsInPlay = [PlayerCard]()
 
         // Test Right Bower
         cardsInPlay = [
-            Card(rank: .Queen, suit: .Spades, owner: player1),
-            Card(rank: .King, suit: .Spades, owner: player2),
-            Card(rank: .Jack, suit: .Spades, owner: player3),
-            Card(rank: .Jack, suit: .Clubs, owner: player4),
+            PlayerCard(owner: player1, card: Card(.Queen, of: .Spades)),
+            PlayerCard(owner: player2, card: Card(.King, of: .Spades)),
+            PlayerCard(owner: player3, card: Card(.Jack, of: .Spades)),
+            PlayerCard(owner: player4, card: Card(.Jack, of: .Clubs)),
         ]
 
-        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
+        if let player = ai.determineWinnerOfTrick(cardsInPlay) {
             XCTAssert(player.id == player3.id)
         }
 
         // Test Left Bower
         cardsInPlay = [
-            Card(rank: .Queen, suit: .Spades, owner: player1),
-            Card(rank: .King, suit: .Spades, owner: player2),
-            Card(rank: .Ace, suit: .Diamonds, owner: player3),
-            Card(rank: .Jack, suit: .Clubs, owner: player4),
+            PlayerCard(owner: player1, card: Card(.Queen, of: .Spades)),
+            PlayerCard(owner: player2, card: Card(.King, of: .Spades)),
+            PlayerCard(owner: player3, card: Card(.Ace, of: .Diamonds)),
+            PlayerCard(owner: player4, card: Card(.Jack, of: .Clubs)),
         ]
 
-        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
+        if let player = ai.determineWinnerOfTrick(cardsInPlay) {
             XCTAssert(player.id == player4.id)
         }
 
         // Test no bower
         cardsInPlay = [
-            Card(rank: .Queen, suit: .Spades, owner: player1),
-            Card(rank: .King, suit: .Spades, owner: player2),
-            Card(rank: .Ace, suit: .Diamonds, owner: player3),
-            Card(rank: .Jack, suit: .Diamonds, owner: player4),
+            PlayerCard(owner: player1, card: Card(.Queen, of: .Spades)),
+            PlayerCard(owner: player2, card: Card(.King, of: .Spades)),
+            PlayerCard(owner: player3, card: Card(.Ace, of: .Diamonds)),
+            PlayerCard(owner: player4, card: Card(.Jack, of: .Diamonds)),
         ]
 
-        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
-            XCTAssert(player.id == player2.id)
-        }
-
-        options = Card.CompareOptions(trump: .Diamonds, bowers: true, aceHigh: true)
-        cardsInPlay = [
-            Card(rank: .Ace, suit: .Clubs, owner: player1),
-            Card(rank: .King, suit: .Diamonds, owner: player2),
-            Card(rank: .Ten, suit: .Hearts, owner: player3),
-            Card(rank: .Queen, suit: .Diamonds, owner: player4),
-        ]
-
-        if let player = GameManager.determineWinnerOfTrick(cardsInPlay, options: options) {
+        if let player = ai.determineWinnerOfTrick(cardsInPlay) {
             XCTAssert(player.id == player2.id)
         }
     }
 
     func testTrump() {
+        let player1 = Player(computerName: "com1")
+        let player2 = Player(computerName: "com2")
+        let player3 = Player(computerName: "com3")
+        let player4 = Player(computerName: "com4")
 
+        let ai = StrategyEngine()
+        ai.options = Card.CompareOptions(trump: .Diamonds, bowers: true, aceHigh: true)
+        var cardsInPlay = [PlayerCard]()
+
+        cardsInPlay = [
+            PlayerCard(owner: player1, card: Card(.Ten, of: .Hearts)),
+            PlayerCard(owner: player2, card: Card(.Queen, of: .Diamonds)),
+            PlayerCard(owner: player3, card: Card(.King, of: .Hearts)),
+            PlayerCard(owner: player4, card: Card(.Jack, of: .Spades)),
+        ]
+
+        if let player = ai.determineWinnerOfTrick(cardsInPlay) {
+            XCTAssert(player.id == player2.id)
+        }
     }
 
     func testFollowingSuit() {
+        let player1 = Player(computerName: "com1")
+        let player2 = Player(computerName: "com2")
+        let player3 = Player(computerName: "com3")
+        let player4 = Player(computerName: "com4")
 
+        let ai = StrategyEngine()
+        ai.options = Card.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
+        var cardsInPlay = [PlayerCard]()
+
+        cardsInPlay = [
+            PlayerCard(owner: player1, card: Card(.Ten, of: .Clubs)),
+            PlayerCard(owner: player2, card: Card(.King, of: .Diamonds)),
+            PlayerCard(owner: player3, card: Card(.Ace, of: .Hearts)),
+            PlayerCard(owner: player4, card: Card(.Queen, of: .Clubs)),
+        ]
+
+        if let player = ai.determineWinnerOfTrick(cardsInPlay) {
+            XCTAssert(player.id == player4.id)
+        }
+    }
+
+    func testOrderCardsInHand() {
+        let ai = StrategyEngine()
+        ai.options = Card.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
+
+        var hand = [Card]()
+        var ordered = [Card]()
+
+        hand = [
+            Card(.Ten, of: .Diamonds),
+            Card(.Ace, of: .Spades),
+            Card(.Jack, of: .Clubs),
+            Card(.Jack, of: .Spades),
+            Card(.Nine, of: .Hearts),
+            Card(.Ten, of: .Clubs),
+            Card(.King, of: .Diamonds),
+        ]
+
+        ordered = ai.orderCards(hand)
+        XCTAssert(ordered[0] == hand[3])
+        XCTAssert(ordered[1] == hand[2])
+        XCTAssert(ordered[2] == hand[1])
+        XCTAssert(ordered[3] == hand[4])
+        XCTAssert(ordered[4] == hand[5])
+        XCTAssert(ordered[5] == hand[6])
+        XCTAssert(ordered[6] == hand[0])
     }
 }

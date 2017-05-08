@@ -17,7 +17,7 @@ class PlayerCard: Card {
 
     init(rank: Rank, suit: Suit, owner: Player) {
         self.owner = owner
-        super.init(rank: rank, suit: suit)
+        super.init(rank, of: suit)
     }
 
     required init?(coder aDecoder: NSCoder) {
