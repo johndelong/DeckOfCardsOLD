@@ -16,7 +16,8 @@ class GameManager {
     let requiredPlayers = 4
     let cardsInDeck = 24
 
-    var ai = StrategyEngine()
+    var ai = StrategyEngine.shared
+    var cs = CardService.shared
     var state: GameStatePacket.State = .readyToStartGame
 
     // ====================================
@@ -64,7 +65,6 @@ class GameManager {
 
     var trump: Card.Suit?
 
-
     // Streams
     private lazy var disposeBag = DisposeBag()
 
@@ -83,8 +83,7 @@ class GameManager {
                     positions.insert(Player.me, at: 0)
                     NetworkManager.shared.send(packet: PlayerDetails(host: Player.me, positions: positions))
                 }
-                }
-            ).disposed(by: self.disposeBag)
+            }).disposed(by: self.disposeBag)
 
          NetworkManager.shared.communication
             .subscribe(onNext: { [unowned self] packet in
@@ -146,7 +145,7 @@ class GameManager {
         } else if self.state == .playing {
             // If everyone has played a card, determine who the winner is
             if self.cardsInPlay.count == self.players.count {
-                if let player = self.ai.determineWinnerOfTrick(self.cardsInPlay) {
+                if let player = self.cs.determineWinnerOfTrick(self.cardsInPlay) {
                     self.cardsInPlay.removeAll()
                     NetworkManager.shared.send(packet: ActionPacket(player: player, action: .wonTrick))
                     return true
@@ -182,7 +181,7 @@ class GameManager {
         if self.state == .playing {
             if
                 let hand = self.playersCards[computer.id],
-                let card = ai.determineCardToPlay(from: hand),
+                let card = ai.determineCardToPlay(from: hand, whenCardsPlayed: self.cardsInPlay),
                 let index = hand.index(of: card)
             {
                 self.player(played: card, fromPosition: index)
@@ -197,13 +196,15 @@ class GameManager {
         return false
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func updateProperties(_ action: ActionPacket) {
         switch action.type {
         case .dealt:
             guard let action = action as? DealCardsPacket else { return }
             self.turn = self.getNextPlayer(currentPlayer: action.player) ?? Player.me
             action.playerCards.forEach { (player, cards) in
-                self.playersCards[player] = self.ai.orderCards(cards)
+
+                self.playersCards[player] = self.cs.orderCards(cards)
             }
             self.kitty = action.kitty
 
@@ -225,11 +226,13 @@ class GameManager {
 
                         return action.decision.caseInsensitiveCompare(suit.toString()) == .orderedSame
                     }) as? Card.Suit {
-                        self.ai.options.trump = trump
+                        print("Trump is now: \(trump.toString())")
+                        self.cs.options.trump = trump
                         self.state = .playing
 
                         for (playerId, hand) in self.playersCards {
-                            self.playersCards[playerId] = self.ai.orderCards(hand)
+
+                            self.playersCards[playerId] = self.cs.orderCards(hand)
                         }
                     }
                 }

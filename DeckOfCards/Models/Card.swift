@@ -17,7 +17,12 @@ import MultipeerConnectivity
 // http://stackoverflow.com/questions/24007461/how-to-enumerate-an-enum-with-string-type
 // http://opengameart.org/content/playing-cards-vector-png
 
-class Card: NSObject, NSCoding {
+protocol CardType {
+    var rank: Card.Rank { get }
+    var suit: Card.Suit { get }
+}
+
+class Card: NSObject, CardType, NSCoding {
     enum Suit: Int {
         case Diamonds = 1
         case Clubs, Hearts, Spades
@@ -107,104 +112,8 @@ class Card: NSObject, NSCoding {
     static var faceDown: UIImage {
         return #imageLiteral(resourceName: "card_back")
     }
-}
 
-/// Comparison
-extension Card {
-    struct CompareOptions {
-        var trump: Suit?
-        var bowers = true
-        var aceHigh = true
-    }
-
-    /// Calculated suit of this card. Is not necessarilly the same as the visible suit
-    func isSuit(_ suit: Suit, options: CompareOptions) -> Bool {
-        if self.suit == suit {
-            return true
-        }
-
-        if let trump = options.trump, options.bowers {
-            if trump == suit && self.isLeftBower(suit: trump) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    func compare(_ card: Card, options: CompareOptions) -> ComparisonResult {
-        // Extrapolate card weights
-        let cardVals = [self, card].map { card -> Int in
-            var val = card.rank.rawValue
-
-            // Ace High
-            if card.rank == .Ace && options.aceHigh {
-                val += Rank.count // 14
-            }
-
-            // Trump
-            if let trump = options.trump {
-                if card.isSuit(trump, options: options) {
-                    val += Rank.count
-                }
-
-                // Bowers
-                if card.isLeftBower(suit: trump) {
-                    val += 4 // 15
-                } else if card.isRightBower(suit: trump) {
-                    val += 5 // 16
-                }
-            }
-
-            return val
-        }
-
-        let lhs = cardVals.first! // swiftlint:disable:this force_unwrapping
-        let rhs = cardVals.last! // swiftlint:disable:this force_unwrapping
-
-        if lhs == rhs {
-            return .orderedSame
-        } else if lhs > rhs {
-            return .orderedDescending
-        } else {
-            return .orderedAscending
-        }
-    }
-
-    func implicitSuit(with options: CompareOptions) -> Suit {
-        guard let trump = options.trump, options.bowers else { return self.suit }
-        if self.isLeftBower(suit: trump) {
-            return trump
-        }
-
-        return self.suit
-    }
-}
-
-/// Trump Related Functions
-extension Card {
-    func isLeftBower(suit: Suit?) -> Bool {
-        guard
-            let suit = suit,
-            self.rank == .Jack
-        else { return false }
-
-        let leftSuit: Suit
-        switch suit {
-        case .Diamonds:
-            leftSuit = .Hearts
-        case .Clubs:
-            leftSuit = .Spades
-        case .Hearts:
-            leftSuit = .Diamonds
-        case .Spades:
-            leftSuit = .Clubs
-        }
-
-        return self.suit == leftSuit
-    }
-
-    func isRightBower(suit: Suit) -> Bool {
-        return self.suit == suit && self.rank == .Jack
+    override public func isEqual(_ object: Any?) -> Bool {
+        return self.suit == (object as? Card)?.suit && self.rank == (object as? Card)?.rank
     }
 }

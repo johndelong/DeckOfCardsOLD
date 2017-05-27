@@ -223,9 +223,9 @@ extension GameTableViewController {
             for cardView in cardViews {
                 cardView.delegate = self
 
-                if playerID == Player.me.id {
+//                if playerID == Player.me.id {
                     cardView.flipCard()
-                }
+//                }
 
                 let offset = (CGFloat(index) * increment)
                 let xPos = (horizontal ? startXPos + offset : playerPos.x) - (CardView.size.width / 2)
@@ -305,11 +305,14 @@ extension GameTableViewController {
 
 extension GameTableViewController: CardViewDelegate {
     func didTapCard(_ cardView: CardView) {
+        let cardsInPlay = GameManager.shared.cardsInPlay
+        let hand = GameManager.shared.cards(for: Player.me.id)
+
         guard
             GameManager.shared.turn.isMe,
             let card = cardView.card as? PlayerCard,
             card.owner == Player.me,
-            GameManager.shared.ai.canPlay(card: card, from: GameManager.shared.cards(for: Player.me.id)),
+            CardService.shared.canPlay(card: card, from: hand, whenCardsPlayed: cardsInPlay),
             let position = self.playerCards[Player.me.id]?.index(of: cardView)
         else { return }
 
