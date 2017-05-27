@@ -103,25 +103,25 @@ class CardService {
 /// Trump Related Functions
 extension CardService {
     func isLeftBower(_ card: CardType) -> Bool {
-        guard card.rank == .Jack else { return false }
+        guard card.rank == .jack else { return false }
 
         let leftSuit: Card.Suit
         switch card.suit {
-        case .Diamonds:
-            leftSuit = .Hearts
-        case .Clubs:
-            leftSuit = .Spades
-        case .Hearts:
-            leftSuit = .Diamonds
-        case .Spades:
-            leftSuit = .Clubs
+        case .diamonds:
+            leftSuit = .hearts
+        case .clubs:
+            leftSuit = .spades
+        case .hearts:
+            leftSuit = .diamonds
+        case .spades:
+            leftSuit = .clubs
         }
 
         return self.options.trump == leftSuit
     }
 
     func isRightBower(_ card: CardType) -> Bool {
-        return self.options.trump == card.suit && card.rank == .Jack
+        return self.options.trump == card.suit && card.rank == .jack
     }
 }
 
@@ -163,7 +163,7 @@ private extension CardType {
         let options = cardService.options
 
         // Ace High
-        if self.rank == .Ace && options.aceHigh {
+        if self.rank == .ace && options.aceHigh {
             val += Card.Rank.count // 14
         }
 

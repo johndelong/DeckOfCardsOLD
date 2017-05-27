@@ -33,16 +33,16 @@ class CardServiceTests: XCTestCase {
         let player4 = Player(computerName: "com4")
 
         let cs = CardService.shared
-        cs.options = CardService.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
+        cs.options = CardService.CompareOptions(trump: .spades, bowers: true, aceHigh: true)
 
         var cardsInPlay = [PlayerCard]()
 
         // Test Right Bower
         cardsInPlay = [
-            PlayerCard(owner: player1, card: Card(.Queen, of: .Spades)),
-            PlayerCard(owner: player2, card: Card(.King, of: .Spades)),
-            PlayerCard(owner: player3, card: Card(.Jack, of: .Spades)),
-            PlayerCard(owner: player4, card: Card(.Jack, of: .Clubs)),
+            PlayerCard(owner: player1, card: Card(.queen, of: .spades)),
+            PlayerCard(owner: player2, card: Card(.king, of: .spades)),
+            PlayerCard(owner: player3, card: Card(.jack, of: .spades)),
+            PlayerCard(owner: player4, card: Card(.jack, of: .clubs)),
         ]
 
         if let player = cs.determineWinnerOfTrick(cardsInPlay) {
@@ -51,10 +51,10 @@ class CardServiceTests: XCTestCase {
 
         // Test Left Bower
         cardsInPlay = [
-            PlayerCard(owner: player1, card: Card(.Queen, of: .Spades)),
-            PlayerCard(owner: player2, card: Card(.King, of: .Spades)),
-            PlayerCard(owner: player3, card: Card(.Ace, of: .Diamonds)),
-            PlayerCard(owner: player4, card: Card(.Jack, of: .Clubs)),
+            PlayerCard(owner: player1, card: Card(.queen, of: .spades)),
+            PlayerCard(owner: player2, card: Card(.king, of: .spades)),
+            PlayerCard(owner: player3, card: Card(.ace, of: .diamonds)),
+            PlayerCard(owner: player4, card: Card(.jack, of: .clubs)),
         ]
 
         if let player = cs.determineWinnerOfTrick(cardsInPlay) {
@@ -63,10 +63,10 @@ class CardServiceTests: XCTestCase {
 
         // Test no bower
         cardsInPlay = [
-            PlayerCard(owner: player1, card: Card(.Queen, of: .Spades)),
-            PlayerCard(owner: player2, card: Card(.King, of: .Spades)),
-            PlayerCard(owner: player3, card: Card(.Ace, of: .Diamonds)),
-            PlayerCard(owner: player4, card: Card(.Jack, of: .Diamonds)),
+            PlayerCard(owner: player1, card: Card(.queen, of: .spades)),
+            PlayerCard(owner: player2, card: Card(.king, of: .spades)),
+            PlayerCard(owner: player3, card: Card(.ace, of: .diamonds)),
+            PlayerCard(owner: player4, card: Card(.jack, of: .diamonds)),
         ]
 
         if let player = cs.determineWinnerOfTrick(cardsInPlay) {
@@ -81,14 +81,14 @@ class CardServiceTests: XCTestCase {
         let player4 = Player(computerName: "com4")
 
         let cs = CardService.shared
-        cs.options = CardService.CompareOptions(trump: .Diamonds, bowers: true, aceHigh: true)
+        cs.options = CardService.CompareOptions(trump: .diamonds, bowers: true, aceHigh: true)
         var cardsInPlay = [PlayerCard]()
 
         cardsInPlay = [
-            PlayerCard(owner: player1, card: Card(.Ten, of: .Hearts)),
-            PlayerCard(owner: player2, card: Card(.Queen, of: .Diamonds)),
-            PlayerCard(owner: player3, card: Card(.King, of: .Hearts)),
-            PlayerCard(owner: player4, card: Card(.Jack, of: .Spades)),
+            PlayerCard(owner: player1, card: Card(.ten, of: .hearts)),
+            PlayerCard(owner: player2, card: Card(.queen, of: .diamonds)),
+            PlayerCard(owner: player3, card: Card(.king, of: .hearts)),
+            PlayerCard(owner: player4, card: Card(.jack, of: .spades)),
         ]
 
         if let player = cs.determineWinnerOfTrick(cardsInPlay) {
@@ -103,14 +103,14 @@ class CardServiceTests: XCTestCase {
         let player4 = Player(computerName: "com4")
 
         let cs = CardService.shared
-        cs.options = CardService.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
+        cs.options = CardService.CompareOptions(trump: .spades, bowers: true, aceHigh: true)
         var cardsInPlay = [PlayerCard]()
 
         cardsInPlay = [
-            PlayerCard(owner: player1, card: Card(.Ten, of: .Clubs)),
-            PlayerCard(owner: player2, card: Card(.King, of: .Diamonds)),
-            PlayerCard(owner: player3, card: Card(.Ace, of: .Hearts)),
-            PlayerCard(owner: player4, card: Card(.Queen, of: .Clubs)),
+            PlayerCard(owner: player1, card: Card(.ten, of: .clubs)),
+            PlayerCard(owner: player2, card: Card(.king, of: .diamonds)),
+            PlayerCard(owner: player3, card: Card(.ace, of: .hearts)),
+            PlayerCard(owner: player4, card: Card(.queen, of: .clubs)),
         ]
 
         if let player = cs.determineWinnerOfTrick(cardsInPlay) {
@@ -120,46 +120,46 @@ class CardServiceTests: XCTestCase {
 
     func testOrderCardsInHand() {
         let cs = CardService.shared
-        cs.options = CardService.CompareOptions(trump: .Spades, bowers: true, aceHigh: true)
+        cs.options = CardService.CompareOptions(trump: .spades, bowers: true, aceHigh: true)
 
         let hand = [
-            Card(.Ten, of: .Diamonds),
-            Card(.Ace, of: .Spades),
-            Card(.Jack, of: .Clubs),
-            Card(.Jack, of: .Spades),
-            Card(.Nine, of: .Hearts),
-            Card(.Ten, of: .Clubs),
-            Card(.King, of: .Diamonds),
+            Card(.ten, of: .diamonds),
+            Card(.ace, of: .spades),
+            Card(.jack, of: .clubs),
+            Card(.jack, of: .spades),
+            Card(.nine, of: .hearts),
+            Card(.ten, of: .clubs),
+            Card(.king, of: .diamonds),
         ]
 
         let ordered = cs.orderCards(hand)
-        XCTAssert(ordered[0] == Card(.Jack, of: .Spades))
-        XCTAssert(ordered[1] == Card(.Jack, of: .Clubs))
-        XCTAssert(ordered[2] == Card(.Ace, of: .Spades))
-        XCTAssert(ordered[3] == Card(.Nine, of: .Hearts))
-        XCTAssert(ordered[4] == Card(.Ten, of: .Clubs))
-        XCTAssert(ordered[5] == Card(.King, of: .Diamonds))
-        XCTAssert(ordered[6] == Card(.Ten, of: .Diamonds))
+        XCTAssert(ordered[0] == Card(.jack, of: .spades))
+        XCTAssert(ordered[1] == Card(.jack, of: .clubs))
+        XCTAssert(ordered[2] == Card(.ace, of: .spades))
+        XCTAssert(ordered[3] == Card(.nine, of: .hearts))
+        XCTAssert(ordered[4] == Card(.ten, of: .clubs))
+        XCTAssert(ordered[5] == Card(.king, of: .diamonds))
+        XCTAssert(ordered[6] == Card(.ten, of: .diamonds))
     }
 
     func testCanPlayCard() {
         let cs = CardService.shared
-        cs.options = CardService.CompareOptions(trump: .Hearts, bowers: true, aceHigh: true)
+        cs.options = CardService.CompareOptions(trump: .hearts, bowers: true, aceHigh: true)
 
         let inPlay = [
-            Card(.King, of: .Hearts),
+            Card(.king, of: .hearts),
         ]
 
         let hand = [
-            Card(.Jack, of: .Clubs),
-            Card(.Ten, of: .Clubs),
-            Card(.Nine, of: .Clubs),
-            Card(.King, of: .Diamonds),
-            Card(.Jack, of: .Diamonds),
+            Card(.jack, of: .clubs),
+            Card(.ten, of: .clubs),
+            Card(.nine, of: .clubs),
+            Card(.king, of: .diamonds),
+            Card(.jack, of: .diamonds),
         ]
 
-        XCTAssert(cs.canPlay(card: Card(.Ace, of: .Diamonds), from: hand, whenCardsPlayed: inPlay) == false)
-        XCTAssert(cs.canPlay(card: Card(.King, of: .Diamonds), from: hand, whenCardsPlayed: inPlay) == false)
-        XCTAssert(cs.canPlay(card: Card(.Jack, of: .Diamonds), from: hand, whenCardsPlayed: inPlay) == true)
+        XCTAssert(cs.canPlay(card: Card(.ace, of: .diamonds), from: hand, whenCardsPlayed: inPlay) == false)
+        XCTAssert(cs.canPlay(card: Card(.king, of: .diamonds), from: hand, whenCardsPlayed: inPlay) == false)
+        XCTAssert(cs.canPlay(card: Card(.jack, of: .diamonds), from: hand, whenCardsPlayed: inPlay) == true)
     }
 }

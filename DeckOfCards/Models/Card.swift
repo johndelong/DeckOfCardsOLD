@@ -24,37 +24,37 @@ protocol CardType {
 
 class Card: NSObject, CardType, NSCoding {
     enum Suit: Int {
-        case Diamonds = 1
-        case Clubs, Hearts, Spades
+        case diamonds = 1
+        case clubs, hearts, spades
 
         func toString() -> String {
             switch self {
-            case .Spades:
+            case .spades:
                 return "Spades"
-            case .Hearts:
+            case .hearts:
                 return "Hearts"
-            case .Diamonds:
+            case .diamonds:
                 return "Diamonds"
-            case .Clubs:
+            case .clubs:
                 return "Clubs"
             }
         }
     }
 
     enum Rank: Int {
-        case Ace = 1
-        case Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten
-        case Jack, Queen, King
+        case ace = 1
+        case two, three, four, five, six, seven, eight, nine, ten
+        case jack, queen, king
 
         func toString() -> String {
             switch self {
-            case .Ace:
+            case .ace:
                 return "Ace"
-            case .Jack:
+            case .jack:
                 return "Jack"
-            case .Queen:
+            case .queen:
                 return "Queen"
-            case .King:
+            case .king:
                 return "King"
             default:
                 return String(self.rawValue)

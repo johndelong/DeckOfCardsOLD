@@ -25,25 +25,25 @@ class StrategyEngineTests: XCTestCase {
 
     func testDetermineCardToPlay() {
         let cs = CardService.shared
-        cs.options = CardService.CompareOptions(trump: .Diamonds, bowers: true, aceHigh: true)
+        cs.options = CardService.CompareOptions(trump: .diamonds, bowers: true, aceHigh: true)
 
         let hand = [
-            Card(.Ace, of: .Hearts),
-            Card(.Jack, of: .Hearts),
-            Card(.Queen, of: .Diamonds),
-            Card(.Ten, of: .Diamonds),
-            Card(.Ten, of: .Spades),
+            Card(.ace, of: .hearts),
+            Card(.jack, of: .hearts),
+            Card(.queen, of: .diamonds),
+            Card(.ten, of: .diamonds),
+            Card(.ten, of: .spades),
         ]
 
         let inPlay = [
-            Card(.Ace, of: .Diamonds),
-            Card(.King, of: .Diamonds),
-            Card(.Nine, of: .Spades),
+            Card(.ace, of: .diamonds),
+            Card(.king, of: .diamonds),
+            Card(.nine, of: .spades),
         ]
 
         let card = StrategyEngine.shared.determineCardToPlay(from: hand, whenCardsPlayed: inPlay)
 
-        XCTAssert(card == Card(.Jack, of: .Hearts))
+        XCTAssert(card == Card(.jack, of: .hearts))
     }
 
 }
