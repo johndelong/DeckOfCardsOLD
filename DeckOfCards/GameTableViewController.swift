@@ -47,8 +47,31 @@ class GameTableViewController: UIViewController, StoryboardBased {
                             self.playButton.setTitle("Deal", for: .normal)
                             self.playButton.isEnabled = true
                         }
-                    } else if state.state == .predictions {
-                        print("\(state.turn.displayName)'s turn to decide trump")
+                    }
+                }
+
+                if GameManager.shared.state == .decisions {
+                    if GameManager.shared.turn.isMe {
+                        let alert = UIAlertController(
+                            title: "Choose Trump",
+                            message: nil,
+                            preferredStyle: .actionSheet
+                        )
+
+                        GameManager.shared.availableDecisions.forEach { item in
+                            if let suit = item as? Card.Suit {
+                                let action = UIAlertAction(title: suit.toString(), style: .default) { _ in
+                                    NetworkManager.shared.send(
+                                        packet: PlayerDecision(player: Player.me, decides: .trump(suit))
+                                    )
+                                }
+                                alert.addAction(action)
+                            }
+                        }
+
+                        self.animationQueue.animate(withDuration: 0, animations: { 
+                            self.present(alert, animated: true, completion: nil)
+                        })
                     }
                 }
 
@@ -64,6 +87,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
         }).disposed(by: self.disposeBag)
     }
 
+    // Actions taken by OTHER players.
     func handleActionEvent(_ action: ActionPacket) {
         if GameManager.shared.turn.isMe {
             self.playButton.setTitle("Take Turn", for: .normal)
@@ -96,9 +120,14 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 }
             })
         } else if let action = action as? PlayerDecision {
-            print("\(action.player.displayName) decided trump")
-
-            self.updateCardPositions()
+            if case let .trump(suit) = action.decision {
+                if let suit = suit {
+                    print("\(action.player.displayName) chose \(suit.toString())")
+                    self.updateCardPositions()
+                } else {
+                    print("\(action.player.displayName) passed")
+                }
+            }
         } else if let action = action as? PlayCardPacket {
             if let cardView = self.playerCards[action.player.id]?[action.positionInHand] {
 

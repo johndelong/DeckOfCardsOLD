@@ -56,7 +56,6 @@ class GameManager {
     // ====================================
     // Decisions
     // ====================================
-
     var availableDecisions = [Any]()
 
     // ====================================
@@ -131,16 +130,11 @@ class GameManager {
     }
 
     /**
-        Analyzes the current situation and determine of updates should be made
+        Analyzes the current situation and determine if updates should be made
     */
     func handleGameStateUpdates() -> Bool {
         // if making a decision
-        if self.state == .predictions {
-            if let player = self.turn, let suit = self.availableDecisions.first as? Card.Suit {
-                NetworkManager.shared.send(
-                    packet: PlayerDecision(player: player, decides: suit.toString(), for: .trump)
-                )
-            }
+        if self.state == .decisions {
 
         } else if self.state == .playing {
             // If everyone has played a card, determine who the winner is
@@ -186,11 +180,19 @@ class GameManager {
             {
                 self.player(played: card, fromPosition: index)
                 return true
+            } else {
+                return false
             }
         }
 
         if self.state == .dealing {
             self.deal(as: computer)
+            return true
+        }
+
+        if self.state == .decisions {
+            NetworkManager.shared.send(packet: PlayerDecision(player: computer, decides: .trump(nil)))
+            return true
         }
 
         return false
@@ -200,47 +202,42 @@ class GameManager {
     func updateProperties(_ action: ActionPacket) {
         switch action.type {
         case .dealt:
+            defer { self.setNextPlayer(currentPlayer: action.player) }
             guard let action = action as? DealCardsPacket else { return }
-            self.turn = self.getNextPlayer(currentPlayer: action.player) ?? Player.me
+
             action.playerCards.forEach { (player, cards) in
 
                 self.playersCards[player] = self.cs.orderCards(cards)
             }
             self.kitty = action.kitty
 
-            // Now that the cards have been delt, it's time to start making predictions
-            self.state = .predictions
+            // Now that the cards have been dealt, it's time to start making predictions
+            self.state = .decisions
 
             if let topCard = self.kitty.first {
                 self.availableDecisions = [topCard.suit]
             }
 
         case .madePrediction:
+            defer { self.setNextPlayer(currentPlayer: action.player) }
             guard let action = action as? PlayerDecision else { return }
-            if action.decision.isEmpty {
+
+            if case let .trump(suit) = action.decision {
                 // Player did not make a decision (they passed)
-            } else {
-                if action.decisionType == .trump {
-                    if let trump = self.availableDecisions.first(where: { (suit) -> Bool in
-                        guard let suit = suit as? Card.Suit else { return false }
+                guard let suit = suit else { return }
 
-                        return action.decision.caseInsensitiveCompare(suit.toString()) == .orderedSame
-                    }) as? Card.Suit {
-                        print("Trump is now: \(trump.toString())")
-                        self.cs.options.trump = trump
-                        self.state = .playing
+                print("Trump is now: \(suit.toString())")
+                self.cs.options.trump = suit
+                self.state = .playing
 
-                        for (playerId, hand) in self.playersCards {
-
-                            self.playersCards[playerId] = self.cs.orderCards(hand)
-                        }
-                    }
+                for (playerId, hand) in self.playersCards {
+                    self.playersCards[playerId] = self.cs.orderCards(hand)
                 }
             }
-
         case .playedCard:
+            defer { self.setNextPlayer(currentPlayer: action.player) }
             guard let action = action as? PlayCardPacket else { return }
-            self.turn = self.getNextPlayer(currentPlayer: action.player) ?? Player.me
+
             self.playersCards[action.player.id]?.remove(at: action.positionInHand)
             self.cardsPlayed.append(action.card)
             self.cardsInPlay.append(action.card)
@@ -309,7 +306,7 @@ class GameManager {
         NetworkManager.shared.send(packet: PlayCardPacket(card: card, position: position))
     }
 
-    func getNextPlayer(currentPlayer: Player) -> Player? {
+    private func getNextPlayer(currentPlayer: Player) -> Player? {
         guard let index = self.players.index(of: currentPlayer) else { return nil }
 
         if index == players.count - 1 {
@@ -317,6 +314,10 @@ class GameManager {
         } else {
             return players[index.advanced(by: 1)]
         }
+    }
+
+    private func setNextPlayer(currentPlayer: Player) {
+        self.turn = self.getNextPlayer(currentPlayer: currentPlayer) ?? Player.me
     }
 }
 

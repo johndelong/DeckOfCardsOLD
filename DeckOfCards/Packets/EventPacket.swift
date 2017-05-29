@@ -129,37 +129,53 @@ class PlayCardPacket: ActionPacket {
 }
 
 class PlayerDecision: ActionPacket {
-    enum DecisionType: String {
-        case trump
+    enum DecisionType {
+        case trump(Card.Suit?)
+
+        // swiftlint:disable:next nesting
+        enum Name: String {
+            case trump
+        }
+
+        var name: Name {
+            switch self {
+            case .trump: return .trump
+            }
+        }
     }
 
-    let decision: String
-    let decisionType: DecisionType
+    let decision: DecisionType
 
-    init(player: Player, decides: String, for decisionType: DecisionType) {
+    init(player: Player, decides: DecisionType) {
         self.decision = decides
-        self.decisionType = decisionType
         super.init(player: player, action: .madePrediction)
     }
 
     required init?(coder aDecoder: NSCoder) {
         guard
-            let decision = aDecoder.decodeObject(forKey: "player_decision") as? String,
             let rawDecisionType = aDecoder.decodeObject(forKey: "decision_type") as? String,
-            let decisionType = DecisionType(rawValue: rawDecisionType)
+            let type = DecisionType.Name(rawValue: rawDecisionType)
         else {
             return nil
         }
 
-        self.decision = decision
-        self.decisionType = decisionType
+        switch type {
+        case .trump:
+            let rawSuit = aDecoder.decodeInteger(forKey: "suit")
+            let suit = Card.Suit(rawValue: rawSuit)
+            self.decision = DecisionType.trump(suit)
+        }
 
         super.init(coder: aDecoder)
     }
 
     override func encode(with aCoder: NSCoder) {
-        aCoder.encode(self.decision, forKey: "player_decision")
-        aCoder.encode(self.decisionType.rawValue, forKey: "decision_type")
+        aCoder.encode(self.decision.name, forKey: "decision_type")
+
+        switch self.decision {
+        case .trump(let suit):
+            aCoder.encode(suit?.rawValue, forKey: "suit")
+        }
 
         super.encode(with: aCoder)
     }
