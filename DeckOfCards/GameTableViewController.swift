@@ -66,10 +66,17 @@ class GameTableViewController: UIViewController, StoryboardBased {
                                     )
                                 }
                                 alert.addAction(action)
+                            } else if let string = item as? String {
+                                let action = UIAlertAction(title: string, style: .default) { _ in
+                                    NetworkManager.shared.send(
+                                        packet: PlayerDecision(player: Player.me, decides: .trump(nil))
+                                    )
+                                }
+                                alert.addAction(action)
                             }
                         }
 
-                        self.animationQueue.animate(withDuration: 0, animations: { 
+                        self.animationQueue.animate(withDuration: 0, animations: {
                             self.present(alert, animated: true, completion: nil)
                         })
                     }
@@ -163,6 +170,7 @@ extension GameTableViewController {
         }, completion: {
             cards.forEach { $0.removeFromSuperview() }
             print("table was cleared")
+            print("\n\n")
         })
     }
 
@@ -252,9 +260,9 @@ extension GameTableViewController {
             for cardView in cardViews {
                 cardView.delegate = self
 
-//                if playerID == Player.me.id {
+                if playerID == Player.me.id {
                     cardView.flipCard()
-//                }
+                }
 
                 let offset = (CGFloat(index) * increment)
                 let xPos = (horizontal ? startXPos + offset : playerPos.x) - (CardView.size.width / 2)
@@ -269,20 +277,18 @@ extension GameTableViewController {
                 index += 1
             }
         }
-
-        print("Finished animating cards being delt")
     }
 
     /**
         Update card positions in hand
     */
     func updateCardPositions() {
-        print("updating card positions...")
         for (playerId, hand) in self.playerCards {
             guard let ordered = GameManager.shared.playersCards[playerId] else { continue }
-            for index in 0...ordered.count - 1 {
+            for index in 0...ordered.count - 1 where hand[index].card != ordered[index] {
                 hand[index].card = ordered[index]
             }
+            self.playerCards[playerId] = hand
         }
     }
 

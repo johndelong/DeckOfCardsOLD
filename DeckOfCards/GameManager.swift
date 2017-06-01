@@ -135,7 +135,19 @@ class GameManager {
     func handleGameStateUpdates() -> Bool {
         // if making a decision
         if self.state == .decisions {
-
+            // TODO: I'm not sure this check should go here or the updateProperties() method.
+            // This may be exposing a bigger problem with this current setup. Maybe I need to decide the reason
+            // for the difference between the methods and clarify or combine them.
+            if self.turn == self.dealer {
+                var decisions = [Card.Suit.diamonds, Card.Suit.clubs, Card.Suit.hearts, Card.Suit.spades]
+                decisions = decisions.filter { suit in
+                    return !self.availableDecisions.contains(where: { (choice) -> Bool in
+                        guard let choice = choice as? Card.Suit else { return false }
+                        return suit == choice
+                    })
+                }
+                self.availableDecisions = decisions
+            }
         } else if self.state == .playing {
             // If everyone has played a card, determine who the winner is
             if self.cardsInPlay.count == self.players.count {
@@ -215,7 +227,7 @@ class GameManager {
             self.state = .decisions
 
             if let topCard = self.kitty.first {
-                self.availableDecisions = [topCard.suit]
+                self.availableDecisions = [topCard.suit, "Pass"]
             }
 
         case .madePrediction:
@@ -226,7 +238,6 @@ class GameManager {
                 // Player did not make a decision (they passed)
                 guard let suit = suit else { return }
 
-                print("Trump is now: \(suit.toString())")
                 self.cs.options.trump = suit
                 self.state = .playing
 

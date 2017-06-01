@@ -17,7 +17,13 @@ class CardView: UIImageView {
     static let size = CGSize(width: 80, height: 116)
 
     private(set) var isFaceUp = false
-    var card: Card
+    var card: Card {
+        didSet {
+            if self.isFaceUp {
+                self.image = self.card.faceUp
+            }
+        }
+    }
 
     weak var delegate: CardViewDelegate?
 
@@ -46,7 +52,6 @@ class CardView: UIImageView {
 
     func flipCard() {
         self.isFaceUp = !self.isFaceUp
-
         self.image = self.isFaceUp ? card.faceUp : Card.faceDown
     }
 }
