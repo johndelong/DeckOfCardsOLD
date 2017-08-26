@@ -64,6 +64,17 @@ extension Player {
     }
 }
 
+// Comparison
+extension Player {
+    public static func == (lhs: Player, rhs: Player) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        return self.id == (object as? Player)?.id
+    }
+}
+
 extension Optional where Wrapped: Player {
     var isMe: Bool {
         return self?.isMe ?? false

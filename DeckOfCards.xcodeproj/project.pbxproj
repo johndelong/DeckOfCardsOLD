@@ -12,6 +12,7 @@
 		1523F1F71E7F2CED001486BB /* GameStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1523F1F61E7F2CED001486BB /* GameStatePacket.swift */; };
 		1523F1F91E7F2D22001486BB /* PlayersPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1523F1F81E7F2D22001486BB /* PlayersPacket.swift */; };
 		1523F1FC1E7F2DC5001486BB /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1523F1FB1E7F2DC5001486BB /* CardView.swift */; };
+		15300C411F51044600F695D5 /* JoinViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15300C401F51044600F695D5 /* JoinViewController.storyboard */; };
 		1533520C1E69148300C997FB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520A1E69148300C997FB /* Card.swift */; };
 		1533520D1E69148300C997FB /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520B1E69148300C997FB /* Deck.swift */; };
 		15A1E7DD1E991ED7009BA96D /* CardServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A1E7DC1E991ED7009BA96D /* CardServiceTests.swift */; };
@@ -57,6 +58,7 @@
 		1523F1F61E7F2CED001486BB /* GameStatePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStatePacket.swift; sourceTree = "<group>"; };
 		1523F1F81E7F2D22001486BB /* PlayersPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayersPacket.swift; sourceTree = "<group>"; };
 		1523F1FB1E7F2DC5001486BB /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		15300C401F51044600F695D5 /* JoinViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = JoinViewController.storyboard; sourceTree = "<group>"; };
 		1533520A1E69148300C997FB /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		1533520B1E69148300C997FB /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
 		15A1E7DC1E991ED7009BA96D /* CardServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardServiceTests.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				1523F1FB1E7F2DC5001486BB /* CardView.swift */,
 				15EE4A101E86C000001A9292 /* AnimationQueue.swift */,
 				15EFE6F11E872473005CC1E0 /* StrategyEngine.swift */,
+				15300C401F51044600F695D5 /* JoinViewController.storyboard */,
 			);
 			path = DeckOfCards;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				15B4ED261E65B4E0001C72CF /* GameTableViewController.storyboard in Resources */,
 				15B4ED0E1E6206A0001C72CF /* .swiftlint.yml in Resources */,
 				15B4ECF61E620446001C72CF /* LaunchScreen.storyboard in Resources */,
+				15300C411F51044600F695D5 /* JoinViewController.storyboard in Resources */,
 				15B4ECF31E620446001C72CF /* Assets.xcassets in Resources */,
 				15B4ECEE1E620446001C72CF /* Main.storyboard in Resources */,
 			);

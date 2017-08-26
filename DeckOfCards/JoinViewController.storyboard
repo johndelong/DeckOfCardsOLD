@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ZYF-7N-obX">
+    <device id="retina4_7" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Join View Controller-->
+        <scene sceneID="O0Y-e0-Ofl">
+            <objects>
+                <viewController id="ZYF-7N-obX" customClass="JoinViewController" customModule="DeckOfCards" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9t2-6o-sqQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="eEB-nC-31f"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uzD-3Y-kB7">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="and-wo-wcp">
+                                <rect key="frame" x="0.0" y="50" width="667" height="325"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D33-oN-GOa">
+                                <rect key="frame" x="20" y="20" width="30" height="30"/>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="exitPressed:" destination="ZYF-7N-obX" eventType="touchUpInside" id="Swg-jQ-Tc3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q6m-sr-vGm">
+                                <rect key="frame" x="613" y="20" width="34" height="30"/>
+                                <state key="normal" title="Start"/>
+                                <connections>
+                                    <action selector="startPressed:" destination="ZYF-7N-obX" eventType="touchUpInside" id="jZe-Dc-z8Z"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="D33-oN-GOa" firstAttribute="leading" secondItem="uzD-3Y-kB7" secondAttribute="leading" constant="20" id="2CN-pO-Gd5"/>
+                            <constraint firstItem="and-wo-wcp" firstAttribute="top" secondItem="9t2-6o-sqQ" secondAttribute="bottom" constant="50" id="Frh-tm-cA9"/>
+                            <constraint firstItem="D33-oN-GOa" firstAttribute="top" secondItem="9t2-6o-sqQ" secondAttribute="bottom" constant="20" id="PAm-fK-K9E"/>
+                            <constraint firstAttribute="trailing" secondItem="and-wo-wcp" secondAttribute="trailing" id="V24-G0-Xen"/>
+                            <constraint firstItem="and-wo-wcp" firstAttribute="leading" secondItem="uzD-3Y-kB7" secondAttribute="leading" id="Yxl-NU-0CA"/>
+                            <constraint firstItem="eEB-nC-31f" firstAttribute="top" secondItem="and-wo-wcp" secondAttribute="bottom" id="hTH-jl-bXG"/>
+                            <constraint firstAttribute="trailing" secondItem="Q6m-sr-vGm" secondAttribute="trailing" constant="20" id="ndS-Ov-FVM"/>
+                            <constraint firstItem="Q6m-sr-vGm" firstAttribute="top" secondItem="9t2-6o-sqQ" secondAttribute="bottom" constant="20" id="wfS-M3-SGq"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="tableView" destination="and-wo-wcp" id="5WW-7t-mtp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="feI-qw-sH6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="23" y="130"/>
+        </scene>
+    </scenes>
+</document>

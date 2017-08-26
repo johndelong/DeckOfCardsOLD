@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 //        NetworkManager.configure()
 
+        UIApplication.shared.isIdleTimerDisabled = true
+
         return true
     }
 

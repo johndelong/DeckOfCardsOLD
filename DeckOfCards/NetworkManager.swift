@@ -14,6 +14,7 @@ import RxSwift
 class NetworkManager: NSObject {
     private let serviceAdvertiser: MCNearbyServiceAdvertiser
     private let serviceBrowser: MCNearbyServiceBrowser
+    private var unsentPackets = [PacketProtocol]()
 
     // Sessions are created by advertisers, and passed to peers when accepting an invitation to connect
     lazy var session: MCSession = {
@@ -85,6 +86,20 @@ class NetworkManager: NSObject {
 
     func sendToMe(packet: PacketProtocol) {
         self.communicationStream.value = packet
+    }
+
+    func queue(packet: PacketProtocol) {
+        self.unsentPackets.append(packet)
+    }
+
+    func sendQueuedPackets() {
+        DispatchQueue.main.async {
+            while !self.unsentPackets.isEmpty {
+                guard let packet = self.unsentPackets.first else { break }
+                self.unsentPackets.removeFirst()
+                self.send(packet: packet)
+            }
+        }
     }
 }
 

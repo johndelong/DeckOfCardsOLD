@@ -170,11 +170,12 @@ class PlayerDecision: ActionPacket {
     }
 
     override func encode(with aCoder: NSCoder) {
-        aCoder.encode(self.decision.name, forKey: "decision_type")
+        aCoder.encode(self.decision.name.rawValue, forKey: "decision_type")
 
         switch self.decision {
         case .trump(let suit):
-            aCoder.encode(suit?.rawValue, forKey: "suit")
+            guard let suit = suit else { break }
+            aCoder.encode(suit.rawValue, forKey: "suit")
         }
 
         super.encode(with: aCoder)

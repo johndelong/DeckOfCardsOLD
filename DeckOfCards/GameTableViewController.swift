@@ -35,22 +35,25 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
         GameManager.shared.eventStream.asObservable()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] event in
+            .subscribe(onNext: { [weak self] event in
+                guard let _self = self else { return }
+
                 if let action = event as? ActionPacket {
-                    self.handleActionEvent(action)
+                    _self.handleActionEvent(action)
                 } else if let players = event as? PlayerDetails {
-                    self.updatePlayerPhysicalPositions(players.positions)
+                    _self.updatePlayerPhysicalPositions(players.positions)
                 } else if let state = event as? GameStatePacket {
                     if state.state == .dealing {
                         print("\(state.dealer.displayName) is now dealing")
                         if GameManager.shared.turn.isMe {
-                            self.playButton.setTitle("Deal", for: .normal)
-                            self.playButton.isEnabled = true
+                            _self.playButton.setTitle("Deal", for: .normal)
+                            _self.playButton.isEnabled = true
                         }
                     }
                 }
 
                 if GameManager.shared.state == .decisions {
+//                    print("\(GameManager.shared.turn?.displayName ?? "Nobodies") turn")
                     if GameManager.shared.turn.isMe {
                         let alert = UIAlertController(
                             title: "Choose Trump",
@@ -76,8 +79,8 @@ class GameTableViewController: UIViewController, StoryboardBased {
                             }
                         }
 
-                        self.animationQueue.animate(withDuration: 0, animations: {
-                            self.present(alert, animated: true, completion: nil)
+                        _self.animationQueue.animate(withDuration: 0, animations: {
+                            _self.present(alert, animated: true, completion: nil)
                         })
                     }
                 }

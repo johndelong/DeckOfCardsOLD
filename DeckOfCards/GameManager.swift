@@ -73,45 +73,51 @@ class GameManager {
     private init() {
 
         NetworkManager.shared.connectedPeers.asObservable()
-            .subscribe(onNext: { [unowned self] peers in
+            .subscribe(onNext: { [weak self] peers in
+                guard let _self = self else { return }
                 guard !peers.isEmpty else { return }
 
                 // If I am the host, I should let others know about player positions
-                if self.host.isMe {
+                if _self.host.isMe {
                     var positions = peers.map { Player(id: $0) }
                     positions.insert(Player.me, at: 0)
-                    NetworkManager.shared.send(packet: PlayerDetails(host: Player.me, positions: positions))
+                    NetworkManager.shared.queue(packet: PlayerDetails(host: Player.me, positions: positions))
                 }
+
+                NetworkManager.shared.sendQueuedPackets()
             }).disposed(by: self.disposeBag)
 
          NetworkManager.shared.communication
-            .subscribe(onNext: { [unowned self] packet in
+            .subscribe(onNext: { [weak self] packet in
+                guard let _self = self else { return }
                 guard let packet = packet else { return }
 
                 // State Packets
                 if let state = packet as? GameStatePacket {
-                    self.state = state.state
-                    self.turn = state.turn
-                    self.dealer = state.dealer
-                    self.eventStream.onNext(state)
+                    _self.state = state.state
+                    _self.turn = state.turn
+                    _self.dealer = state.dealer
+                    _self.eventStream.onNext(state)
                 }
 
                 // Player Packets
                 if let data = packet as? PlayerDetails {
-                    self.players = data.positions
-                    self.host = data.host
-                    self.eventStream.onNext(data)
+                    _self.players = data.positions
+                    _self.host = data.host
+                    _self.eventStream.onNext(data)
                 }
 
                 // Action Packets
                 if let event = packet as? ActionPacket {
                     // Update properties
-                    self.updateProperties(event)
-                    self.eventStream.onNext(event)
+                    _self.updateProperties(event)
+                    _self.eventStream.onNext(event)
                 }
 
                 // Make additional calculations
-                self.postCalculations()
+                _self.postCalculations()
+
+                NetworkManager.shared.sendQueuedPackets()
             }).disposed(by: self.disposeBag)
 
     }
@@ -133,40 +139,11 @@ class GameManager {
         Analyzes the current situation and determine if updates should be made
     */
     func handleGameStateUpdates() -> Bool {
-        // if making a decision
-        if self.state == .decisions {
-            // TODO: I'm not sure this check should go here or the updateProperties() method.
-            // This may be exposing a bigger problem with this current setup. Maybe I need to decide the reason
-            // for the difference between the methods and clarify or combine them.
-            if self.turn == self.dealer {
-                var decisions = [Card.Suit.diamonds, Card.Suit.clubs, Card.Suit.hearts, Card.Suit.spades]
-                decisions = decisions.filter { suit in
-                    return !self.availableDecisions.contains(where: { (choice) -> Bool in
-                        guard let choice = choice as? Card.Suit else { return false }
-                        return suit == choice
-                    })
-                }
-                self.availableDecisions = decisions
-            }
-        } else if self.state == .playing {
-            // If everyone has played a card, determine who the winner is
-            if self.cardsInPlay.count == self.players.count {
-                if let player = self.cs.determineWinnerOfTrick(self.cardsInPlay) {
-                    self.cardsInPlay.removeAll()
-                    NetworkManager.shared.send(packet: ActionPacket(player: player, action: .wonTrick))
-                    return true
-                }
-            }
+        guard self.host.isMe else { return false }
+        if self.state == .playing {
 
             // If all cards have been played, then update the dealer and start again
             if self.cardsPlayed.count == (self.cardsInDeck - self.kitty.count) {
-                // Reset round dependant properties
-
-                self.cardsPlayed.removeAll()
-                self.playersCards.removeAll()
-                self.cardsInPlay.removeAll()
-                self.kitty.removeAll()
-
                 self.setDealer(player: self.turn)
                 return true
             }
@@ -203,7 +180,7 @@ class GameManager {
         }
 
         if self.state == .decisions {
-            NetworkManager.shared.send(packet: PlayerDecision(player: computer, decides: .trump(nil)))
+            NetworkManager.shared.queue(packet: PlayerDecision(player: computer, decides: .trump(nil)))
             return true
         }
 
@@ -215,10 +192,9 @@ class GameManager {
         switch action.type {
         case .dealt:
             defer { self.setNextPlayer(currentPlayer: action.player) }
-            guard let action = action as? DealCardsPacket else { return }
+            guard let action = action as? DealCardsPacket else { break }
 
             action.playerCards.forEach { (player, cards) in
-
                 self.playersCards[player] = self.cs.orderCards(cards)
             }
             self.kitty = action.kitty
@@ -232,11 +208,11 @@ class GameManager {
 
         case .madePrediction:
             defer { self.setNextPlayer(currentPlayer: action.player) }
-            guard let action = action as? PlayerDecision else { return }
+            guard let action = action as? PlayerDecision else { break }
 
             if case let .trump(suit) = action.decision {
                 // Player did not make a decision (they passed)
-                guard let suit = suit else { return }
+                guard let suit = suit else { break }
 
                 self.cs.options.trump = suit
                 self.state = .playing
@@ -247,13 +223,50 @@ class GameManager {
             }
         case .playedCard:
             defer { self.setNextPlayer(currentPlayer: action.player) }
-            guard let action = action as? PlayCardPacket else { return }
+            guard let action = action as? PlayCardPacket else { break }
 
             self.playersCards[action.player.id]?.remove(at: action.positionInHand)
             self.cardsPlayed.append(action.card)
             self.cardsInPlay.append(action.card)
         case .wonTrick:
             self.turn = action.player
+        }
+
+        // if making a decision
+        if self.state == .decisions {
+            if self.turn == self.dealer {
+                var decisions = [Card.Suit.diamonds, Card.Suit.clubs, Card.Suit.hearts, Card.Suit.spades]
+                decisions = decisions.filter { suit in
+                    return !self.availableDecisions.contains(where: { (choice) -> Bool in
+                        guard let choice = choice as? Card.Suit else { return false }
+                        return suit == choice
+                    })
+                }
+                self.availableDecisions = decisions
+            }
+        } else if self.state == .playing {
+            if self.cardsInPlay.count == self.players.count {
+
+                if let player = self.cs.determineWinnerOfTrick(self.cardsInPlay) {
+                    print("was here")
+
+                    self.cardsInPlay.removeAll()
+
+                    if self.host.isMe {
+                        NetworkManager.shared.queue(packet: ActionPacket(player: player, action: .wonTrick))
+                    }
+                }
+            }
+
+            // If all cards have been played, then update the dealer and start again
+            if self.cardsPlayed.count == (self.cardsInDeck - self.kitty.count) {
+                // Reset round dependant properties
+
+                self.cardsPlayed.removeAll()
+                self.playersCards.removeAll()
+                self.cardsInPlay.removeAll()
+                self.kitty.removeAll()
+            }
         }
     }
 
