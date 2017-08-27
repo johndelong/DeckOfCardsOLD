@@ -14,7 +14,7 @@ import RxSwift
 class NetworkManager: NSObject {
     private let serviceAdvertiser: MCNearbyServiceAdvertiser
     private let serviceBrowser: MCNearbyServiceBrowser
-    private var unsentPackets = [PacketProtocol]()
+    private(set) var unsentPackets = [PacketProtocol]()
 
     // Sessions are created by advertisers, and passed to peers when accepting an invitation to connect
     lazy var session: MCSession = {

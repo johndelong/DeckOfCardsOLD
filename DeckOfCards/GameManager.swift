@@ -115,41 +115,13 @@ class GameManager {
                 }
 
                 // Make additional calculations
-                _self.postCalculations()
+                if NetworkManager.shared.unsentPackets.isEmpty {
+                    _self.handlePlayingAsComputer()
+                }
 
                 NetworkManager.shared.sendQueuedPackets()
             }).disposed(by: self.disposeBag)
 
-    }
-
-    func postCalculations() {
-        // Is round over? (i.e. all cards have been played)
-        // If yes, determine what should happen next
-        if self.handleGameStateUpdates() {
-            return
-        }
-
-        // If is computer's turn, then play as the computer
-        if self.handlePlayingAsComputer() {
-            return
-        }
-    }
-
-    /**
-        Analyzes the current situation and determine if updates should be made
-    */
-    func handleGameStateUpdates() -> Bool {
-        guard self.host.isMe else { return false }
-        if self.state == .playing {
-
-            // If all cards have been played, then update the dealer and start again
-            if self.cardsPlayed.count == (self.cardsInDeck - self.kitty.count) {
-                self.setDealer(player: self.turn)
-                return true
-            }
-        }
-
-        return false
     }
 
     /**
@@ -248,14 +220,19 @@ class GameManager {
             if self.cardsInPlay.count == self.players.count {
 
                 if let player = self.cs.determineWinnerOfTrick(self.cardsInPlay) {
-                    print("was here")
-
                     self.cardsInPlay.removeAll()
 
                     if self.host.isMe {
                         NetworkManager.shared.queue(packet: ActionPacket(player: player, action: .wonTrick))
                     }
                 }
+            }
+
+            // If all cards have been played, then update the dealer and start again
+            print("cards played: \(self.cardsPlayed.count)")
+            if self.cardsPlayed.count == (self.cardsInDeck - self.kitty.count) {
+                print("updating the dealer...")
+                NetworkManager.shared.queue(packet: self.getDealerPacket(player: self.turn))
             }
 
             // If all cards have been played, then update the dealer and start again
@@ -293,7 +270,7 @@ class GameManager {
             )
         }
 
-        self.setDealer()
+        NetworkManager.shared.send(packet: self.getDealerPacket())
     }
 
     /**
@@ -302,15 +279,14 @@ class GameManager {
         - Parameters:
             - player: The player who is the dealer. If not specified, a player will be choosen at random
     */
-    func setDealer(player: Player? = nil) {
+    func getDealerPacket(player: Player? = nil) -> PacketProtocol {
         let dealer: Player
         if let player = player {
             dealer = player
         } else {
             dealer = players[Int(arc4random_uniform(UInt32(players.count)))]
         }
-        let state = GameStatePacket(state: .dealing, dealer: dealer, turn: dealer)
-        NetworkManager.shared.send(packet: state)
+        return GameStatePacket(state: .dealing, dealer: dealer, turn: dealer)
     }
 
     func leaveGame() {
