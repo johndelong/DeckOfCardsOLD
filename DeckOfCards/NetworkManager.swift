@@ -152,7 +152,9 @@ extension NetworkManager : MCSessionDelegate {
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         NSLog("%@", "peer \(peerID.displayName) did change state: \(state.displayName)")
-        self.connectedPeers.value = session.connectedPeers
+        if state == .connected || state == .notConnected {
+            self.connectedPeers.value = session.connectedPeers
+        }
     }
 
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {

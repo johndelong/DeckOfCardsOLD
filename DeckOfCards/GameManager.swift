@@ -83,18 +83,28 @@ class GameManager {
 
                     var updatedPlayers = connectedPlayers
 
-                    // If we lost a player, insert a computer in their place
                     if _self.players.count > connectedPlayers.count {
                         updatedPlayers = _self.players
+
+                        // If we lost a player, insert a computer in their place
                         for (index, player) in _self.players.enumerated() {
                             if player.isHuman && !connectedPlayers.contains(player) {
                                 let computer = Player(computerName: "Computer \(index)")
                                 updatedPlayers[index] = computer
 
-                                _self.playerCards[computer.id] = _self.playerCards[player.id]?.map({ card in
-                                    return PlayerCard(owner: computer, card: card)
-                                })
-                                _self.playerCards[player.id] = nil
+                                _self.replace(player: player, with: computer)
+                            }
+                        }
+
+                        // If we gained a player, then drop a computer
+                        for human in connectedPlayers {
+                            if !_self.players.contains(human) {
+                                for (index, player) in _self.players.enumerated() where player.isComputer {
+                                    updatedPlayers[index] = human
+
+                                    _self.replace(player: player, with: human)
+                                    break
+                                }
                             }
                         }
                     }
@@ -260,6 +270,14 @@ class GameManager {
         default:
             break
         }
+    }
+
+    /// Players come and go. This method helps with the transition.
+    func replace(player: Player, with newPlayer: Player) {
+        self.playerCards[newPlayer.id] = self.playerCards[player.id]?.map({ card in
+            return PlayerCard(owner: newPlayer, card: card)
+        })
+        self.playerCards[player.id] = nil
     }
 
     func hostGame() {
