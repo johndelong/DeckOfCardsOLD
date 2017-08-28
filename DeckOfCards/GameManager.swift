@@ -42,7 +42,7 @@ class GameManager {
     // ====================================
 
     /// All the cards in each player's hand
-    var playersCards = [PlayerID: [PlayerCard]]()
+    var playerCards = [PlayerID: [PlayerCard]]()
 
     /// Remining Cards not dealt to players
     var kitty = [Card]()
@@ -75,13 +75,31 @@ class GameManager {
         NetworkManager.shared.connectedPeers.asObservable()
             .subscribe(onNext: { [weak self] peers in
                 guard let _self = self else { return }
-                guard !peers.isEmpty else { return }
 
                 // If I am the host, I should let others know about player positions
                 if _self.host.isMe {
-                    var positions = peers.map { Player(id: $0) }
-                    positions.insert(Player.me, at: 0)
-                    NetworkManager.shared.queue(packet: PlayerDetails(host: Player.me, positions: positions))
+                    var connectedPlayers = peers.map { Player(id: $0) }
+                    connectedPlayers.insert(Player.me, at: 0)
+
+                    var updatedPlayers = connectedPlayers
+
+                    // If we lost a player, insert a computer in their place
+                    if _self.players.count > connectedPlayers.count {
+                        updatedPlayers = _self.players
+                        for (index, player) in _self.players.enumerated() {
+                            if player.isHuman && !connectedPlayers.contains(player) {
+                                let computer = Player(computerName: "Computer \(index)")
+                                updatedPlayers[index] = computer
+
+                                _self.playerCards[computer.id] = _self.playerCards[player.id]?.map({ card in
+                                    return PlayerCard(owner: computer, card: card)
+                                })
+                                _self.playerCards[player.id] = nil
+                            }
+                        }
+                    }
+
+                    NetworkManager.shared.queue(packet: PlayerDetails(host: Player.me, positions: updatedPlayers))
                 }
 
                 NetworkManager.shared.sendQueuedPackets()
@@ -97,77 +115,42 @@ class GameManager {
                     _self.state = state.state
                     _self.turn = state.turn
                     _self.dealer = state.dealer
-                    _self.eventStream.onNext(state)
                 }
 
                 // Player Packets
                 if let data = packet as? PlayerDetails {
                     _self.players = data.positions
                     _self.host = data.host
-                    _self.eventStream.onNext(data)
                 }
 
                 // Action Packets
                 if let event = packet as? ActionPacket {
-                    // Update properties
-                    _self.updateProperties(event)
-                    _self.eventStream.onNext(event)
+                    _self.handleAction(event)
                 }
 
-                // Make additional calculations
+                // Check the current state of the game and make adjustments if needed
+                _self.evaluateState()
+
+                // If adjustments have not been made, check to see if it is the computers turn and take action
                 if NetworkManager.shared.unsentPackets.isEmpty {
                     _self.handlePlayingAsComputer()
                 }
+
+                _self.eventStream.onNext(packet)
 
                 NetworkManager.shared.sendQueuedPackets()
             }).disposed(by: self.disposeBag)
 
     }
 
-    /**
-        If it is the computer's turn, then this function will determine what the computer should do
-    */
-    func handlePlayingAsComputer() -> Bool {
-        guard
-            self.turn.isComputer && self.host.isMe,
-            let computer = self.turn
-        else { return false }
-
-        if self.state == .playing {
-            if
-                let hand = self.playersCards[computer.id],
-                let card = ai.determineCardToPlay(from: hand, whenCardsPlayed: self.cardsInPlay),
-                let index = hand.index(of: card)
-            {
-                self.player(played: card, fromPosition: index)
-                return true
-            } else {
-                return false
-            }
-        }
-
-        if self.state == .dealing {
-            self.deal(as: computer)
-            return true
-        }
-
-        if self.state == .decisions {
-            NetworkManager.shared.queue(packet: PlayerDecision(player: computer, decides: .trump(nil)))
-            return true
-        }
-
-        return false
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    func updateProperties(_ action: ActionPacket) {
+    func handleAction(_ action: ActionPacket) {
         switch action.type {
         case .dealt:
             defer { self.setNextPlayer(currentPlayer: action.player) }
             guard let action = action as? DealCardsPacket else { break }
 
             action.playerCards.forEach { (player, cards) in
-                self.playersCards[player] = self.cs.orderCards(cards)
+                self.playerCards[player] = self.cs.orderCards(cards)
             }
             self.kitty = action.kitty
 
@@ -189,21 +172,23 @@ class GameManager {
                 self.cs.options.trump = suit
                 self.state = .playing
 
-                for (playerId, hand) in self.playersCards {
-                    self.playersCards[playerId] = self.cs.orderCards(hand)
+                for (playerId, hand) in self.playerCards {
+                    self.playerCards[playerId] = self.cs.orderCards(hand)
                 }
             }
         case .playedCard:
             defer { self.setNextPlayer(currentPlayer: action.player) }
             guard let action = action as? PlayCardPacket else { break }
 
-            self.playersCards[action.player.id]?.remove(at: action.positionInHand)
+            self.playerCards[action.player.id]?.remove(at: action.positionInHand)
             self.cardsPlayed.append(action.card)
             self.cardsInPlay.append(action.card)
         case .wonTrick:
             self.turn = action.player
         }
+    }
 
+    func evaluateState() {
         // if making a decision
         if self.state == .decisions {
             if self.turn == self.dealer {
@@ -231,19 +216,49 @@ class GameManager {
             // If all cards have been played, then update the dealer and start again
             print("cards played: \(self.cardsPlayed.count)")
             if self.cardsPlayed.count == (self.cardsInDeck - self.kitty.count) {
-                print("updating the dealer...")
-                NetworkManager.shared.queue(packet: self.getDealerPacket(player: self.turn))
-            }
+                if self.host.isMe {
+                    print("updating the dealer...")
+                    NetworkManager.shared.queue(packet: self.getDealerPacket(player: self.turn))
+                }
 
-            // If all cards have been played, then update the dealer and start again
-            if self.cardsPlayed.count == (self.cardsInDeck - self.kitty.count) {
                 // Reset round dependant properties
-
                 self.cardsPlayed.removeAll()
-                self.playersCards.removeAll()
+                self.playerCards.removeAll()
                 self.cardsInPlay.removeAll()
                 self.kitty.removeAll()
             }
+        }
+    }
+
+    /**
+        If it is the computer's turn, then this function will determine what the computer should do
+    */
+    func handlePlayingAsComputer() {
+        guard
+            self.turn.isComputer && self.host.isMe,
+            let computer = self.turn
+        else { return }
+
+        switch self.state {
+        case .playing:
+            if
+                let hand = self.playerCards[computer.id],
+                let card = ai.determineCardToPlay(from: hand, whenCardsPlayed: self.cardsInPlay),
+                let index = hand.index(of: card)
+            {
+                NetworkManager.shared.queue(packet: PlayCardPacket(card: card, position: index))
+            }
+        case .dealing:
+            NetworkManager.shared.queue(packet: DealCardsPacket(
+                player: computer,
+                deals: 20,
+                from: Deck.euchre(),
+                to: self.players)
+            )
+        case .decisions:
+            NetworkManager.shared.queue(packet: PlayerDecision(player: computer, decides: .trump(nil)))
+        default:
+            break
         }
     }
 
@@ -290,6 +305,7 @@ class GameManager {
     }
 
     func leaveGame() {
+        // Reset game state
         NetworkManager.shared.disconnect()
     }
 
@@ -323,6 +339,6 @@ class GameManager {
 
 extension GameManager {
     func cards(for playerID: PlayerID) -> [PlayerCard] {
-        return self.playersCards[playerID] ?? []
+        return self.playerCards[playerID] ?? []
     }
 }

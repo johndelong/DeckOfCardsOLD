@@ -117,7 +117,7 @@ extension NetworkManager: MCNearbyServiceAdvertiserDelegate {
         withContext context: Data?,
         invitationHandler: @escaping (Bool, MCSession?) -> Void
     ) {
-        NSLog("%@", "didReceiveInvitationFromPeer \(peerID)") // Somebody would like to join my game
+        NSLog("%@", "did receive invitation from peer \(peerID.displayName)") // Somebody would like to join my game
         let canJoin = self.session.connectedPeers.count < GameManager.shared.requiredPlayers - 1
         invitationHandler(canJoin, self.session) // Let them play!
     }
@@ -134,13 +134,16 @@ extension NetworkManager : MCNearbyServiceBrowserDelegate {
         foundPeer peerID: MCPeerID,
         withDiscoveryInfo info: [String : String]?
     ) {
-        NSLog("%@", "foundPeer: \(peerID)") // Hey, I found a game to join
-        NSLog("%@", "invitePeer: \(peerID)") // Lets see if I can play with them
+        NSLog("%@", "found peer: \(peerID.displayName)") // Hey, I found a game to join
+        NSLog("%@", "invite peer: \(peerID.displayName)") // Lets see if I can play with them
         browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        NSLog("%@", "lostPeer: \(peerID)")
+        NSLog("%@", "lost peer: \(peerID.displayName)")
+        self.connectedPeers.value = self.connectedPeers.value.filter { peer -> Bool in
+            return peer != peerID
+        }
     }
 
 }
@@ -148,7 +151,7 @@ extension NetworkManager : MCNearbyServiceBrowserDelegate {
 extension NetworkManager : MCSessionDelegate {
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        NSLog("%@", "peer \(peerID) didChangeState: \(state.rawValue)")
+        NSLog("%@", "peer \(peerID.displayName) did change state: \(state.displayName)")
         self.connectedPeers.value = session.connectedPeers
     }
 
@@ -184,5 +187,18 @@ extension NetworkManager : MCSessionDelegate {
         withError error: Error?
     ) {
         NSLog("%@", "didFinishReceivingResourceWithName")
+    }
+}
+
+fileprivate extension MCSessionState {
+    var displayName: String {
+        switch self {
+        case .connected:
+            return "connected"
+        case .connecting:
+            return "connecting"
+        case .notConnected:
+            return "not connected"
+        }
     }
 }

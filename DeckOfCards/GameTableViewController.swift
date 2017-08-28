@@ -17,6 +17,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
     @IBOutlet private weak var exitButton: UIButton!
     @IBOutlet private weak var playButton: UIButton!
 
+    fileprivate var players = [Player]()
     fileprivate var playerPhysicalPositions = [PlayerID: CGPoint]()
     fileprivate var playerLabels = [UIView]()
     fileprivate var playerCards = [PlayerID: [CardView]]()
@@ -41,6 +42,20 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 if let action = event as? ActionPacket {
                     _self.handleActionEvent(action)
                 } else if let players = event as? PlayerDetails {
+
+                    // if player details change (especially during a game), we need to re-assign a players hand
+                    // to the new player
+                    if _self.players.count == GameManager.shared.players.count {
+                        for (index, player) in GameManager.shared.players.enumerated() {
+                            if !_self.players.contains(player) {
+                                let oldPlayer = _self.players[index]
+                                _self.playerCards[player.id] = _self.playerCards[oldPlayer.id]
+                                _self.playerCards[oldPlayer.id] = nil
+                            }
+                        }
+                    }
+                    _self.players = players.positions
+
                     _self.updatePlayerPhysicalPositions(players.positions)
                 } else if let state = event as? GameStatePacket {
                     if state.state == .dealing {
@@ -53,7 +68,6 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 }
 
                 if GameManager.shared.state == .decisions {
-//                    print("\(GameManager.shared.turn?.displayName ?? "Nobodies") turn")
                     if GameManager.shared.turn.isMe {
                         let alert = UIAlertController(
                             title: "Choose Trump",
@@ -109,7 +123,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
         if action.type == .dealt {
             // assign cards
-            GameManager.shared.playersCards.forEach { (player, cards) in
+            GameManager.shared.playerCards.forEach { (player, cards) in
                 self.playerCards[player] = cards.map { CardView(card: $0) }
             }
 
@@ -158,6 +172,7 @@ class GameTableViewController: UIViewController, StoryboardBased {
 
     @IBAction func exitPressed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+        GameManager.shared.leaveGame()
     }
 }
 
@@ -182,6 +197,8 @@ extension GameTableViewController {
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
         let padding: CGFloat = 16
+
+        self.playerPhysicalPositions.removeAll()
 
         // start with me and then go clockwise around positions
         guard let startIndex = positions.index(of: Player.me) else { return }
@@ -234,6 +251,8 @@ extension GameTableViewController {
             self.view.addSubview(label)
             self.playerLabels.append(label)
         }
+
+        self.view.layoutIfNeeded()
     }
 
     /**
@@ -287,7 +306,7 @@ extension GameTableViewController {
     */
     func updateCardPositions() {
         for (playerId, hand) in self.playerCards {
-            guard let ordered = GameManager.shared.playersCards[playerId] else { continue }
+            guard let ordered = GameManager.shared.playerCards[playerId] else { continue }
             for index in 0...ordered.count - 1 where hand[index].card != ordered[index] {
                 hand[index].card = ordered[index]
             }

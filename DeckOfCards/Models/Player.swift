@@ -62,6 +62,10 @@ extension Player {
     var isComputer: Bool {
         return self.type == .computer
     }
+
+    var isHuman: Bool {
+        return self.type == .human
+    }
 }
 
 // Comparison
