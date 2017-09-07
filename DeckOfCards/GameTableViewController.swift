@@ -57,13 +57,17 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     _self.players = players.positions
 
                     _self.updatePlayerPhysicalPositions(players.positions)
-                } else if let state = event as? GameStatePacket {
-                    if state.state == .dealing {
-                        print("\(state.dealer.displayName) is now dealing")
+                } else if let packet = event as? GameStatePacket {
+                    if packet.state == .dealing {
+                        print("\(packet.dealer.displayName) is now dealing")
                         if GameManager.shared.turn.isMe {
                             _self.playButton.setTitle("Deal", for: .normal)
                             _self.playButton.isEnabled = true
                         }
+                    }
+                } else if let packet = event as? CardPacket {
+                    packet.playerCards.forEach { (player, cards) in
+                        _self.playerCards[player] = cards.map { CardView(card: $0) }
                     }
                 }
 
@@ -99,6 +103,8 @@ class GameTableViewController: UIViewController, StoryboardBased {
                     }
                 }
 
+                _self.evaluateState()
+
             }
         ).disposed(by: self.disposeBag)
 
@@ -109,6 +115,39 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 GameManager.shared.deal(as: Player.me)
             }
         }).disposed(by: self.disposeBag)
+    }
+
+    /// Every time we get a packet, we need to look at the current situation and decide what to do now.
+    /// Every packet we get makes changes to our properties. It is now our job to look at those properties
+    /// and decide what should be done
+    func evaluateState() {
+        let mgr = GameManager.shared
+        switch mgr.state {
+        case .playing:
+
+            // We have players and cards, but nothing has been dealt yet
+            if
+                self.playerPhysicalPositions.isNotEmpty,
+                self.playerCards.isNotEmpty,
+                self.playerCards.first?.value.first?.superview == nil,
+                let dealer = mgr.dealer
+            {
+                self.player(
+                    dealer,
+                    deal: self.playerCards,
+                    to: self.playerPhysicalPositions,
+                    animated: false
+                )
+
+                for card in mgr.cardsInPlay {
+                    let cardView = CardView(card: card)
+                    self.view.addSubview(cardView)
+                    self.player(card.owner, playedCard: cardView)
+                }
+            }
+        default:
+            print("doing nothing")
+        }
     }
 
     // Actions taken by OTHER players.
@@ -158,8 +197,6 @@ class GameTableViewController: UIViewController, StoryboardBased {
                 print("\(action.player.displayName) played the \(action.card.displayName())")
 
                 self.playerCards[action.player.id]?.remove(at: action.positionInHand)
-
-                self.cardsPlayed.append(cardView)
 
                 // Animate the card being played
                 self.player(action.player, playedCard: cardView)
@@ -323,6 +360,8 @@ extension GameTableViewController {
     */
     func player(_ player: Player, playedCard cardView: CardView, animated: Bool = true) {
         guard let playerPos = self.playerPhysicalPositions[player.id] else { return }
+
+        self.cardsPlayed.append(cardView)
 
         let centerOfScreen = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
         let distanceFromCenter: CGFloat = CardView.size.height / 2

@@ -30,7 +30,7 @@ class GameManager {
     */
     var players = [Player.me]
     var turn: Player?
-    private var dealer: Player?
+    var dealer: Player?
     /**
         The host is the designated state resolver. The host makes all of the decisions and updates to the game
         that should not be computed by all players.
@@ -105,6 +105,26 @@ class GameManager {
                                     _self.replace(player: player, with: human)
                                     break
                                 }
+
+                                if
+                                    let dealer = _self.dealer,
+                                    let turn = _self.turn,
+                                    let host = _self.host
+                                {
+                                    let statePacket = GameStatePacket(state: _self.state, dealer: dealer, turn: turn)
+                                    NetworkManager.shared.send(packet: statePacket, toPeer: human.id)
+
+                                    let playerPacket = PlayerDetails(host: host, positions: _self.players)
+                                    NetworkManager.shared.send(packet: playerPacket, toPeer: human.id)
+
+                                    let cardPacket = CardPacket(
+                                        playerCards: _self.playerCards,
+                                        kitty: _self.kitty,
+                                        cardsPlayed: _self.cardsPlayed,
+                                        cardsInPlay: _self.cardsInPlay
+                                    )
+                                    NetworkManager.shared.send(packet: cardPacket, toPeer: human.id)
+                                }
                             }
                         }
                     }
@@ -125,6 +145,14 @@ class GameManager {
                     _self.state = state.state
                     _self.turn = state.turn
                     _self.dealer = state.dealer
+                }
+
+                // Card Packets
+                if let packet = packet as? CardPacket {
+                    _self.playerCards = packet.playerCards
+                    _self.kitty = packet.kitty
+                    _self.cardsPlayed = packet.cardsPlayed
+                    _self.cardsInPlay = packet.cardsInPlay
                 }
 
                 // Player Packets
@@ -278,6 +306,11 @@ class GameManager {
             return PlayerCard(owner: newPlayer, card: card)
         })
         self.playerCards[player.id] = nil
+
+        if let index = self.players.index(of: player) {
+            self.players.remove(at: index)
+            self.players.insert(newPlayer, at: index)
+        }
     }
 
     func hostGame() {

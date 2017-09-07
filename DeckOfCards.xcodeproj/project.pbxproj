@@ -15,7 +15,9 @@
 		15300C411F51044600F695D5 /* JoinViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15300C401F51044600F695D5 /* JoinViewController.storyboard */; };
 		1533520C1E69148300C997FB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520A1E69148300C997FB /* Card.swift */; };
 		1533520D1E69148300C997FB /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1533520B1E69148300C997FB /* Deck.swift */; };
+		1554C8C81F60D071004BE80A /* Collection+NotEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1554C8C71F60D071004BE80A /* Collection+NotEmpty.swift */; };
 		15A1E7DD1E991ED7009BA96D /* CardServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A1E7DC1E991ED7009BA96D /* CardServiceTests.swift */; };
+		15A342F91F55F68200FA9539 /* CardPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A342F81F55F68200FA9539 /* CardPacket.swift */; };
 		15B4ECE91E620446001C72CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECE81E620446001C72CF /* AppDelegate.swift */; };
 		15B4ECEE1E620446001C72CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B4ECEC1E620446001C72CF /* Main.storyboard */; };
 		15B4ECF11E620446001C72CF /* DeckOfCards.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 15B4ECEF1E620446001C72CF /* DeckOfCards.xcdatamodeld */; };
@@ -61,7 +63,9 @@
 		15300C401F51044600F695D5 /* JoinViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = JoinViewController.storyboard; sourceTree = "<group>"; };
 		1533520A1E69148300C997FB /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		1533520B1E69148300C997FB /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
+		1554C8C71F60D071004BE80A /* Collection+NotEmpty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+NotEmpty.swift"; sourceTree = "<group>"; };
 		15A1E7DC1E991ED7009BA96D /* CardServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardServiceTests.swift; sourceTree = "<group>"; };
+		15A342F81F55F68200FA9539 /* CardPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPacket.swift; sourceTree = "<group>"; };
 		15B4ECE51E620446001C72CF /* DeckOfCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeckOfCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B4ECE81E620446001C72CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15B4ECED1E620446001C72CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -198,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				15B4ED1E1E646429001C72CF /* Loadable */,
+				1554C8C71F60D071004BE80A /* Collection+NotEmpty.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -219,6 +224,7 @@
 				15FD42C11E7C14C800486072 /* EventPacket.swift */,
 				1523F1F61E7F2CED001486BB /* GameStatePacket.swift */,
 				1523F1F81E7F2D22001486BB /* PlayersPacket.swift */,
+				15A342F81F55F68200FA9539 /* CardPacket.swift */,
 			);
 			path = Packets;
 			sourceTree = "<group>";
@@ -465,6 +471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15A342F91F55F68200FA9539 /* CardPacket.swift in Sources */,
 				1533520D1E69148300C997FB /* Deck.swift in Sources */,
 				15B4ED201E6464E8001C72CF /* GameTableViewController.swift in Sources */,
 				15EE4A111E86C000001A9292 /* AnimationQueue.swift in Sources */,
@@ -475,6 +482,7 @@
 				150343A91ECF161D002B4415 /* CardService.swift in Sources */,
 				1533520C1E69148300C997FB /* Card.swift in Sources */,
 				1523F1F91E7F2D22001486BB /* PlayersPacket.swift in Sources */,
+				1554C8C81F60D071004BE80A /* Collection+NotEmpty.swift in Sources */,
 				15D09F8A1E8B47660029BFFD /* Player.swift in Sources */,
 				15B4ED1C1E6463F6001C72CF /* NibLoadable.swift in Sources */,
 				1523F1F71E7F2CED001486BB /* GameStatePacket.swift in Sources */,

@@ -84,6 +84,16 @@ class NetworkManager: NSObject {
         }
     }
 
+    func send(packet: PacketProtocol, toPeer peer: MCPeerID) {
+        do {
+            if session.connectedPeers.contains(peer) {
+                try self.session.send(packet.encode(), toPeers: [peer], with: .reliable)
+            }
+        } catch let error {
+            NSLog("%@", "Error for sending: \(error)")
+        }
+    }
+
     func sendToMe(packet: PacketProtocol) {
         self.communicationStream.value = packet
     }
